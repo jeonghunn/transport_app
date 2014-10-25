@@ -3,7 +3,6 @@
   <component name="FacetManager">
     <facet type="java-gradle" name="Java-Gradle">
       <configuration>
-      <option name="APK_PATH" value="/build/apk/****-debug-unaligned.apk" />
         <option name="BUILD_FOLDER_PATH" value="$MODULE_DIR$/build" />
       </configuration>
     </facet>
