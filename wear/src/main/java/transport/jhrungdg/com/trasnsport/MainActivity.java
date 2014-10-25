@@ -1,7 +1,10 @@
 package transport.jhrungdg.com.trasnsport;
 
 import android.app.Activity;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.support.wearable.view.CardFragment;
 import android.support.wearable.view.WatchViewStub;
 import android.widget.TextView;
 
@@ -17,8 +20,15 @@ public class MainActivity extends Activity {
         stub.setOnLayoutInflatedListener(new WatchViewStub.OnLayoutInflatedListener() {
             @Override
             public void onLayoutInflated(WatchViewStub stub) {
-                mTextView = (TextView) stub.findViewById(R.id.text);
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                CardFragment cardFragment = CardFragment.create("WhereBus", "asdf", R.drawable.ic_launcher);
+                fragmentTransaction.add(R.id.frame_layout, cardFragment);
+                fragmentTransaction.commit();
+
             }
         });
+
+
     }
 }
