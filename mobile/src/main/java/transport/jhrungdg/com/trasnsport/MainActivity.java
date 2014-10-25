@@ -1,17 +1,34 @@
 package transport.jhrungdg.com.trasnsport;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
+
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 public class MainActivity extends ActionBarActivity {
 
+    private Context context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        context = this;
         setContentView(R.layout.activity_main);
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                startActivity(new Intent(context,TestActivty.class));
+                finish();
+            }
+        }, (long) (Math.random() * 2000));
     }
 
 
@@ -32,5 +49,13 @@ public class MainActivity extends ActionBarActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+    @Override
+    protected void onStop(){
+        super.onStop();
     }
 }
