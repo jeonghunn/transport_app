@@ -24,6 +24,24 @@
         </activity>
         <actvity
             android:name="transport.jhrungdg.com.transport.MainActivity"></actvity>
+
+        <activity
+            android:name=".BusList"
+            android:label="@string/app_name" />
+
+        <activity
+            android:name=".StationList"
+            android:label="@string/app_name" />
+
+        <activity
+            android:name=".WayList"
+            android:label="@string/app_name" />
+
+
+        <activity
+            android:name=".almost"
+            android:label="@string/app_name" />
+
     </application>
 
 </manifest>
