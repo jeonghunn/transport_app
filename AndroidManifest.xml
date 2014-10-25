@@ -22,6 +22,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <actvity
+            android:name="transport.jhrungdg.com.transport.MainActivity"></actvity>
     </application>
 
 </manifest>
