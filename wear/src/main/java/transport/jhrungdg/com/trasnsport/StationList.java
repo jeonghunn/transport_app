@@ -22,7 +22,7 @@ public class StationList extends Activity
     String[] elements = {"부평구청역", "삭은다리", "대우자동차(동문)", "갈산역", "갈산시장", "삼산사거리"};
     private MyAsyncTask myAsyncTask;
     Context ct;
-
+    WearableListView listView;
 
     @Override
     public void onClick(WearableListView.ViewHolder viewHolder) {
@@ -38,6 +38,8 @@ public class StationList extends Activity
 
     public class MyAsyncTask extends AsyncTask<String, String, String> {
 
+        String[] elements2 = {"부평구청역", "삭은다리", "대우자동차(동문)", "갈산역", "갈산시장", "삼산사거리"};
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -52,7 +54,7 @@ public class StationList extends Activity
             Wearable.MessageApi.addListener(client, new MessageApi.MessageListener() {
                 @Override
                 public void onMessageReceived(MessageEvent messageEvent) {
-                    Toast.makeText(ct, messageEvent.getPath(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ct, elements2[Integer.parseInt(messageEvent.getPath().substring(0,1))], Toast.LENGTH_SHORT).show();
                 }
             });
             client.disconnect();
@@ -79,7 +81,7 @@ public class StationList extends Activity
         ct = this;
 
         // Get the list component from the layout of the activity
-        WearableListView listView =
+        listView =
                 (WearableListView) findViewById(R.id.wearable_list);
 
         // Assign an adapter to the list

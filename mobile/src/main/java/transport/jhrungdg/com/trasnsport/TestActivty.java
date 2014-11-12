@@ -51,7 +51,8 @@ public class TestActivty extends ActionBarActivity {
             public void onProgressChanged(SeekBar seekBar, int p, boolean fromUser) {
                 // TODO Auto-generated method stub
                 progress = p;
-                sendToast(Math.floor(p/3) + "");
+                String[] elements2 = {"부평구청역", "삭은다리", "대우자동차(동문)", "갈산역", "갈산시장", "삼산사거리"};
+                sendToast(elements2[Integer.parseInt((Math.floor(p/3) + "").substring(0,1))]);
             }
         });
         retrieveDeviceNode();
