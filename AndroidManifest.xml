@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.jhrungdg.transport" >
+    package="com.tarks.transport" >
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -21,7 +21,7 @@
             </intent-filter>
         </activity>
         <actvity
-            android:name="transport.jhrungdg.com.transport.MainActivity"></actvity>
+            android:name="com.tarks.transport.MainActivity"></actvity>
 
         <activity
             android:name=".BusList"

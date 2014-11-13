@@ -1,11 +1,8 @@
-package transport.jhrungdg.com.trasnsport;
+package com.tarks.transport;
 
 import android.app.Activity;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.wearable.view.CardFragment;
 import android.support.wearable.view.CardScrollView;
 import android.support.wearable.view.WatchViewStub;
 import android.view.Gravity;

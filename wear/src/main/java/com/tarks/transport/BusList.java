@@ -1,10 +1,9 @@
-package transport.jhrungdg.com.trasnsport;
+package com.tarks.transport;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.wearable.view.WearableListView;
-import android.widget.TextView;
 
 public class BusList extends Activity
         implements WearableListView.ClickListener {

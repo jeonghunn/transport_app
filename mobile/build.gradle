@@ -5,7 +5,7 @@ android {
     buildToolsVersion "20.0.0"
 
     defaultConfig {
-        applicationId "transport.jhrungdg.com.trasnsport"
+        applicationId "com.tarks.transport"
         minSdkVersion 19
         targetSdkVersion 21
         versionCode 1

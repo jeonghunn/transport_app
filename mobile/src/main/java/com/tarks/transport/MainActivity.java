@@ -1,4 +1,4 @@
-package transport.jhrungdg.com.trasnsport;
+package com.tarks.transport;
 
 import android.content.Context;
 import android.content.Intent;
@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
-
 
 import java.util.Timer;
 import java.util.TimerTask;
