@@ -4,5 +4,7 @@
     <string name="app_name">Transport</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="ver">0.1.0.1</string>
 
 </resources>
