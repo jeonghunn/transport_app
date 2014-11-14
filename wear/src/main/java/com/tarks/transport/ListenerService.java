@@ -13,7 +13,7 @@ public class ListenerService extends WearableListenerService {
     }
 
     private void showToast(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 
 }

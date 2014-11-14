@@ -60,7 +60,11 @@ public class StationList extends Activity
                 @Override
                 public void onMessageReceived(MessageEvent messageEvent) {
 //                   Toast.makeText(ct, elements2[Integer.parseInt(messageEvent.getPath().substring(0,1))], Toast.LENGTH_SHORT).show();
-
+                    Message msg = mHandler.obtainMessage();
+                    msg.what = 1;
+                    msg.obj = messageEvent.getPath();
+                    // msg.arg1 = DataContent;
+                    mHandler.sendMessage(msg);
 
                 }
             });
@@ -71,15 +75,11 @@ public class StationList extends Activity
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            Log.i("called", "asdf");
+           // Log.i("called", "asdf");
 
             if (result != null) {
 
-                Message msg = mHandler.obtainMessage();
-                msg.what = 1;
-                msg.obj = result;
-               // msg.arg1 = DataContent;
-                mHandler.sendMessage(msg);
+
 
             }
 
@@ -97,7 +97,7 @@ public class StationList extends Activity
             }
 
             if (msg.what == 1) {
-                Toast.makeText(ct, "adf", Toast.LENGTH_SHORT).show();
+            listView.smoothScrollToPosition(Integer.parseInt(msg.obj.toString()));
             }
 
 
