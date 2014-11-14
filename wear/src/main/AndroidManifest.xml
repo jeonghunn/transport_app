@@ -5,7 +5,6 @@
     <uses-feature android:name="android.hardware.type.watch" />
 
     <application
-        android:name="com.tarks.transport.core.ModApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
