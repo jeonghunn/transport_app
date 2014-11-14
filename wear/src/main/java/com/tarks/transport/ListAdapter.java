@@ -1,11 +1,15 @@
 package com.tarks.transport;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.wearable.view.WearableListView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.util.List;
 
 /**
  * Created by JHRunning on 10/25/14.
@@ -14,6 +18,7 @@ public final class ListAdapter extends WearableListView.Adapter {
     private String[] mDataset;
     private final Context mContext;
     private final LayoutInflater mInflater;
+    private int selected_pos;
 
     // Provide a suitable constructor (depends on the kind of dataset)
     public ListAdapter(Context context, String[] dataset) {
@@ -30,7 +35,13 @@ public final class ListAdapter extends WearableListView.Adapter {
             // find the text view within the custom item's layout
             textView = (TextView) itemView.findViewById(R.id.name);
         }
+
+        public void Sizebig(){
+            textView.setTextSize(21);
+        }
     }
+
+
 
     // Create new views for list items
     // (invoked by the WearableListView's layout manager)
@@ -65,4 +76,35 @@ public final class ListAdapter extends WearableListView.Adapter {
     public int getItemCount() {
         return mDataset.length;
     }
+//
+//    @Override
+//    public View getView(int position, View convertView, ViewGroup parent) {
+//        View v = convertView;
+//        if (v == null) {
+//            LayoutInflater vi = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//            v = vi.inflate(R.layout.profile_list, null);
+//        }
+//        final List p = items.get(position);
+//        if (p != null) {
+//            TextView tt = (TextView) v.findViewById(R.id.titre);
+//            TextView bt = (TextView) v.findViewById(R.id.description);
+//            ImageView image = (ImageView) v.findViewById(R.id.img);
+//
+//            if (tt != null) {
+//                tt.setText(p.getTitle());
+//                // Log.i("test", p.getStatus() + "kk" +p.getTitle() );
+//                // Status not public
+//                if (p.getStatus() > 1) {
+//                    tt.setTextColor(Color.GRAY);
+//                } else {
+//                    tt.setTextColor(Color.BLACK);
+//                }
+//
+//            }
+//
+//
+//        }
+//        return v;
+//    }
 }
+
