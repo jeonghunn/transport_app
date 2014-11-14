@@ -18,7 +18,7 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this;
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.splash);
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
@@ -26,7 +26,7 @@ public class MainActivity extends ActionBarActivity {
                 startActivity(new Intent(context,TestActivty.class));
                 finish();
             }
-        }, (long) (Math.random() * 2000));
+        }, (long) (Math.random() * 10500));
     }
 
 

@@ -11,6 +11,7 @@
 
         <activity
             android:name="com.tarks.transport.MainActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
             android:label="@string/app_name" >
 
 
