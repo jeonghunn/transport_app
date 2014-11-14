@@ -9,19 +9,15 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.wearable.view.WearableListView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.MessageApi;
 import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.Wearable;
-import com.tarks.transport.core.global;
 
 import java.util.concurrent.TimeUnit;
 
@@ -38,7 +34,7 @@ public class StationList extends Activity
 
     @Override
     public void onClick(WearableListView.ViewHolder viewHolder) {
-        Intent i = new Intent(StationList.this, almost.class);
+        Intent i = new Intent(StationList.this, BusArrive.class);
         startActivity(i);
     }
 

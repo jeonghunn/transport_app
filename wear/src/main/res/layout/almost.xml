@@ -27,8 +27,11 @@
                     android:layout_width="match_parent"
                     android:text="목적지 거의도착"
                     android:textColor="@color/black"
+                    android:id="@+id/card_title"
                     android:textSize="20sp"/>
+
                 <TextView
+                    android:id="@+id/card_subtitle"
                     android:fontFamily="sans-serif-light"
                     android:layout_height="wrap_content"
                     android:layout_width="match_parent"
