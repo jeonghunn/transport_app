@@ -5,13 +5,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.wearable.view.WearableListView;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.MessageApi;
 import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.Wearable;
+import com.tarks.transport.core.global;
 
 import java.util.concurrent.TimeUnit;
 
@@ -23,6 +27,7 @@ public class StationList extends Activity
     private MyAsyncTask myAsyncTask;
     Context ct;
     WearableListView listView;
+
 
     @Override
     public void onClick(WearableListView.ViewHolder viewHolder) {
@@ -38,7 +43,7 @@ public class StationList extends Activity
 
     public class MyAsyncTask extends AsyncTask<String, String, String> {
 
-        String[] elements2 = {"부평구청역", "삭은다리", "대우자동차(동문)", "갈산역", "갈산시장", "삼산사거리"};
+    //    String[] elements2 = {"부평구청역", "삭은다리", "대우자동차(동문)", "갈산역", "갈산시장", "삼산사거리"};
 
         @Override
         protected void onPreExecute() {
@@ -54,7 +59,9 @@ public class StationList extends Activity
             Wearable.MessageApi.addListener(client, new MessageApi.MessageListener() {
                 @Override
                 public void onMessageReceived(MessageEvent messageEvent) {
-                    Toast.makeText(ct, elements2[Integer.parseInt(messageEvent.getPath().substring(0,1))], Toast.LENGTH_SHORT).show();
+//                   Toast.makeText(ct, elements2[Integer.parseInt(messageEvent.getPath().substring(0,1))], Toast.LENGTH_SHORT).show();
+
+
                 }
             });
             client.disconnect();
@@ -64,15 +71,38 @@ public class StationList extends Activity
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
+            Log.i("called", "asdf");
 
             if (result != null) {
 
+                Message msg = mHandler.obtainMessage();
+                msg.what = 1;
+                msg.obj = result;
+               // msg.arg1 = DataContent;
+                mHandler.sendMessage(msg);
 
             }
 
 
         }
     }
+
+    protected Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+         //   hideProgressBar();
+            // IF Sucessfull no timeout
+
+            if (msg.what == -1) {
+         //       Global.ConnectionError(PageActivity.this);
+            }
+
+            if (msg.what == 1) {
+                Toast.makeText(ct, "adf", Toast.LENGTH_SHORT).show();
+            }
+
+
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

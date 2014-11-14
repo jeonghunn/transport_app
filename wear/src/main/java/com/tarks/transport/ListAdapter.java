@@ -52,6 +52,9 @@ public final class ListAdapter extends WearableListView.Adapter {
         TextView view = itemHolder.textView;
         // replace text contents
         view.setText(mDataset[position]);
+
+//       if(int) view.setTextSize(21);
+        //view.isFocusable()
         // replace list item's metadata
         holder.itemView.setTag(position);
     }
