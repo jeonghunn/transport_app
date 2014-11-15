@@ -75,7 +75,7 @@ public class TestActivty extends ActionBarActivity implements GoogleApiClient.Co
                 .addOnConnectionFailedListener(this)
                 .build();
 
-        retrieveDeviceNode();
+       retrieveDeviceNode();
 
     }
 
@@ -124,7 +124,7 @@ public class TestActivty extends ActionBarActivity implements GoogleApiClient.Co
                 if (nodes.size() > 0) {
                     nodeId = nodes.get(0).getId();
                 }
-                mGoogleApiClient.disconnect();
+              //  mGoogleApiClient.disconnect();
             }
         }).start();
     }
@@ -138,7 +138,6 @@ public class TestActivty extends ActionBarActivity implements GoogleApiClient.Co
                 public void run() {
                     mGoogleApiClient.blockingConnect(10000, TimeUnit.MILLISECONDS);
                     Wearable.MessageApi.sendMessage(mGoogleApiClient, nodeId, msg, null);
-                    mGoogleApiClient.disconnect();
                 }
             }).start();
         }
