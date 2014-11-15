@@ -57,12 +57,12 @@ public class DbOpenHelper {
     }
 
     // Insert DB
-    public long insertColumn(int srl, int country_srl ,int route_srl, int station_srl, String station_name, Double station_latitude, Double station_longitude){
+    public long insertColumn(int country_srl ,int route_srl, int station_srl, int way_srl,  String station_name, Double station_latitude, Double station_longitude){
         ContentValues values = new ContentValues();
-        values.put(DataBases.CreateDB.SRL, srl);
         values.put(DataBases.CreateDB.COUNTRY_SRL, country_srl);
         values.put(DataBases.CreateDB.ROUTE_SRL, route_srl);
         values.put(DataBases.CreateDB.STATION_SRL, station_srl);
+        values.put(DataBases.CreateDB.WAY_SRL, way_srl);
         values.put(DataBases.CreateDB.STATION_NAME, station_name);
         values.put(DataBases.CreateDB.STATION_LATITUDE, station_latitude);
         values.put(DataBases.CreateDB.STATION_LONGITUDE, station_longitude);
