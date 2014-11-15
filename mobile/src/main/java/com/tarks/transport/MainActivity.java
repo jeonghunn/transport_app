@@ -37,9 +37,8 @@ startApp();
     }
 
     public void DBInsert(){
-        DbOpenHelper mDbOpenHelper = new DbOpenHelper(mod);
+        DbOpenHelper mDbOpenHelper = new DbOpenHelper(this);
         mDbOpenHelper.open();
-        Cursor csr = mDbOpenHelper.getUserInfo(user);
         mDbOpenHelper.insertColumn(1,1,1,2, "천안시청", 36.8164823,127.1138453);
         mDbOpenHelper.insertColumn(1,1,2,2, "천안시청보건소",36.8142015,127.1152021);
         mDbOpenHelper.insertColumn(1,1,3,2, "불당동일하이빌", 36.8079758, 127.1134732);
@@ -52,7 +51,6 @@ startApp();
         mDbOpenHelper.insertColumn(1,1,10,2, "서당골", 36.8004764, 127.1000929);
         mDbOpenHelper.insertColumn(1,1,11,2, "갤러리아백화점", 36.8015857, 127.1029344);
         mDbOpenHelper.insertColumn(1,1,12,2, "백석20통", 36.802279, 127.1081098);
-        csr.close();
         mDbOpenHelper.close();
     startApp();
     }
