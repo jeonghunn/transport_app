@@ -26,7 +26,7 @@ public class MainActivity extends ActionBarActivity {
                 startActivity(new Intent(context,TestActivty.class));
                 finish();
             }
-        }, (long) (Math.random() * 10500));
+        }, (long) (900));
     }
 
 
