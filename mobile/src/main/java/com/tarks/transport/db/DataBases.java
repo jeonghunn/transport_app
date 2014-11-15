@@ -20,7 +20,7 @@ public class DataBases {
         public static final String _CREATE =
                 "create table "+_TABLENAME+"("
                         +_ID+" integer primary key autoincrement, "
-                        +COUNTRY_SRL+"int not null , "
+                        +COUNTRY_SRL+" int not null , "
                         +ROUTE_SRL+" int not null , "
                         +STATION_SRL+" int not null , "
                         +WAY_SRL+" int not null , "

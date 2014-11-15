@@ -7,13 +7,14 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 /**
  * Created by JHRunning on 11/16/14.
  */
 public class DbOpenHelper {
 
-    private static final String DATABASE_NAME = "favorite.db";
+    private static final String DATABASE_NAME = "transport.db";
     private static final int DATABASE_VERSION = 2;
     public static SQLiteDatabase mDB;
     private DatabaseHelper mDBHelper;
@@ -66,7 +67,12 @@ public class DbOpenHelper {
         values.put(DataBases.CreateDB.STATION_NAME, station_name);
         values.put(DataBases.CreateDB.STATION_LATITUDE, station_latitude);
         values.put(DataBases.CreateDB.STATION_LONGITUDE, station_longitude);
+
+        Log.i("asdf",station_latitude  +"Fdf");
+
         return mDB.insert(DataBases.CreateDB._TABLENAME, null, values);
+
+
     }
 
     // Update DB
@@ -136,6 +142,25 @@ public class DbOpenHelper {
         return c;
     }
 
+    // 이름 검색 하기 (rawQuery)
+    public Cursor getNearStation(Double latitude, Double longitude){
+        Double max_latitude = latitude + 0.002;
+        Double min_latitude = latitude - 0.002;
+        Double max_longitude = longitude + 0.002;
+        Double min_longitude = longitude - 0.002;
+        Cursor c = mDB.rawQuery( "select * from stations where station_latitude > '" +  min_latitude + "' AND station_latitude < '" + max_latitude + "' AND station_longitude > '" + min_longitude + "' AND station_longitude < '" + max_longitude + "'" , null);
+        return c;
+    }
+
+
+    // ID 컬럼 얻어 오기
+//    public Cursor getNearStation(Double latitude, Double longitude){
+//        Cursor c = mDB.query(DataBases.CreateDB._TABLENAME, null,
+//                "user_srl="+user_srl, null, null, null, null);
+//        if(c != null && c.getCount() != 0)
+//            c.moveToFirst();
+//        return c;
+//    }
 
 }
 

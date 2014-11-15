@@ -1,6 +1,7 @@
 package com.tarks.transport;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -20,6 +21,8 @@ import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.Wearable;
 import com.google.android.gms.location.LocationListener;
+import com.tarks.transport.db.DbOpenHelper;
+
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -63,7 +66,6 @@ public class TestActivty extends ActionBarActivity implements GoogleApiClient.Co
                 sendToast(String.valueOf(p));
             }
         });
-
 
 
 
@@ -130,6 +132,30 @@ public class TestActivty extends ActionBarActivity implements GoogleApiClient.Co
     }
 
 
+    private String getNearStations(Double latitude, Double longitude){
+        DbOpenHelper mDbOpenHelper = new DbOpenHelper(this);
+        mDbOpenHelper.open();
+        Cursor csr = mDbOpenHelper.getNearStation(latitude, longitude);
+        String station_name = null;
+
+        while (csr.moveToNext()) {
+
+            station_name =  csr.getString(csr.getColumnIndex("station_name"));
+
+//            mInfoClass = new InfoClass(
+//                    mCursor.getInt(mCursor.getColumnIndex("_id")),
+//                    mCursor.getString(mCursor.getColumnIndex("name")),
+//                    mCursor.getString(mCursor.getColumnIndex("contact")),
+//                    mCursor.getString(mCursor.getColumnIndex("email"))
+//            );
+//
+//            mInfoArray.add(mInfoClass);
+        }
+
+        csr.close();
+        mDbOpenHelper.close();
+        return station_name;
+    }
 
     private void sendToast(final String msg) {
         if (nodeId != null) {
@@ -141,6 +167,7 @@ public class TestActivty extends ActionBarActivity implements GoogleApiClient.Co
                 }
             }).start();
         }
+
 
 
     }
@@ -176,7 +203,10 @@ public class TestActivty extends ActionBarActivity implements GoogleApiClient.Co
 
     @Override
     public void onLocationChanged(Location location) {
-        Toast.makeText(TestActivty.this, "Success." + location.getLatitude() + "," +  location.getLongitude(), Toast.LENGTH_LONG).show();
+      //  Toast.makeText(TestActivty.this, "Success." + location.getLatitude() + "," +  location.getLongitude(), Toast.LENGTH_LONG).show();
+        Toast.makeText(TestActivty.this, getNearStations(location.getLatitude(), location.getLongitude()) + "역이 주변에 있는걸 감지했습니다.", Toast.LENGTH_LONG).show();
         Log.d(TAG, "Success." + location.getLatitude() + "," +  location.getLongitude());
+
+
     }
 }

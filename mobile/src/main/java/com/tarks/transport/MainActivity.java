@@ -52,6 +52,7 @@ startApp();
         mDbOpenHelper.insertColumn(1,1,11,2, "갤러리아백화점", 36.8015857, 127.1029344);
         mDbOpenHelper.insertColumn(1,1,12,2, "백석20통", 36.802279, 127.1081098);
         mDbOpenHelper.close();
+        finishedfirstTask();
     startApp();
     }
 
@@ -64,6 +65,18 @@ startApp();
                 finish();
             }
         }, (long) (900));
+    }
+
+    private void finishedfirstTask(){
+        // Setting Editor
+        SharedPreferences edit = getSharedPreferences("setting",
+                MODE_PRIVATE);
+        SharedPreferences.Editor editor = edit.edit();
+        editor.putString("frist_use_app", "false");
+        editor.commit();
+
+
+
     }
 
 
