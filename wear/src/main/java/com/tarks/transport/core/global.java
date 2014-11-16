@@ -36,5 +36,30 @@ public final class global {
     }
 
 
+    //Temp function
+    public static void setNotifcation(Context cx, int notificationId, Intent viewIntent, String title, String content, int largeicon){
+
+// Build intent for notification content
+        // Intent viewIntent = new Intent(this, StationList.class);
+        //  viewIntent.putExtra("1234", eventId);
+        PendingIntent viewPendingIntent =
+                PendingIntent.getActivity(cx, 0, viewIntent, 0);
+
+        NotificationCompat.Builder notificationBuilder =
+                new NotificationCompat.Builder(cx)
+                        .setSmallIcon(R.drawable.ic_launcher)
+                        .setContentTitle(title)
+                        .setContentText(content)
+                        .setLargeIcon(BitmapFactory.decodeResource(
+                                cx.getResources(), largeicon))
+                        .setContentIntent(viewPendingIntent);
+
+// Get an instance of the NotificationManager service
+        NotificationManagerCompat notificationManager =
+                NotificationManagerCompat.from(cx);
+
+// Build the notification and issues it with notification manager.
+        notificationManager.notify(notificationId, notificationBuilder.build());
+    }
 
 }

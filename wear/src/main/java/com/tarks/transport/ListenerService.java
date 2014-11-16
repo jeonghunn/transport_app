@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.WearableListenerService;
+import com.tarks.transport.core.global;
 
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
@@ -23,34 +24,12 @@ public class ListenerService extends WearableListenerService {
     private void showToast(String message) {
         //Toast.makeText(this, message, Toast.LENGTH_LONG).show();
 
+//        Intent viewIntent = new Intent(this, StationList.class);
+//        global.setNotifcation(this, 1, viewIntent, "가나다", "가나다", R.drawable.bus_background);
+
     }
 
 
-    //Temp function
-    private void noti(){
 
-        int notificationId = 001;
-// Build intent for notification content
-        Intent viewIntent = new Intent(this, StationList.class);
-        //  viewIntent.putExtra("1234", eventId);
-        PendingIntent viewPendingIntent =
-                PendingIntent.getActivity(this, 0, viewIntent, 0);
-
-        NotificationCompat.Builder notificationBuilder =
-                new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.drawable.ic_launcher)
-                        .setContentTitle("천안역")
-                        .setContentText("다음 역 : 갈산역")
-                        .setLargeIcon(BitmapFactory.decodeResource(
-                                getResources(), R.drawable.bus_background))
-                        .setContentIntent(viewPendingIntent);
-
-// Get an instance of the NotificationManager service
-        NotificationManagerCompat notificationManager =
-                NotificationManagerCompat.from(this);
-
-// Build the notification and issues it with notification manager.
-        notificationManager.notify(notificationId, notificationBuilder.build());
-    }
 
 }
