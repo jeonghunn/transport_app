@@ -5,16 +5,25 @@ package com.tarks.transport.db;
  */
 
 public class InfoClass {
-    public int user_srl;
-    public String profile_update;
-    public String profile_pic;
+    public int country_srl;
+    public int route_srl;
+    public int way_srl;
+    public int station_srl;
+    public String station_name;
+    public Double station_latitude;
+    public Double station_longitude;
+
 
     public InfoClass(){}
 
-    public InfoClass(int _user_srl , String profile_update , String profile_pic){
-        this.user_srl = _user_srl;
-        this.profile_update = profile_update;
-        this.profile_pic = profile_pic;
+    public InfoClass(int _country_srl , int _route_srl , int _way_srl, int _station_srl, String _station_name, Double _station_latitude, Double _station_longitude){
+        this.country_srl = _country_srl;
+        this.route_srl = _route_srl;
+        this.way_srl = _way_srl;
+        this.station_srl = _station_srl;
+        this.station_name = _station_name;
+        this.station_latitude = _station_latitude;
+        this.station_longitude = _station_longitude;
     }
 
 }
