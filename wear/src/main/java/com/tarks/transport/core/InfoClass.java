@@ -1,4 +1,4 @@
-package com.tarks.transport.db;
+package com.tarks.transport.core;
 
 /**
  * Created by JHRunning on 11/16/14.
@@ -17,7 +17,7 @@ public class InfoClass {
 
     public InfoClass(){}
 
-    public InfoClass(int _id, int _country_srl , int _route_srl , int _way_srl, int _station_srl, String _station_name, Double _station_latitude, Double _station_longitude){
+    public InfoClass(int _id, int _country_srl, int _route_srl, int _way_srl, int _station_srl, String _station_name, Double _station_latitude, Double _station_longitude){
         this.id = _id;
         this.country_srl = _country_srl;
         this.route_srl = _route_srl;

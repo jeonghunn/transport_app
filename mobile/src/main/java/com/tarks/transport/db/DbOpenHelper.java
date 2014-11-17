@@ -144,10 +144,19 @@ public class DbOpenHelper {
 
     // 이름 검색 하기 (rawQuery)
     public Cursor getNearStation(Double latitude, Double longitude){
-        Double max_latitude = latitude + 0.002;
-        Double min_latitude = latitude - 0.002;
-        Double max_longitude = longitude + 0.002;
-        Double min_longitude = longitude - 0.002;
+        Double max_latitude = latitude + 0.003;
+        Double min_latitude = latitude - 0.003;
+        Double max_longitude = longitude + 0.003;
+        Double min_longitude = longitude - 0.003;
+        Cursor c = mDB.rawQuery( "select * from stations where station_latitude > '" +  min_latitude + "' AND station_latitude < '" + max_latitude + "' AND station_longitude > '" + min_longitude + "' AND station_longitude < '" + max_longitude + "'" , null);
+        return c;
+    }
+
+    public Cursor getNowStation(Double latitude, Double longitude){
+        Double max_latitude = latitude + 0.001;
+        Double min_latitude = latitude - 0.001;
+        Double max_longitude = longitude + 0.001;
+        Double min_longitude = longitude - 0.001;
         Cursor c = mDB.rawQuery( "select * from stations where station_latitude > '" +  min_latitude + "' AND station_latitude < '" + max_latitude + "' AND station_longitude > '" + min_longitude + "' AND station_longitude < '" + max_longitude + "'" , null);
         return c;
     }

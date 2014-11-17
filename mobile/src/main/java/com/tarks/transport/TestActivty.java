@@ -21,8 +21,18 @@ import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.Wearable;
 import com.google.android.gms.location.LocationListener;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.tarks.transport.core.global;
 import com.tarks.transport.db.DbOpenHelper;
+import com.tarks.transport.db.InfoClass;
 
+import org.apache.http.util.ByteArrayBuffer;
+import org.json.JSONArray;
+
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -63,7 +73,7 @@ public class TestActivty extends ActionBarActivity implements GoogleApiClient.Co
                 progress = p;
              //   String[] elements2 = {"부평구청역", "삭은다리", "대우자동차(동문)", "갈산역", "갈산시장", "삼산사거리"};
                // sendToast(elements2[Integer.parseInt((Math.floor(p/3) + "").substring(0,1))]);
-                sendToast(String.valueOf(p));
+                sendMessage(String.valueOf(p), null);
             }
         });
 
@@ -103,8 +113,6 @@ public class TestActivty extends ActionBarActivity implements GoogleApiClient.Co
                             //if (Log.isLoggable(TAG, Log.DEBUG)) {
                                 Log.d(TAG, "Successfully requested location updates");
                           //  }
-                            Toast.makeText(TestActivty.this, "Successfully requested location updates", Toast.LENGTH_LONG).show();
-                            Toast.makeText(TestActivty.this, "Success" + result.getStatus().toString(), Toast.LENGTH_LONG).show();
                         } else {
                             Log.i("Failed", "Fail");
                             Toast.makeText(TestActivty.this, "Failed", Toast.LENGTH_LONG).show();
@@ -132,38 +140,49 @@ public class TestActivty extends ActionBarActivity implements GoogleApiClient.Co
     }
 
 
-    private String getNearStations(Double latitude, Double longitude){
+    private ArrayList<InfoClass> getNearStations(Double latitude, Double longitude){
+        // InfoClass mInfoClass;
+        ArrayList<InfoClass> mInfoArray = new ArrayList<InfoClass>();
+
+
+
         DbOpenHelper mDbOpenHelper = new DbOpenHelper(this);
         mDbOpenHelper.open();
         Cursor csr = mDbOpenHelper.getNearStation(latitude, longitude);
-        String station_name = null;
+
 
         while (csr.moveToNext()) {
 
-            station_name =  csr.getString(csr.getColumnIndex("station_name"));
+            global.log(csr.getString(csr.getColumnIndex("station_name")));
 
-//            mInfoClass = new InfoClass(
-//                    mCursor.getInt(mCursor.getColumnIndex("_id")),
-//                    mCursor.getString(mCursor.getColumnIndex("name")),
-//                    mCursor.getString(mCursor.getColumnIndex("contact")),
-//                    mCursor.getString(mCursor.getColumnIndex("email"))
-//            );
-//
-//            mInfoArray.add(mInfoClass);
+            InfoClass mInfoClass = new InfoClass(
+                    csr.getInt(csr.getColumnIndex("_id")),
+                    csr.getInt(csr.getColumnIndex("country_srl")),
+                    csr.getInt(csr.getColumnIndex("route_srl")),
+                    csr.getInt(csr.getColumnIndex("way_srl")),
+                    csr.getInt(csr.getColumnIndex("station_srl")),
+                    csr.getString(csr.getColumnIndex("station_name")),
+                    csr.getDouble(csr.getColumnIndex("station_latitude")),
+                    csr.getDouble(csr.getColumnIndex("station_longitude"))
+            );
+
+            mInfoArray.add(mInfoClass);
+
         }
+
 
         csr.close();
         mDbOpenHelper.close();
-        return station_name;
+        return mInfoArray;
     }
 
-    private void sendToast(final String msg) {
+    private void sendMessage(final String msg, final byte[] data) {
         if (nodeId != null) {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
                     mGoogleApiClient.blockingConnect(10000, TimeUnit.MILLISECONDS);
-                    Wearable.MessageApi.sendMessage(mGoogleApiClient, nodeId, msg, null);
+                    Wearable.MessageApi.sendMessage(mGoogleApiClient, nodeId, msg, data);
                 }
             }).start();
         }
@@ -204,8 +223,17 @@ public class TestActivty extends ActionBarActivity implements GoogleApiClient.Co
     @Override
     public void onLocationChanged(Location location) {
       //  Toast.makeText(TestActivty.this, "Success." + location.getLatitude() + "," +  location.getLongitude(), Toast.LENGTH_LONG).show();
-        Toast.makeText(TestActivty.this, getNearStations(location.getLatitude(), location.getLongitude()) + "역이 주변에 있는걸 감지했습니다.", Toast.LENGTH_LONG).show();
-        Log.d(TAG, "Success." + location.getLatitude() + "," +  location.getLongitude());
+       // Toast.makeText(TestActivty.this, getNearStations(location.getLatitude(), location.getLongitude()) + "역이 주변에 있는걸 감지했습니다.", Toast.LENGTH_LONG).show();
+        ArrayList<InfoClass> result_array = getNearStations(location.getLatitude(), location.getLongitude());
+        Gson gson = new GsonBuilder().create();
+        JsonArray json_array_result = gson.toJsonTree(result_array).getAsJsonArray();
+
+        global.log(json_array_result.toString());
+        //    sendMessage("nearstation", result_array.to);
+
+
+
+        if(global.debug_mode)  Log.d(TAG, "Success." + location.getLatitude() + "," +  location.getLongitude());
 
 
     }

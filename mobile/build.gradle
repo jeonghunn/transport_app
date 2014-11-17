@@ -24,4 +24,6 @@ dependencies {
     wearApp project(':wear')
     compile 'com.google.android.gms:play-services-wearable:+'
     compile 'com.android.support:appcompat-v7:+'
+    compile 'com.google.code.gson:gson:2.3'
 }
+

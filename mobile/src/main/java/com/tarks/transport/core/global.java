@@ -7,11 +7,14 @@ import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.tarks.transport.R;
-import com.tarks.transport.StationList;
+import com.tarks.transport.db.InfoClass;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 
 /**
@@ -19,7 +22,7 @@ import java.util.ArrayList;
  */
 public final class global {
 
-    static boolean debug_mode = true;
+    public static boolean debug_mode = true;
 
     public static void toast(String str, boolean length) {
         // Log.i("ACCESS", "I can access to toast");
@@ -37,6 +40,11 @@ public final class global {
         if(debug_mode) Log.i("Log", str);
     }
 
+
+    public static void dumpArray(String[] array) {
+        for (int i = 0; i < array.length; i++)
+            System.out.format("array[%d] = %s%n", i, array[i]);
+    }
 
     //Temp function
     public static void setNotifcation(Context cx, int notificationId, Intent viewIntent, String title, String content, int largeicon){
@@ -66,15 +74,15 @@ public final class global {
         notificationManager.notify(notificationId, notificationBuilder.build());
     }
 
-    public static ArrayList<InfoClass> saveBytesArraytoBytesArrayList(byte[] in) {
-        ArrayList<InfoClass> temp = new ArrayList<InfoClass>();
-        for (int i = 0; i<temp.size(); i++){
 
+    public static byte[] convertToBytes(ArrayList<InfoClass> strings) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        DataOutputStream out = new DataOutputStream(baos);
+        for (InfoClass element : strings) {
+            out.writeUTF(String.valueOf(element));
         }
-
-        return temp;
-
+        byte[] bytes = baos.toByteArray();
+Log.i("asdf", bytes.toString());
+        return bytes;
     }
-
-
 }

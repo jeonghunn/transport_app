@@ -18,12 +18,13 @@ public class ListenerService extends WearableListenerService {
 
     @Override
     public void onMessageReceived(MessageEvent messageEvent) {
-        showToast(messageEvent.getPath());
+        showToast(messageEvent.getPath(), messageEvent.getData());
+
     }
 
-    private void showToast(String message) {
+    private void showToast(String message, byte[] bytenear) {
         //Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-
+        global.log(message);
 //        Intent viewIntent = new Intent(this, StationList.class);
 //        global.setNotifcation(this, 1, viewIntent, "가나다", "가나다", R.drawable.bus_background);
 
