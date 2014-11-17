@@ -99,7 +99,8 @@ public class TestActivty extends ActionBarActivity implements GoogleApiClient.Co
     @Override
     public void onConnected(Bundle bundle) {
         LocationRequest(5000, 2000);
-        sendNoti(1,1, "동일하이빌A -> 불당대동다숲", "다음 역: 백석농공단지");
+     //   sendNoti(1,1, "동일하이빌A -> 불당대동다숲", "다음 역: 백석농공단지");
+        almost_arrived();
         global.log("Connected");
     }
 
@@ -107,7 +108,7 @@ public class TestActivty extends ActionBarActivity implements GoogleApiClient.Co
         global.log("LocationRequest");
         LocationRequest locationRequest = LocationRequest.create()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                .setInterval(1000)
+                .setInterval(5000)
                 .setFastestInterval(500);
 
         LocationServices.FusedLocationApi
@@ -205,6 +206,11 @@ public class TestActivty extends ActionBarActivity implements GoogleApiClient.Co
     }
 
 
+    private void almost_arrived(){
+        sendMessage("almost_arrived//ll", null);
+    }
+
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -265,4 +271,6 @@ global.log(noti_json_result.toString());
         global.log(json_array_result.toString());
         sendMessage("stations//" + json_array_result.toString(), null);
     }
+
+
 }

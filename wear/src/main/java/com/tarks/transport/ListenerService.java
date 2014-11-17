@@ -39,38 +39,45 @@ checkMessage(messageEvent.getPath(), messageEvent.getData());
         String data = array[1];
 
         if(action_kind.matches("notification")) actionNoti(data);
+        if(action_kind.matches("almost_arrived")) almostarrived(data);
 
 
     }
 
-    private void actionNoti(String data){
+    private void actionNoti(String data) {
         global.log("Actionnoti");
         Map<String, String> resultmap = null;
         resultmap = global.getJSONArray(data);
 
-        int kind   =  Integer.parseInt(String.valueOf(resultmap.get("kind")));
-        int noti_id =  Integer.parseInt(String.valueOf(resultmap.get("noti_id")));
+        int kind = Integer.parseInt(String.valueOf(resultmap.get("kind")));
+        int noti_id = Integer.parseInt(String.valueOf(resultmap.get("noti_id")));
         String title = String.valueOf(resultmap.get("title"));
         String content = String.valueOf(resultmap.get("content"));
 
-        if(kind == 1) {
+        if (kind == 1) {
             Intent viewIntent = new Intent(this, StationList.class);
-            global.setNotifcation(this,noti_id,viewIntent, title ,content,R.drawable.bus_background);
+            global.setNotifcation(this, noti_id, viewIntent, title, content, R.drawable.bus_background);
         }
 
-
-
     }
+        private void almostarrived(String data){
+
+        Intent i = new Intent(ListenerService.this, BusArrive.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(i);
+
+            global.Vibrate(this, 3000);
+    }
+
+
+
+
 
     private void showToast(String message)  {
         //Toast.makeText(this, message, Toast.LENGTH_LONG).show();
 
 //        Intent viewIntent = new Intent(this, StationList.class);
 //        global.setNotifcation(this, 1, viewIntent, "가나다", "가나다", R.drawable.bus_background);
-
-
-
-
 
 
 

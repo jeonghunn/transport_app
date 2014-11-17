@@ -44,9 +44,7 @@ public class BusArrive extends Activity {
         card_title.setText("목적지 도착");
         card_subtitle.setText("천안역 -> 갈산역\n 43.725km");
 
-        Vibrator v = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
-        // Vibrate for 500 milliseconds
-        v.vibrate(5000);
+
 
 
     }
