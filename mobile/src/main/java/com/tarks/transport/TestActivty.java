@@ -25,6 +25,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.tarks.transport.core.global;
+import com.tarks.transport.core.noticlass;
 import com.tarks.transport.db.DbOpenHelper;
 import com.tarks.transport.db.InfoClass;
 
@@ -89,12 +90,21 @@ public class TestActivty extends ActionBarActivity implements GoogleApiClient.Co
 
        retrieveDeviceNode();
 
+
+
     }
 
 
 
     @Override
     public void onConnected(Bundle bundle) {
+        LocationRequest(5000, 2000);
+        sendNoti(1,1, "동일하이빌A -> 불당대동다숲", "다음 역: 백석농공단지");
+        global.log("Connected");
+    }
+
+    public void LocationRequest(int interval, int fastestinterval){
+        global.log("LocationRequest");
         LocationRequest locationRequest = LocationRequest.create()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
                 .setInterval(1000)
@@ -111,8 +121,8 @@ public class TestActivty extends ActionBarActivity implements GoogleApiClient.Co
 
                         if (result.getStatus().isSuccess()) {
                             //if (Log.isLoggable(TAG, Log.DEBUG)) {
-                                Log.d(TAG, "Successfully requested location updates");
-                          //  }
+                            Log.d(TAG, "Successfully requested location updates");
+                            //  }
                         } else {
                             Log.i("Failed", "Fail");
                             Toast.makeText(TestActivty.this, "Failed", Toast.LENGTH_LONG).show();
@@ -127,7 +137,7 @@ public class TestActivty extends ActionBarActivity implements GoogleApiClient.Co
         new Thread(new Runnable() {
             @Override
             public void run() {
-                mGoogleApiClient.blockingConnect(10000, TimeUnit.MILLISECONDS);
+             //   mGoogleApiClient.blockingConnect(10000, TimeUnit.MILLISECONDS);
                 NodeApi.GetConnectedNodesResult result =
                         Wearable.NodeApi.getConnectedNodes(mGoogleApiClient).await();
                 List<Node> nodes = result.getNodes();
@@ -137,6 +147,9 @@ public class TestActivty extends ActionBarActivity implements GoogleApiClient.Co
               //  mGoogleApiClient.disconnect();
             }
         }).start();
+
+
+
     }
 
 
@@ -224,17 +237,32 @@ public class TestActivty extends ActionBarActivity implements GoogleApiClient.Co
     public void onLocationChanged(Location location) {
       //  Toast.makeText(TestActivty.this, "Success." + location.getLatitude() + "," +  location.getLongitude(), Toast.LENGTH_LONG).show();
        // Toast.makeText(TestActivty.this, getNearStations(location.getLatitude(), location.getLongitude()) + "역이 주변에 있는걸 감지했습니다.", Toast.LENGTH_LONG).show();
-        ArrayList<InfoClass> result_array = getNearStations(location.getLatitude(), location.getLongitude());
-        Gson gson = new GsonBuilder().create();
-        JsonArray json_array_result = gson.toJsonTree(result_array).getAsJsonArray();
 
-        global.log(json_array_result.toString());
-        //    sendMessage("nearstation", result_array.to);
+
 
 
 
         if(global.debug_mode)  Log.d(TAG, "Success." + location.getLatitude() + "," +  location.getLongitude());
 
 
+    }
+
+   private void sendNoti(int kind, int noti_id, String title, String content){
+       ArrayList<noticlass> notiarray = new ArrayList<noticlass>();
+       noticlass mnoticalss = new noticlass(kind, noti_id, title,content);
+
+       notiarray.add(mnoticalss);
+       Gson gson = new GsonBuilder().create();
+       JsonArray noti_json_result = gson.toJsonTree(notiarray).getAsJsonArray();
+global.log(noti_json_result.toString());
+       sendMessage("notification//" + noti_json_result.toString(), null);
+   }
+
+    public void sendstations(Location location){
+        ArrayList<InfoClass> result_array = getNearStations(location.getLatitude(), location.getLongitude());
+        Gson gson = new GsonBuilder().create();
+        JsonArray json_array_result = gson.toJsonTree(result_array).getAsJsonArray();
+        global.log(json_array_result.toString());
+        sendMessage("stations//" + json_array_result.toString(), null);
     }
 }

@@ -12,7 +12,15 @@ import android.widget.Toast;
 import com.tarks.transport.R;
 import com.tarks.transport.StationList;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by JHRunning on 11/14/14.
@@ -66,15 +74,103 @@ public final class global {
         notificationManager.notify(notificationId, notificationBuilder.build());
     }
 
-    public static ArrayList<InfoClass> saveBytesArraytoBytesArrayList(byte[] in) {
-        ArrayList<InfoClass> temp = new ArrayList<InfoClass>();
-        for (int i = 0; i<temp.size(); i++){
 
+    public static Map getJSONArray(String content) {
+        // JSONArray array = Global.jsonParserList(content);
+
+        // JSONObject jsonRoot = null;
+
+        try {
+
+            JSONArray array = new JSONArray(content);
+            Map<String, Object> mp = new HashMap<String, Object>();
+
+            JSONObject jsonRoot = null;
+            for (int i = 0; i < array.length(); i++) {
+                jsonRoot = array.getJSONObject(i);
+                mp.putAll(jsonToMap(jsonRoot, mp));
+                //map.put(mp.get(0).toString(), mp.get(1).toString());
+            }
+            Log.i("Result",  mp.toString());
+            return mp;
+        } catch (Exception e) {
+            Log.e("JSON Combine", ":::::array Error " + e.toString());
         }
-
-        return temp;
+        return null;
 
     }
+
+    public static Map getJSON(JSONArray array) {
+        // JSONArray array = Global.jsonParserList(content);
+
+        // JSONObject jsonRoot = null;
+
+        try {
+
+            Map<String, Object> mp = new HashMap<String, Object>();
+
+            JSONObject jsonRoot = null;
+            for (int i = 0; i < array.length(); i++) {
+                jsonRoot = array.getJSONObject(i);
+                mp.putAll(jsonToMap(jsonRoot, mp));
+                //map.put(mp.get(0).toString(), mp.get(1).toString());
+            }
+            Log.i("Result",  mp.toString());
+            return mp;
+        } catch (Exception e) {
+            Log.e("JSON Combine", ":::::array Error " + e.toString());
+        }
+        return null;
+
+    }
+
+    public static Map jsonToMap(JSONObject json, Map retMap) throws JSONException {
+//		Map<String, Object> retMap = new HashMap<String, Object>();
+
+        if (json != JSONObject.NULL) {
+            retMap = toMap(json);
+        }
+        return retMap;
+    }
+
+    public static Map toMap(JSONObject object) throws JSONException {
+        Map<String, Object> map = new HashMap<String, Object>();
+
+        Iterator<String> keysItr = object.keys();
+        while (keysItr.hasNext()) {
+            String key = keysItr.next();
+            Object value = object.get(key);
+
+            if (value instanceof JSONArray) {
+                value = toList((JSONArray) value);
+            }
+
+            else if (value instanceof JSONObject) {
+                value = toMap((JSONObject) value);
+            }
+            map.put(key, value);
+        }
+        return map;
+    }
+
+
+    public static List toList(JSONArray array) throws JSONException {
+        List<Object> list = new ArrayList<Object>();
+        for (int i = 0; i < array.length(); i++) {
+            Object value = array.get(i);
+            if (value instanceof JSONArray) {
+                value = toList((JSONArray) value);
+            }
+
+            else if (value instanceof JSONObject) {
+                value = toMap((JSONObject) value);
+            }
+            list.add(value);
+        }
+        return list;
+    }
+
+
 
 
 }
