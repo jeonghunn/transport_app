@@ -98,9 +98,9 @@ public class TestActivty extends ActionBarActivity implements GoogleApiClient.Co
 
     @Override
     public void onConnected(Bundle bundle) {
-        LocationRequest(5000, 2000);
+        LocationRequest(100000, 50000);
      //   sendNoti(1,1, "동일하이빌A -> 불당대동다숲", "다음 역: 백석농공단지");
-        almost_arrived();
+
         global.log("Connected");
     }
 
@@ -108,8 +108,8 @@ public class TestActivty extends ActionBarActivity implements GoogleApiClient.Co
         global.log("LocationRequest");
         LocationRequest locationRequest = LocationRequest.create()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                .setInterval(5000)
-                .setFastestInterval(500);
+                .setInterval(interval)
+                .setFastestInterval(fastestinterval);
 
         LocationServices.FusedLocationApi
                 .requestLocationUpdates(mGoogleApiClient, locationRequest, this)
@@ -206,8 +206,8 @@ public class TestActivty extends ActionBarActivity implements GoogleApiClient.Co
     }
 
 
-    private void almost_arrived(){
-        sendMessage("almost_arrived//ll", null);
+    private void almost_arrived(String this_station, String next_station){
+        sendNoti(2,1, this_station, next_station);
     }
 
 
@@ -220,11 +220,11 @@ public class TestActivty extends ActionBarActivity implements GoogleApiClient.Co
     @Override
     protected void onPause() {
         super.onPause();
-        if (mGoogleApiClient.isConnected()) {
-            LocationServices.FusedLocationApi
-                    .removeLocationUpdates(mGoogleApiClient,  this);
-        }
-        mGoogleApiClient.disconnect();
+//        if (mGoogleApiClient.isConnected()) {
+//            LocationServices.FusedLocationApi
+//                    .removeLocationUpdates(mGoogleApiClient,  this);
+//        }
+//        mGoogleApiClient.disconnect();
     }
 
     @Override
@@ -244,8 +244,8 @@ public class TestActivty extends ActionBarActivity implements GoogleApiClient.Co
       //  Toast.makeText(TestActivty.this, "Success." + location.getLatitude() + "," +  location.getLongitude(), Toast.LENGTH_LONG).show();
        // Toast.makeText(TestActivty.this, getNearStations(location.getLatitude(), location.getLongitude()) + "역이 주변에 있는걸 감지했습니다.", Toast.LENGTH_LONG).show();
 
-
-
+        ArrayList<InfoClass> result_array =  getStations(location);
+        almost_arrived(result_array.get(0).station_name.toString(), result_array.get(1).station_name.toString());
 
 
         if(global.debug_mode)  Log.d(TAG, "Success." + location.getLatitude() + "," +  location.getLongitude());
@@ -253,18 +253,27 @@ public class TestActivty extends ActionBarActivity implements GoogleApiClient.Co
 
     }
 
-   private void sendNoti(int kind, int noti_id, String title, String content){
+   private void sendNoti(int kind, int noti_id, String title, String content) {
        ArrayList<noticlass> notiarray = new ArrayList<noticlass>();
-       noticlass mnoticalss = new noticlass(kind, noti_id, title,content);
+       noticlass mnoticalss = new noticlass(kind, noti_id, title, content);
 
        notiarray.add(mnoticalss);
        Gson gson = new GsonBuilder().create();
        JsonArray noti_json_result = gson.toJsonTree(notiarray).getAsJsonArray();
-global.log(noti_json_result.toString());
+       global.log(noti_json_result.toString());
        sendMessage("notification//" + noti_json_result.toString(), null);
+
    }
 
-    public void sendstations(Location location){
+       private ArrayList<InfoClass> getStations(Location location){
+           ArrayList<InfoClass> result_array = getNearStations(location.getLatitude(), location.getLongitude());
+
+
+           return result_array;
+       }
+
+
+    private void sendstations(Location location){
         ArrayList<InfoClass> result_array = getNearStations(location.getLatitude(), location.getLongitude());
         Gson gson = new GsonBuilder().create();
         JsonArray json_array_result = gson.toJsonTree(result_array).getAsJsonArray();

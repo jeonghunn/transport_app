@@ -75,6 +75,23 @@ public final class global {
         notificationManager.notify(notificationId, notificationBuilder.build());
     }
 
+    //Temp function
+    public static void cancelNoti(Context cx, int notificationId){
+
+// Build intent for notification content
+        // Intent viewIntent = new Intent(this, StationList.class);
+        //  viewIntent.putExtra("1234", eventId);
+
+
+
+// Get an instance of the NotificationManager service
+        NotificationManagerCompat notificationManager =
+                NotificationManagerCompat.from(cx);
+
+
+        notificationManager.cancel(notificationId);
+    }
+
 
     public static Map getJSONArray(String content) {
         // JSONArray array = Global.jsonParserList(content);

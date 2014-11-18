@@ -11,6 +11,10 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
 
+import com.tarks.transport.core.global;
+
+import java.util.Map;
+
 public class BusArrive extends Activity {
 
     private TextView mTextView;
@@ -21,8 +25,16 @@ public class BusArrive extends Activity {
         setContentView(R.layout.almost);
         final WatchViewStub stub = (WatchViewStub) findViewById(R.id.watch_view_stub);
 
+        Intent intent = getIntent(); // 인텐트 받아오고
+        String title = intent.getStringExtra("title"); // 인텐트로 부터 데이터 가져오고
+        String content = intent.getStringExtra("content"); // 인텐트로 부터 데이터 가져오고
 
-                CardScrollView cardScrollView =
+
+
+
+
+
+        CardScrollView cardScrollView =
                         (CardScrollView) findViewById(R.id.card_scroll_view);
                 cardScrollView.setCardGravity(Gravity.BOTTOM);
 
@@ -31,8 +43,8 @@ public class BusArrive extends Activity {
                 cardScrollView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent i = new Intent(BusArrive.this, BusList.class);
-                        startActivity(i);
+                       finish();
+
                     }
                 });
 
@@ -41,8 +53,8 @@ public class BusArrive extends Activity {
         TextView card_subtitle = (TextView) findViewById(R.id.card_subtitle);
 
 
-        card_title.setText("목적지 도착");
-        card_subtitle.setText("천안역 -> 갈산역\n 43.725km");
+        card_title.setText(title);
+        card_subtitle.setText(content);
 
 
 

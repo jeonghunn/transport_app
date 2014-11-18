@@ -39,12 +39,14 @@ checkMessage(messageEvent.getPath(), messageEvent.getData());
         String data = array[1];
 
         if(action_kind.matches("notification")) actionNoti(data);
-        if(action_kind.matches("almost_arrived")) almostarrived(data);
 
 
     }
 
     private void actionNoti(String data) {
+        //ID
+        // 1 : transport, arrived, next stop
+
         global.log("Actionnoti");
         Map<String, String> resultmap = null;
         resultmap = global.getJSONArray(data);
@@ -54,20 +56,29 @@ checkMessage(messageEvent.getPath(), messageEvent.getData());
         String title = String.valueOf(resultmap.get("title"));
         String content = String.valueOf(resultmap.get("content"));
 
+        //Normal noti
         if (kind == 1) {
             Intent viewIntent = new Intent(this, StationList.class);
             global.setNotifcation(this, noti_id, viewIntent, title, content, R.drawable.bus_background);
         }
 
-    }
-        private void almostarrived(String data){
+        //Bus almost arrived
+        if (kind == 2) {
 
-        Intent i = new Intent(ListenerService.this, BusArrive.class);
+            global.Vibrate(this, 2000);
+            Intent viewIntent = new Intent(this, StationList.class);
+            global.setNotifcation(this, noti_id, viewIntent, title, content, R.drawable.flag);
+
+            Intent i = new Intent(ListenerService.this, BusArrive.class);
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(i);
+            i.putExtra("title", title);
+            i.putExtra("content", content);
+            startActivity(i);
 
-            global.Vibrate(this, 3000);
+        }
+
     }
+
 
 
 
