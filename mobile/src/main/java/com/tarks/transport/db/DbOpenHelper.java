@@ -32,6 +32,7 @@ public class DbOpenHelper {
         @Override
         public void onCreate(SQLiteDatabase db) {
             db.execSQL(DataBases.CreateDB._CREATE);
+            db.execSQL(fddb.CreateDB._CREATE);
 
         }
 
@@ -39,6 +40,7 @@ public class DbOpenHelper {
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
             db.execSQL("DROP TABLE IF EXISTS "+DataBases.CreateDB._TABLENAME);
+            db.execSQL("DROP TABLE IF EXISTS "+fddb.CreateDB._TABLENAME);
             onCreate(db);
         }
     }
@@ -116,6 +118,11 @@ public class DbOpenHelper {
     // Select All
     public Cursor getAllColumns(){
         return mDB.query(DataBases.CreateDB._TABLENAME, null, null, null, null, null, null);
+    }
+
+    // Select All
+    public Cursor getFdAllColumns(){
+        return mDB.query(fddb.CreateDB._TABLENAME, null, null, null, null, null, null);
     }
 
     // ID 컬럼 얻어 오기

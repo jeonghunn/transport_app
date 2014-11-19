@@ -59,7 +59,7 @@ checkMessage(messageEvent.getPath(), messageEvent.getData());
         //Normal noti
         if (kind == 1) {
             Intent viewIntent = new Intent(this, StationList.class);
-            global.setNotifcation(this, noti_id, viewIntent, title, content, R.drawable.bus_background);0
+            global.setNotifcation(this, noti_id, viewIntent, title, content, R.drawable.bus_background);
         }
 
         //Bus almost arrived
