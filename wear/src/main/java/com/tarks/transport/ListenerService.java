@@ -59,7 +59,7 @@ checkMessage(messageEvent.getPath(), messageEvent.getData());
         //Normal noti
         if (kind == 1) {
             Intent viewIntent = new Intent(this, StationList.class);
-            global.setNotifcation(this, noti_id, viewIntent, title, content, R.drawable.bus_background);
+            global.setNotifcation(this, noti_id, viewIntent, title, content, R.drawable.bus_background);0
         }
 
         //Bus almost arrived
@@ -68,12 +68,12 @@ checkMessage(messageEvent.getPath(), messageEvent.getData());
             global.Vibrate(this, 2000);
             Intent viewIntent = new Intent(this, StationList.class);
             global.setNotifcation(this, noti_id, viewIntent, title, content, R.drawable.flag);
-
-            Intent i = new Intent(ListenerService.this, BusArrive.class);
-            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            i.putExtra("title", title);
-            i.putExtra("content", content);
-            startActivity(i);
+//
+//            Intent i = new Intent(ListenerService.this, BusArrive.class);
+//            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//            i.putExtra("title", title);
+//            i.putExtra("content", content);
+//            startActivity(i);
 
         }
 

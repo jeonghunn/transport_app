@@ -42,7 +42,7 @@ startApp();
         mDbOpenHelper.insertColumn(1,1,1,2, "천안시청", 36.8164823,127.1138453);
         mDbOpenHelper.insertColumn(1,1,2,2, "천안시청보건소",36.8142015,127.1152021);
         mDbOpenHelper.insertColumn(1,1,3,2, "불당동일하이빌", 36.8079758, 127.1134732);
-        mDbOpenHelper.insertColumn(1,1,4,2, "불당대동다숲", 36.8056116, 127.1127508);
+        mDbOpenHelper.insertColumn(1,1,4,2, "불당대동다숲", 36.80500346879021,127.1128689198951);
         mDbOpenHelper.insertColumn(1,1,5,2, "불당한성A", 36.803072, 127.112147);
         mDbOpenHelper.insertColumn(1,1,6,2, "천안교육지청", 36.8004375, 127.1100977);
         mDbOpenHelper.insertColumn(1,1,7,2, "천안북부상공회의소", 36.7985507, 127.1092666);
@@ -51,6 +51,10 @@ startApp();
         mDbOpenHelper.insertColumn(1,1,10,2, "서당골", 36.8004764, 127.1000929);
         mDbOpenHelper.insertColumn(1,1,11,2, "갤러리아백화점", 36.8015857, 127.1029344);
         mDbOpenHelper.insertColumn(1,1,12,2, "백석20통", 36.802279, 127.1081098);
+
+        //반대방향
+
+
         mDbOpenHelper.close();
         finishedfirstTask();
     startApp();

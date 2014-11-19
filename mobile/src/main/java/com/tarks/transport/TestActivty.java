@@ -25,6 +25,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.tarks.transport.core.global;
+import com.tarks.transport.core.globalv;
 import com.tarks.transport.core.noticlass;
 import com.tarks.transport.db.DbOpenHelper;
 import com.tarks.transport.db.InfoClass;
@@ -94,20 +95,33 @@ public class TestActivty extends ActionBarActivity implements GoogleApiClient.Co
 
     }
 
+    private void calculateLocationMode(){
+
+    }
+
+    private void setLocationMode(int level){
+       if(level == globalv.HIBERNATION_MODE) LocationRequest(5400000, 900000 ,LocationRequest.PRIORITY_NO_POWER);
+        if(level == globalv.POWER_SAVED_MODE) LocationRequest(3600000, 900000 ,LocationRequest.PRIORITY_LOW_POWER);
+        if(level == globalv.STANBY_MODE) LocationRequest(1800000, 900000 ,LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+        if(level == globalv.ACTIVE_STANBY_MODE) LocationRequest(1200000, 60000 ,LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+        if(level == globalv.ACTIVE_MODE) LocationRequest(60000, 5000 ,LocationRequest.PRIORITY_HIGH_ACCURACY);
+        if(level == globalv.LIVE_ACTIVE_MODE) LocationRequest(25000, 5000 ,LocationRequest.PRIORITY_HIGH_ACCURACY);
+    }
 
 
     @Override
     public void onConnected(Bundle bundle) {
-        LocationRequest(100000, 50000);
+
+        setLocationMode(globalv.ACTIVE_MODE);
      //   sendNoti(1,1, "동일하이빌A -> 불당대동다숲", "다음 역: 백석농공단지");
 
         global.log("Connected");
     }
 
-    public void LocationRequest(int interval, int fastestinterval){
+    public void LocationRequest(int interval, int fastestinterval, int priority){
         global.log("LocationRequest");
         LocationRequest locationRequest = LocationRequest.create()
-                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                .setPriority(priority)
                 .setInterval(interval)
                 .setFastestInterval(fastestinterval);
 
@@ -162,7 +176,7 @@ public class TestActivty extends ActionBarActivity implements GoogleApiClient.Co
 
         DbOpenHelper mDbOpenHelper = new DbOpenHelper(this);
         mDbOpenHelper.open();
-        Cursor csr = mDbOpenHelper.getNearStation(latitude, longitude);
+        Cursor csr = mDbOpenHelper.getNearStation(latitude, longitude,1);
 
 
         while (csr.moveToNext()) {
@@ -245,7 +259,7 @@ public class TestActivty extends ActionBarActivity implements GoogleApiClient.Co
        // Toast.makeText(TestActivty.this, getNearStations(location.getLatitude(), location.getLongitude()) + "역이 주변에 있는걸 감지했습니다.", Toast.LENGTH_LONG).show();
 
         ArrayList<InfoClass> result_array =  getStations(location);
-        almost_arrived(result_array.get(0).station_name.toString(), result_array.get(1).station_name.toString());
+        almost_arrived(result_array.get(0).station_name.toString(), String.valueOf(result_array.size()));
 
 
         if(global.debug_mode)  Log.d(TAG, "Success." + location.getLatitude() + "," +  location.getLongitude());

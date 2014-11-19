@@ -143,23 +143,34 @@ public class DbOpenHelper {
     }
 
     // 이름 검색 하기 (rawQuery)
-    public Cursor getNearStation(Double latitude, Double longitude){
-        Double max_latitude = latitude + 0.003;
-        Double min_latitude = latitude - 0.003;
-        Double max_longitude = longitude + 0.003;
-        Double min_longitude = longitude - 0.003;
+    public Cursor getNearStation(Double latitude, Double longitude, int range_level){
+       Double range = null;
+
+        if(range_level == 1) range = 0.0003;
+        if(range_level == 2) range = 0.001;
+        if(range_level == 3) range = 0.003;
+        if(range_level == 4) range = 0.005;
+        if(range_level == 5) range = 0.01;
+        if(range_level == 6) range = 0.02;
+
+        Double max_latitude = latitude + range;
+        Double min_latitude = latitude - range;
+        Double max_longitude = longitude + range;
+        Double min_longitude = longitude - range;
         Cursor c = mDB.rawQuery( "select * from stations where station_latitude > '" +  min_latitude + "' AND station_latitude < '" + max_latitude + "' AND station_longitude > '" + min_longitude + "' AND station_longitude < '" + max_longitude + "'" , null);
         return c;
     }
 
-    public Cursor getNowStation(Double latitude, Double longitude){
-        Double max_latitude = latitude + 0.001;
-        Double min_latitude = latitude - 0.001;
-        Double max_longitude = longitude + 0.001;
-        Double min_longitude = longitude - 0.001;
-        Cursor c = mDB.rawQuery( "select * from stations where station_latitude > '" +  min_latitude + "' AND station_latitude < '" + max_latitude + "' AND station_longitude > '" + min_longitude + "' AND station_longitude < '" + max_longitude + "'" , null);
-        return c;
-    }
+
+
+//    public Cursor getNowStation(Double latitude, Double longitude){
+//        Double max_latitude = latitude + 0.001;
+//        Double min_latitude = latitude - 0.001;
+//        Double max_longitude = longitude + 0.001;
+//        Double min_longitude = longitude - 0.001;
+//        Cursor c = mDB.rawQuery( "select * from stations where station_latitude > '" +  min_latitude + "' AND station_latitude < '" + max_latitude + "' AND station_longitude > '" + min_longitude + "' AND station_longitude < '" + max_longitude + "'" , null);
+//        return c;
+//    }
 
 
     // ID 컬럼 얻어 오기
