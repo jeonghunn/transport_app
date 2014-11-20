@@ -175,7 +175,7 @@ public class DbOpenHelper {
     public Cursor getNearStation(Double latitude, Double longitude, int range_level){
        Double range = null;
 
-        if(range_level == 1) range = 0.0003;
+        if(range_level == 1) range = 0.0005;
         if(range_level == 2) range = 0.001;
         if(range_level == 3) range = 0.003;
         if(range_level == 4) range = 0.005;
