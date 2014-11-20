@@ -7,6 +7,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.tarks.transport.core.CoreSystem;
 import com.tarks.transport.core.global;
 import com.tarks.transport.db.DbOpenHelper;
 
@@ -26,9 +27,11 @@ public class MainActivity extends ActionBarActivity {
         String frist_use = prefs.getString("first_use_app", "true");
 
       if(frist_use.matches("true")){
+
 DBInsert();
 
       }else{
+          startService(new Intent(this, CoreSystem.class));
 startApp();
       }
 

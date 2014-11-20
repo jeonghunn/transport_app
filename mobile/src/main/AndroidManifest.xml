@@ -21,6 +21,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <service android:name=".core.CoreSystem" android:enabled="true">
+            <intent-filter>
+                <action android:name="com.tarks.tarnsport.core.CoreSystem">
+                </action></intent-filter>
+        </service>
+
         <activity android:name=".main" android:label="test"></activity>
 
         <meta-data
