@@ -21,7 +21,7 @@ public void initflowCore(Context cx){
 
 
     if(global.getDBCountSrl(cx) < global.getCountSrl(cx)){
-        firstflow();
+        firstFlow();
     }else{
         conFlow();
     }
