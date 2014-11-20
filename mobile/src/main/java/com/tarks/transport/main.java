@@ -23,6 +23,7 @@ import com.google.android.gms.location.LocationListener;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
+import com.tarks.transport.core.flowCore;
 import com.tarks.transport.core.global;
 import com.tarks.transport.core.globalv;
 import com.tarks.transport.core.noticlass;
@@ -38,6 +39,8 @@ import java.util.concurrent.TimeUnit;
  */
 public class main extends ActionBarActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
+    private flowCore fc;
+
     private int progress = 0;
     private SeekBar pb;
     private TextView tv;
@@ -49,6 +52,7 @@ public class main extends ActionBarActivity implements GoogleApiClient.Connectio
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.layouttest);
+        fc = new flowCore();
         pb = (SeekBar) findViewById(R.id.seekBar);
         tv = (TextView) findViewById(R.id.txt);
         ct = this;
@@ -108,8 +112,11 @@ public class main extends ActionBarActivity implements GoogleApiClient.Connectio
 
     private void initCore(){
         global.log("Connected");
+        //Get flowCore
+
         //Check location
         setLocationMode(globalv.ACTIVE_MODE);
+
     }
 
     //Location mode set
