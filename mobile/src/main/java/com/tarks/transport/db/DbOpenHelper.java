@@ -155,6 +155,15 @@ public class DbOpenHelper {
         return c;
     }
 
+    // ID 컬럼 얻어 오기
+    public Cursor getCountColumn(int count_srl){
+        Cursor c = mDB.query(fddb.CreateDB._TABLENAME, null,
+                "count_srl="+count_srl, null, null, null, null);
+        if(c != null && c.getCount() != 0)
+            c.moveToFirst();
+        return c;
+    }
+
 
     // 이름 검색 하기 (rawQuery)
     public Cursor getUser(String user_srl){

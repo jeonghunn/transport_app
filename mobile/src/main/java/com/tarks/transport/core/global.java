@@ -193,6 +193,19 @@ public final class global {
         SaveSetting(cx, "count_srl", String.valueOf(count_srl++));
     }
 
+    public static void DBCountSrlUpdate(Context cx) {
+        int count_srl = Integer.parseInt(getSetting(cx, "db_count_srl", "1"));
+        SaveSetting(cx, "db_count_srl", String.valueOf(count_srl++));
+    }
+
+    public static int getDBCountSrl(Context cx){
+        return Integer.parseInt(getSetting(cx, "db_count_srl", "1"));
+    }
+
+    public static int getCountSrl(Context cx){
+        return Integer.parseInt(getSetting(cx, "count_srl", "1"));
+    }
+
 
     public static void SaveSetting(Context cx, String setting, String value){
         SharedPreferences edit = cx.getSharedPreferences("setting",
