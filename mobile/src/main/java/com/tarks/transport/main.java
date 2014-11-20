@@ -38,7 +38,6 @@ import java.util.concurrent.TimeUnit;
  */
 public class main extends ActionBarActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
-    private static final String TAG = "LOG";
     private int progress = 0;
     private SeekBar pb;
     private TextView tv;
@@ -239,13 +238,13 @@ public class main extends ActionBarActivity implements GoogleApiClient.Connectio
     @Override
     public void onConnectionSuspended(int i) {
        // if (Log.isLoggable(TAG, Log.DEBUG)) {
-            Log.d(TAG, "connection to location client suspended");
+    global.log("connection to location client suspended");
      //   }
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-        Log.d(TAG, "onConnectionFailed");
+        global.log("onConnectionFailed");
     }
 
     @Override
@@ -257,8 +256,7 @@ public class main extends ActionBarActivity implements GoogleApiClient.Connectio
         almost_arrived(result_array.get(0).station_name.toString(), String.valueOf(result_array.size()));
 
 
-        if(global.debug_mode)  Log.d(TAG, "Success." + location.getLatitude() + "," +  location.getLongitude());
-
+global.log( "Success." + location.getLatitude() + "," +  location.getLongitude());
 
     }
 
