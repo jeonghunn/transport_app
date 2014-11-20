@@ -7,6 +7,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.tarks.transport.core.global;
 import com.tarks.transport.db.DbOpenHelper;
 
 import java.util.Timer;
@@ -22,7 +23,7 @@ public class MainActivity extends ActionBarActivity {
 
         // 자신의 신분 설정값을 불러옵니다.
         SharedPreferences prefs = getSharedPreferences("setting", MODE_PRIVATE);
-        String frist_use = prefs.getString("frist_use_app", "true");
+        String frist_use = prefs.getString("first_use_app", "true");
 
       if(frist_use.matches("true")){
 DBInsert();
@@ -70,14 +71,8 @@ startApp();
     }
 
     private void finishedfirstTask(){
-        // Setting Editor
-        SharedPreferences edit = getSharedPreferences("setting",
-                MODE_PRIVATE);
-        SharedPreferences.Editor editor = edit.edit();
-        editor.putString("frist_use_app", "false");
-        editor.commit();
 
-
+        global.SaveSetting(this, "first_use_app", "false");
 
     }
 
