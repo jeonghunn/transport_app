@@ -70,12 +70,33 @@ public class DbOpenHelper {
         values.put(DataBases.CreateDB.STATION_LATITUDE, station_latitude);
         values.put(DataBases.CreateDB.STATION_LONGITUDE, station_longitude);
 
-        Log.i("asdf",station_latitude  +"Fdf");
 
         return mDB.insert(DataBases.CreateDB._TABLENAME, null, values);
 
 
     }
+
+
+
+    // Insert DB
+    public long insertFdColumn(int count_srl, int country_srl ,int route_srl, int station_srl, int way_srl, Double latitude, Double longitude, int location_level){
+        ContentValues values = new ContentValues();
+        values.put(fddb.CreateDB.COUNT_SRL, count_srl);
+        values.put(fddb.CreateDB.COUNTRY_SRL, country_srl);
+        values.put(fddb.CreateDB.ROUTE_SRL, route_srl);
+        values.put(fddb.CreateDB.STATION_SRL, station_srl);
+        values.put(fddb.CreateDB.WAY_SRL, way_srl);
+        values.put(fddb.CreateDB.LATITUDE, latitude);
+        values.put(fddb.CreateDB.LONGITUDE, longitude);
+        values.put(fddb.CreateDB.LOCATION_LEVEL, location_level);
+
+
+
+        return mDB.insert(fddb.CreateDB._TABLENAME, null, values);
+
+
+    }
+
 
     // Update DB
 //    public boolean updateColumn(String user_srl, String profile_update, String profile_update_thumbnail, String profile_pic){
