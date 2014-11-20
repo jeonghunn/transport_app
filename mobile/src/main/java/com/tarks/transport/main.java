@@ -89,9 +89,7 @@ public class main extends ActionBarActivity implements GoogleApiClient.Connectio
 
     }
 
-    private void calculateLocationMode(){
 
-    }
 
     private void setLocationMode(int level){
        if(level == globalv.HIBERNATION_MODE) LocationRequest(5400000, 900000 ,LocationRequest.PRIORITY_NO_POWER);
@@ -105,11 +103,46 @@ public class main extends ActionBarActivity implements GoogleApiClient.Connectio
 
     @Override
     public void onConnected(Bundle bundle) {
+        initCore();
+    }
 
-        setLocationMode(globalv.ACTIVE_MODE);
-     //   sendNoti(1,1, "동일하이빌A -> 불당대동다숲", "다음 역: 백석농공단지");
-
+    private void initCore(){
         global.log("Connected");
+        //Check location
+        setLocationMode(globalv.ACTIVE_MODE);
+    }
+
+    //Location mode set
+   private void setHibernationMode(){
+       setLocationMode(globalv.HIBERNATION_MODE);
+       global.CountSrlUpdate(this);
+   }
+
+    private void setPowerSavedMode(){
+        setLocationMode(globalv.POWER_SAVED_MODE);
+        global.CountSrlUpdate(this);
+    }
+
+    private void setStanbyMode(){
+        setLocationMode(globalv.STANBY_MODE);
+        global.CountSrlUpdate(this);
+    }
+
+
+    private void setActiveStanbyMode(){
+        setLocationMode(globalv.ACTIVE_STANBY_MODE);
+    }
+
+
+    //Location mode set
+    private void setActiveMode(){
+        setLocationMode(globalv.ACTIVE_MODE);
+    }
+
+
+    //Location mode set
+    private void setLiveActiveMode(){
+        setLocationMode(globalv.LIVE_ACTIVE_MODE);
     }
 
     public void LocationRequest(int interval, int fastestinterval, int priority){

@@ -3,6 +3,7 @@ package com.tarks.transport.core;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
@@ -181,7 +182,25 @@ public final class global {
         }
         return list;
     }
+    public static String getSetting(Context cx, String setting, String default_value) {
+        SharedPreferences prefs = cx.getSharedPreferences("setting",
+                cx.MODE_PRIVATE);
+        return prefs.getString(setting, default_value);
+    }
 
+    public static void CountSrlUpdate(Context cx) {
+        int count_srl = Integer.parseInt(getSetting(cx, "count_srl", "1"));
+        SaveSetting(cx, "count_srl", String.valueOf(count_srl++));
+    }
+
+
+    public static void SaveSetting(Context cx, String setting, String value){
+        SharedPreferences edit = cx.getSharedPreferences("setting",
+                cx.MODE_PRIVATE);
+        SharedPreferences.Editor editor = edit.edit();
+        editor.putString(setting , value);
+        editor.commit();
+    }
 
 
 
