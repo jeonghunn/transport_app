@@ -14,7 +14,6 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Result;
 import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.wearable.Node;
@@ -30,10 +29,6 @@ import com.tarks.transport.core.noticlass;
 import com.tarks.transport.db.DbOpenHelper;
 import com.tarks.transport.db.InfoClass;
 
-import org.apache.http.util.ByteArrayBuffer;
-import org.json.JSONArray;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -41,7 +36,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by panda on 2014-10-25.
  */
-public class TestActivty extends ActionBarActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
+public class main extends ActionBarActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
     private static final String TAG = "LOG";
     private int progress = 0;
@@ -140,7 +135,7 @@ public class TestActivty extends ActionBarActivity implements GoogleApiClient.Co
                             //  }
                         } else {
                             Log.i("Failed", "Fail");
-                            Toast.makeText(TestActivty.this, "Failed", Toast.LENGTH_LONG).show();
+                            Toast.makeText(main.this, "Failed", Toast.LENGTH_LONG).show();
                         }
                     }
                 });

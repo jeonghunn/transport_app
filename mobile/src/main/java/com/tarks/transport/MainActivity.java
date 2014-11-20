@@ -1,9 +1,7 @@
 package com.tarks.transport;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -65,7 +63,7 @@ startApp();
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                startActivity(new Intent(MainActivity.this,TestActivty.class));
+                startActivity(new Intent(MainActivity.this,main.class));
                 finish();
             }
         }, (long) (900));

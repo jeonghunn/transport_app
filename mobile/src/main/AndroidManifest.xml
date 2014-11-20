@@ -21,7 +21,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.tarks.transport.TestActivty" android:label="test"></activity>
+        <activity android:name=".main" android:label="test"></activity>
 
         <meta-data
             android:name="com.google.android.gms.version"
