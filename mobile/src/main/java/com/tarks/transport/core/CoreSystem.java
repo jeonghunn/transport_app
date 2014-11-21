@@ -66,15 +66,36 @@ public void startFlow(Context cx, Location lc){
 
 
     public void firstFlow(Context cx, Location lc){
+        global.log("firstFlow");
+         global.DBCountSrlUpdate(cx);
+
 
         //Location level 1
 if(getStations(cx,lc,1).size() > 0) {
+setActiveMode(cx);
+}else
 
-}
+        if(getStations(cx,lc,2).size() > 0) {
+            setActiveStanbyMode(cx);
+        }else
+
+        //Location level 3
+        if(getStations(cx,lc,3).size() > 0) {
+            setStanbyMode(cx);
+        }else
+
+
+        //Location level 4
+        if(getStations(cx,lc,4).size() > 0) {
+            setPowerSavedMode(cx);
+        }else{
+            setHibernationMode(cx);
+        }
+
     }
 
     public void  conFlow(){
-
+global.log("conFlow");
     }
 
     public ArrayList<InfoClass> getNearStations(Context cx, int location_level, Double latitude, Double longitude){
@@ -226,6 +247,7 @@ global.log("Connected");
     @Override
     public void onLocationChanged(Location location) {
         global.log( "Success." + location.getLatitude() + "," +  location.getLongitude());
+        startFlow(cx, location);
     }
 
     @Override
@@ -235,34 +257,40 @@ global.log("Connected");
 
     //Location mode set
     private void setHibernationMode(Context cx){
+        global.log("HibernationMode");
         setLocationMode(cx, globalv.HIBERNATION_MODE);
         global.CountSrlUpdate(cx);
     }
 
     private void setPowerSavedMode(Context cx){
+        global.log("PowerSavedMode");
         setLocationMode(cx, globalv.POWER_SAVED_MODE);
         global.CountSrlUpdate(cx);
     }
 
     private void setStanbyMode(Context cx){
+        global.log("StanByMode");
         setLocationMode(cx, globalv.STANBY_MODE);
         global.CountSrlUpdate(cx);
     }
 
 
     private void setActiveStanbyMode(Context cx){
+        global.log("ActiveStanByMode");
         setLocationMode(cx, globalv.ACTIVE_STANBY_MODE);
     }
 
 
     //Location mode set
     private void setActiveMode(Context cx){
+        global.log("ActiveMode");
         setLocationMode(cx, globalv.ACTIVE_MODE);
     }
 
 
     //Location mode set
     private void setLiveActiveMode(Context cx){
+        global.log("LiveActiveMode");
         setLocationMode(cx, globalv.LIVE_ACTIVE_MODE);
     }
 

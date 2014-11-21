@@ -194,12 +194,12 @@ public final class global {
     }
 
     public static void DBCountSrlUpdate(Context cx) {
-        int count_srl = Integer.parseInt(getSetting(cx, "db_count_srl", "1"));
-        SaveSetting(cx, "db_count_srl", String.valueOf(count_srl++));
+        int count_srl = Integer.parseInt(getSetting(cx, "count_srl", "1"));
+        SaveSetting(cx, "db_count_srl", String.valueOf(count_srl));
     }
 
     public static int getDBCountSrl(Context cx){
-        return Integer.parseInt(getSetting(cx, "db_count_srl", "1"));
+        return Integer.parseInt(getSetting(cx, "db_count_srl", "0"));
     }
 
     public static int getCountSrl(Context cx){
