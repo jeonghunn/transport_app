@@ -35,6 +35,7 @@ public class CoreSystem extends Service implements GoogleApiClient.ConnectionCal
     private GoogleApiClient mGoogleApiClient;
     private String nodeId;
     private Context cx;
+    private int location_mode;
 
     @Override
     public void onCreate() {
@@ -58,7 +59,7 @@ public void startFlow(Context cx, Location lc){
     if(global.getDBCountSrl(cx) < global.getCountSrl(cx)){
         firstFlow(cx, lc);
     }else{
-        conFlow();
+        conFlow(cx, lc);
     }
 
 }
@@ -69,33 +70,87 @@ public void startFlow(Context cx, Location lc){
         global.log("firstFlow");
          global.DBCountSrlUpdate(cx);
 
+        int near_level = 0;
 
-        //Location level 1
-if(getStations(cx,lc,1).size() > 0) {
-setActiveMode(cx);
-}else
+        for (int i = 1; i <= 6; i++) {
+            if(getStations(cx,lc,i).size() > 0) {
+                near_level = i;
+                break;
+            }
 
-        if(getStations(cx,lc,2).size() > 0) {
-            setActiveStanbyMode(cx);
-        }else
-
-        //Location level 3
-        if(getStations(cx,lc,3).size() > 0) {
-            setStanbyMode(cx);
-        }else
-
-
-        //Location level 4
-        if(getStations(cx,lc,4).size() > 0) {
-            setPowerSavedMode(cx);
-        }else{
-            setHibernationMode(cx);
+            if(i == 6) near_level = 7;
         }
+
+
+        if(near_level == 1) setActionLocationMode(cx, globalv.ACTIVE_MODE);
+        if(near_level == 2) setActionLocationMode(cx, globalv.ACTIVE_STANBY_MODE);
+        if(near_level == 3) setActionLocationMode(cx, globalv.STANBY_MODE);
+        if(near_level == 4) setActionLocationMode(cx, globalv.POWER_SAVED_MODE);
+        if(near_level == 5) setActionLocationMode(cx, globalv.HIBERNATION_MODE);
+        if(near_level >= 6) setActionLocationMode(cx, globalv.HIBERNATION_MODE);
+
 
     }
 
-    public void  conFlow(){
+    public void  conFlow(Context cx, Location lc){
 global.log("conFlow");
+
+        int near_level = 0;
+
+        for (int i = 1; i <= 6; i++) {
+            if(getStations(cx,lc,i).size() > 0) {
+                near_level = i;
+                global.log("fggg" + i);
+                break;
+            }
+
+            if(i == 6) near_level = 7;
+        }
+
+        global.log("getlolevel : " + near_level);
+        if(location_mode == globalv.LIVE_ACTIVE_MODE){
+
+            if(global.getSamePlaceCount(cx) > 24) setActionLocationMode(cx, globalv.ACTIVE_MODE);
+
+        }
+
+        if(location_mode == globalv.ACTIVE_MODE) {
+
+            if (global.getSamePlaceCount(cx) > 1) { //introduce guide}
+sendNoti(1,1,"1,17,12,9", "주변 정류장 버스 노선");
+
+            }
+
+            //Stanby mode
+            if (global.getSamePlaceCount(cx) > 99 || global.getSamePlaceCount(cx) > 29 && near_level >= 3 || near_level >= 5) setActionLocationMode(cx, globalv.STANBY_MODE);
+
+        }
+
+
+        if (location_mode == globalv.ACTIVE_STANBY_MODE) {
+
+            if (global.getSamePlaceCount(cx) >= 1) { //introduce guide}]}
+            }
+
+            //Stanby mode
+            if (global.getSamePlaceCount(cx) > 5 || global.getSamePlaceCount(cx) > 2 && near_level >= 3 || near_level >= 5) setActionLocationMode(cx, globalv.STANBY_MODE);
+
+            }
+
+        if (location_mode == globalv.STANBY_MODE) {
+
+           // if()
+        }
+
+        if (location_mode == globalv.POWER_SAVED_MODE) {
+            if(near_level <= 5) setActionLocationMode(cx, globalv.STANBY_MODE);
+        }
+
+        if (location_mode == globalv.HIBERNATION_MODE) {
+            if(near_level <= 6) setActionLocationMode(cx, globalv.STANBY_MODE);
+        }
+
+
     }
 
     public ArrayList<InfoClass> getNearStations(Context cx, int location_level, Double latitude, Double longitude){
@@ -106,7 +161,7 @@ global.log("conFlow");
 
         DbOpenHelper mDbOpenHelper = new DbOpenHelper(cx);
         mDbOpenHelper.open();
-        Cursor csr = mDbOpenHelper.getNearStation(latitude, longitude,1);
+        Cursor csr = mDbOpenHelper.getNearStation(latitude, longitude, location_level);
 
 
         while (csr.moveToNext()) {
@@ -220,12 +275,13 @@ global.log("conFlow");
 //    }
 
     public void setLocationMode(Context cx, int level){
+        location_mode = level;
         if(level == globalv.HIBERNATION_MODE) LocationRequest(cx, 5400000, 900000 ,LocationRequest.PRIORITY_NO_POWER);
         if(level == globalv.POWER_SAVED_MODE) LocationRequest(cx, 3600000, 900000 ,LocationRequest.PRIORITY_LOW_POWER);
         if(level == globalv.STANBY_MODE) LocationRequest(cx, 1800000, 900000 ,LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
-        if(level == globalv.ACTIVE_STANBY_MODE) LocationRequest(cx, 1200000, 60000 ,LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
-        if(level == globalv.ACTIVE_MODE) LocationRequest(cx, 60000, 5000 ,LocationRequest.PRIORITY_HIGH_ACCURACY);
-        if(level == globalv.LIVE_ACTIVE_MODE) LocationRequest(cx, 25000, 5000 ,LocationRequest.PRIORITY_HIGH_ACCURACY);
+        if(level == globalv.ACTIVE_STANBY_MODE) LocationRequest(cx, 300000, 60000 ,LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+        if(level == globalv.ACTIVE_MODE) LocationRequest(cx, 25000, 10000 ,LocationRequest.PRIORITY_HIGH_ACCURACY);
+        if(level == globalv.LIVE_ACTIVE_MODE) LocationRequest(cx, 15000, 5000 ,LocationRequest.PRIORITY_HIGH_ACCURACY);
     }
 
 
@@ -236,7 +292,7 @@ global.log("conFlow");
     @Override
     public void onConnected(Bundle bundle) {
 global.log("Connected");
-      setActiveMode(cx);
+     setActionLocationMode(cx, globalv.ACTIVE_MODE);
     }
 
     @Override
@@ -255,44 +311,48 @@ global.log("Connected");
 
     }
 
-    //Location mode set
-    private void setHibernationMode(Context cx){
-        global.log("HibernationMode");
-        setLocationMode(cx, globalv.HIBERNATION_MODE);
-        global.CountSrlUpdate(cx);
+    public void setActionLocationMode(Context cx, int level){
+        global.log("Location Level : " + level);
+        if(level == globalv.LIVE_ACTIVE_MODE){
+            setLocationMode(cx, globalv.LIVE_ACTIVE_MODE);
+        }
+
+        if(level == globalv.ACTIVE_MODE){
+            setLocationMode(cx, globalv.ACTIVE_MODE);
+        }
+
+
+        if(level == globalv.ACTIVE_STANBY_MODE){
+            setLocationMode(cx, globalv.ACTIVE_STANBY_MODE);
+        }
+
+
+        if(level == globalv.STANBY_MODE){
+            setLocationMode(cx, globalv.STANBY_MODE);
+            global.CountSrlUpdate(cx);
+        }
+
+
+        if(level == globalv.POWER_SAVED_MODE){
+            setLocationMode(cx, globalv.POWER_SAVED_MODE);
+            global.CountSrlUpdate(cx);
+        }
+
+        if(level == globalv.HIBERNATION_MODE){
+            setLocationMode(cx, globalv.HIBERNATION_MODE);
+            global.CountSrlUpdate(cx);
+
+        }
+
+        global.resetSamePlaceCount(cx);
     }
 
-    private void setPowerSavedMode(Context cx){
-        global.log("PowerSavedMode");
-        setLocationMode(cx, globalv.POWER_SAVED_MODE);
-        global.CountSrlUpdate(cx);
-    }
-
-    private void setStanbyMode(Context cx){
-        global.log("StanByMode");
-        setLocationMode(cx, globalv.STANBY_MODE);
-        global.CountSrlUpdate(cx);
-    }
 
 
-    private void setActiveStanbyMode(Context cx){
-        global.log("ActiveStanByMode");
-        setLocationMode(cx, globalv.ACTIVE_STANBY_MODE);
-    }
 
 
-    //Location mode set
-    private void setActiveMode(Context cx){
-        global.log("ActiveMode");
-        setLocationMode(cx, globalv.ACTIVE_MODE);
-    }
 
 
-    //Location mode set
-    private void setLiveActiveMode(Context cx){
-        global.log("LiveActiveMode");
-        setLocationMode(cx, globalv.LIVE_ACTIVE_MODE);
-    }
 
     private void almost_arrived(String this_station, String next_station){
         sendNoti(2,1, this_station, next_station);

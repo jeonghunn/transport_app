@@ -206,6 +206,20 @@ public final class global {
         return Integer.parseInt(getSetting(cx, "count_srl", "1"));
     }
 
+    public static void SamePlaceCountUpdate(Context cx) {
+        int same_place_count = Integer.parseInt(getSetting(cx, "same_place_count", "0"));
+        SaveSetting(cx, "same_place_count", String.valueOf(same_place_count++));
+
+    }
+
+    public static void resetSamePlaceCount(Context cx) {
+        SaveSetting(cx, "same_place_count", String.valueOf(0));
+    }
+    public static int getSamePlaceCount(Context cx){
+        return Integer.parseInt(getSetting(cx, "same_place_count", "0"));
+    }
+
+
 
     public static void SaveSetting(Context cx, String setting, String value){
         SharedPreferences edit = cx.getSharedPreferences("setting",
