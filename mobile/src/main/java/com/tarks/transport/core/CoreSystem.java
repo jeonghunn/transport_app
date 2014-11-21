@@ -41,6 +41,9 @@ public class CoreSystem extends Service implements GoogleApiClient.ConnectionCal
     private int location_mode;
     private int dbid;
     private int sis;
+    private int plm;
+    private boolean initcheck = false;
+    private int action_count = 0;
 
     @Override
     public void onCreate() {
@@ -93,11 +96,13 @@ public void startFlow(Context cx, Location lc){
         if(near_level == 5) setActionLocationMode(cx, globalv.HIBERNATION_MODE);
         if(near_level >= 6) setActionLocationMode(cx, globalv.HIBERNATION_MODE);
 
+        initcheck = true;
 
     }
 
     public void  conFlow(Context cx, Location lc){
 global.log("conFlow");
+        action_count++;
 
         int near_level = 0;
         ArrayList<InfoClass>  ic = null;
@@ -114,18 +119,19 @@ global.log("conFlow");
         }
 
         //Check same place
-        if(dbid == ic.get(0).id && sis == ic.size()){
+        if(dbid == ic.get(0).id && sis == ic.size() && location_mode == plm){
             global.SamePlaceCountUpdate(cx);
         }else{
             dbid = ic.get(0).id;
             sis = ic.size();
+            plm = location_mode;
         }
 
-
+        global.log("id : " + dbid);
         global.log("getlolevel : " + near_level);
         if(location_mode == globalv.LIVE_ACTIVE_MODE){
 
-            if(global.getSamePlaceCount(cx) > 24) setActionLocationMode(cx, globalv.ACTIVE_MODE);
+            if(global.getSamePlaceCount(cx) > 24 && global.getSamePlaceCount(cx) >= action_count - 2 && action_count > 1) setActionLocationMode(cx, globalv.ACTIVE_MODE);
 
         }
 
@@ -136,13 +142,17 @@ global.log("conFlow");
             }
 
 //
+            if (near_level  <= 3 && global.getSamePlaceCount(cx) <= action_count - 2 && action_count > 1) {
+                setActionLocationMode(cx, globalv.LIVE_ACTIVE_MODE);
+
+            }
 //                if (global.getSamePlaceCount(cx) < 2 && global.getSamePlaceCount(cx) < 3) {
 //                    setActionLocationMode(cx, globalv.ACTIVE_MODE);
 //
 //            }
 
             //Stanby mode
-            if (global.getSamePlaceCount(cx) > 3 || global.getSamePlaceCount(cx) > 29 && near_level >= 3 || near_level >= 5) setActionLocationMode(cx, globalv.STANBY_MODE);
+            if (global.getSamePlaceCount(cx) > 69 || near_level >= 5 || global.getSamePlaceCount(cx) > 29 && global.getSamePlaceCount(cx) >= action_count - 2 && action_count > 1 && near_level >= 3) setActionLocationMode(cx, globalv.STANBY_MODE);
 
         }
 
@@ -152,7 +162,7 @@ global.log("conFlow");
             if (global.getSamePlaceCount(cx) >= 1) { //introduce guide}]}
             }
 
-            if ( near_level >= 3 && global.getSamePlaceCount(cx) < 3 ) {
+            if ( near_level  <= 3 && global.getSamePlaceCount(cx) <= action_count - 2 && action_count > 1) {
                 setActionLocationMode(cx, globalv.ACTIVE_MODE);
 
             }
@@ -163,12 +173,20 @@ global.log("conFlow");
             }
 
         if (location_mode == globalv.STANBY_MODE) {
+            if ( near_level  <= 3 && global.getSamePlaceCount(cx) <= action_count - 2 && action_count > 1) {
+               if(near_level == 2) setActionLocationMode(cx, globalv.ACTIVE_MODE);
+                if(near_level == 3) setActionLocationMode(cx, globalv.ACTIVE_STANBY_MODE);
 
-           // if()
+            }
+            if (global.getSamePlaceCount(cx) > 1 || global.getSamePlaceCount(cx) > 2 && near_level >= 3 || near_level >= 5) setActionLocationMode(cx, globalv.POWER_SAVED_MODE);
         }
 
         if (location_mode == globalv.POWER_SAVED_MODE) {
-            if(near_level <= 5) setActionLocationMode(cx, globalv.STANBY_MODE);
+            if ( near_level  <= 5 && global.getSamePlaceCount(cx) <= action_count - 2 && action_count > 1) {
+                setActionLocationMode(cx, globalv.STANBY_MODE);
+            }
+
+            //Delete Noti
         }
 
         if (location_mode == globalv.HIBERNATION_MODE) {
@@ -323,12 +341,23 @@ global.log("conFlow");
 
     public void setLocationMode(Context cx, int level){
         location_mode = level;
-        if(level == globalv.HIBERNATION_MODE) LocationRequest(cx, 5400000, 900000 ,LocationRequest.PRIORITY_NO_POWER);
-        if(level == globalv.POWER_SAVED_MODE) LocationRequest(cx, 3600000, 900000 ,LocationRequest.PRIORITY_LOW_POWER);
-        if(level == globalv.STANBY_MODE) LocationRequest(cx, 1800000, 900000 ,LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
-        if(level == globalv.ACTIVE_STANBY_MODE) LocationRequest(cx, 300000, 60000 ,LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
-        if(level == globalv.ACTIVE_MODE) LocationRequest(cx, 25000, 10000 ,LocationRequest.PRIORITY_HIGH_ACCURACY);
-        if(level == globalv.LIVE_ACTIVE_MODE) LocationRequest(cx, 15000, 5000 ,LocationRequest.PRIORITY_HIGH_ACCURACY);
+        boolean test_mode = false;
+        if(!global.debug_mode || !test_mode) {
+            if (level == globalv.HIBERNATION_MODE)
+                LocationRequest(cx, 5400000, 900000, LocationRequest.PRIORITY_NO_POWER);
+            if (level == globalv.POWER_SAVED_MODE)
+                LocationRequest(cx, 3600000, 900000, LocationRequest.PRIORITY_LOW_POWER);
+            if (level == globalv.STANBY_MODE)
+                LocationRequest(cx, 1800000, 900000, LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+            if (level == globalv.ACTIVE_STANBY_MODE)
+                LocationRequest(cx, 300000, 60000, LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+            if (level == globalv.ACTIVE_MODE)
+                LocationRequest(cx, 25000, 10000, LocationRequest.PRIORITY_HIGH_ACCURACY);
+            if (level == globalv.LIVE_ACTIVE_MODE)
+                LocationRequest(cx, 15000, 5000, LocationRequest.PRIORITY_HIGH_ACCURACY);
+        }else{
+            LocationRequest(cx, 10000, 6000, LocationRequest.PRIORITY_HIGH_ACCURACY);
+        }
     }
 
 
@@ -339,7 +368,8 @@ global.log("conFlow");
     @Override
     public void onConnected(Bundle bundle) {
 global.log("Connected");
-   //  setActionLocationMode(cx, globalv.ACTIVE_MODE);
+     setActionLocationMode(cx, globalv.ACTIVE_MODE);
+
 
     }
 
@@ -351,7 +381,13 @@ global.log("Connected");
     @Override
     public void onLocationChanged(Location location) {
         global.log( "Success." + location.getLatitude() + "," +  location.getLongitude());
-        conFlow(cx, location);
+
+        if(initcheck){
+            conFlow(cx, location);
+        }else{
+            firstFlow(cx, location);
+        }
+
     }
 
     @Override
@@ -361,6 +397,8 @@ global.log("Connected");
 
     public void setActionLocationMode(Context cx, int level){
         global.log("Location Level : " + level);
+        action_count = 0;
+
         if(level == globalv.LIVE_ACTIVE_MODE){
             setLocationMode(cx, globalv.LIVE_ACTIVE_MODE);
         }
@@ -393,6 +431,7 @@ global.log("Connected");
         }
 
         global.resetSamePlaceCount(cx);
+
     }
 
 
