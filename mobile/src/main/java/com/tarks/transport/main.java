@@ -59,25 +59,6 @@ public class main extends ActionBarActivity{
 
 
 
-    private void retrieveDeviceNode() {
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-             //   mGoogleApiClient.blockingConnect(10000, TimeUnit.MILLISECONDS);
-                NodeApi.GetConnectedNodesResult result =
-                        Wearable.NodeApi.getConnectedNodes(mGoogleApiClient).await();
-                List<Node> nodes = result.getNodes();
-                if (nodes.size() > 0) {
-            //        nodeId = nodes.get(0).getId();
-                }
-              //  mGoogleApiClient.disconnect();
-            }
-        }).start();
-
-
-
-    }
 
 
 

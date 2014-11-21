@@ -190,7 +190,7 @@ public final class global {
 
     public static void CountSrlUpdate(Context cx) {
         int count_srl = Integer.parseInt(getSetting(cx, "count_srl", "1"));
-        SaveSetting(cx, "count_srl", String.valueOf(count_srl++));
+        SaveSetting(cx, "count_srl", String.valueOf(count_srl + 1));
     }
 
     public static void DBCountSrlUpdate(Context cx) {
@@ -208,7 +208,8 @@ public final class global {
 
     public static void SamePlaceCountUpdate(Context cx) {
         int same_place_count = Integer.parseInt(getSetting(cx, "same_place_count", "0"));
-        SaveSetting(cx, "same_place_count", String.valueOf(same_place_count++));
+        SaveSetting(cx, "same_place_count", String.valueOf(same_place_count + 1));
+        log("asdf" + same_place_count);
 
     }
 

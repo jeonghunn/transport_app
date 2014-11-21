@@ -17,6 +17,8 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.wearable.Node;
+import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.Wearable;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -25,6 +27,7 @@ import com.tarks.transport.db.DbOpenHelper;
 import com.tarks.transport.db.InfoClass;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -36,6 +39,8 @@ public class CoreSystem extends Service implements GoogleApiClient.ConnectionCal
     private String nodeId;
     private Context cx;
     private int location_mode;
+    private int dbid;
+    private int sis;
 
     @Override
     public void onCreate() {
@@ -56,11 +61,10 @@ public void startFlow(Context cx, Location lc){
 
 
 
-    if(global.getDBCountSrl(cx) < global.getCountSrl(cx)){
+   // if(global.getDBCountSrl(cx) < global.getCountSrl(cx)){
         firstFlow(cx, lc);
-    }else{
-        conFlow(cx, lc);
-    }
+
+      //  conFlow(cx, lc);
 
 }
 
@@ -96,9 +100,11 @@ public void startFlow(Context cx, Location lc){
 global.log("conFlow");
 
         int near_level = 0;
+        ArrayList<InfoClass>  ic = null;
 
         for (int i = 1; i <= 6; i++) {
-            if(getStations(cx,lc,i).size() > 0) {
+           ic = getStations(cx,lc,i);
+            if(ic.size() > 0) {
                 near_level = i;
                 global.log("fggg" + i);
                 break;
@@ -106,6 +112,15 @@ global.log("conFlow");
 
             if(i == 6) near_level = 7;
         }
+
+        //Check same place
+        if(dbid == ic.get(0).id && sis == ic.size()){
+            global.SamePlaceCountUpdate(cx);
+        }else{
+            dbid = ic.get(0).id;
+            sis = ic.size();
+        }
+
 
         global.log("getlolevel : " + near_level);
         if(location_mode == globalv.LIVE_ACTIVE_MODE){
@@ -115,14 +130,19 @@ global.log("conFlow");
         }
 
         if(location_mode == globalv.ACTIVE_MODE) {
+            sendNoti(1,1,"1,17,12,9", ic.get(0).station_name);
 
             if (global.getSamePlaceCount(cx) > 1) { //introduce guide}
-sendNoti(1,1,"1,17,12,9", "주변 정류장 버스 노선");
-
             }
 
+//
+//                if (global.getSamePlaceCount(cx) < 2 && global.getSamePlaceCount(cx) < 3) {
+//                    setActionLocationMode(cx, globalv.ACTIVE_MODE);
+//
+//            }
+
             //Stanby mode
-            if (global.getSamePlaceCount(cx) > 99 || global.getSamePlaceCount(cx) > 29 && near_level >= 3 || near_level >= 5) setActionLocationMode(cx, globalv.STANBY_MODE);
+            if (global.getSamePlaceCount(cx) > 3 || global.getSamePlaceCount(cx) > 29 && near_level >= 3 || near_level >= 5) setActionLocationMode(cx, globalv.STANBY_MODE);
 
         }
 
@@ -132,7 +152,12 @@ sendNoti(1,1,"1,17,12,9", "주변 정류장 버스 노선");
             if (global.getSamePlaceCount(cx) >= 1) { //introduce guide}]}
             }
 
-            //Stanby mode
+            if ( near_level >= 3 && global.getSamePlaceCount(cx) < 3 ) {
+                setActionLocationMode(cx, globalv.ACTIVE_MODE);
+
+            }
+
+                //Stanby mode
             if (global.getSamePlaceCount(cx) > 5 || global.getSamePlaceCount(cx) > 2 && near_level >= 3 || near_level >= 5) setActionLocationMode(cx, globalv.STANBY_MODE);
 
             }
@@ -207,6 +232,7 @@ sendNoti(1,1,"1,17,12,9", "주변 정류장 버스 노선");
                 .build();
 
         mGoogleApiClient.connect();
+        retrieveDeviceNode();
     }
 
 
@@ -243,7 +269,7 @@ sendNoti(1,1,"1,17,12,9", "주변 정류장 버스 노선");
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    mGoogleApiClient.blockingConnect(10000, TimeUnit.MILLISECONDS);
+                //    mGoogleApiClient.blockingConnect(10000, TimeUnit.MILLISECONDS);
                     Wearable.MessageApi.sendMessage(mGoogleApiClient, nodeId, msg, data);
                 }
             }).start();
@@ -252,6 +278,27 @@ sendNoti(1,1,"1,17,12,9", "주변 정류장 버스 노선");
 
 
     }
+
+    public void retrieveDeviceNode() {
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                  mGoogleApiClient.blockingConnect(10000, TimeUnit.MILLISECONDS);
+                NodeApi.GetConnectedNodesResult result =
+                        Wearable.NodeApi.getConnectedNodes(mGoogleApiClient).await();
+                List<Node> nodes = result.getNodes();
+                if (nodes.size() > 0) {
+                            nodeId = nodes.get(0).getId();
+                }
+                //  mGoogleApiClient.disconnect();
+            }
+        }).start();
+
+
+
+    }
+
 
     public void sendNoti(int kind, int noti_id, String title, String content) {
         ArrayList<noticlass> notiarray = new ArrayList<noticlass>();
@@ -292,23 +339,24 @@ sendNoti(1,1,"1,17,12,9", "주변 정류장 버스 노선");
     @Override
     public void onConnected(Bundle bundle) {
 global.log("Connected");
-     setActionLocationMode(cx, globalv.ACTIVE_MODE);
+   //  setActionLocationMode(cx, globalv.ACTIVE_MODE);
+
     }
 
     @Override
     public void onConnectionSuspended(int i) {
-
+        global.log("onConnectionSuspended");
     }
 
     @Override
     public void onLocationChanged(Location location) {
         global.log( "Success." + location.getLatitude() + "," +  location.getLongitude());
-        startFlow(cx, location);
+        conFlow(cx, location);
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-
+        global.log("onConnectionFailed");
     }
 
     public void setActionLocationMode(Context cx, int level){
