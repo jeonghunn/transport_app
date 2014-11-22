@@ -31,7 +31,7 @@ public class MainActivity extends ActionBarActivity {
 DBInsert();
 
       }else{
-          startService(new Intent(this, CoreSystem.class));
+
 startApp();
       }
 
@@ -68,6 +68,7 @@ startApp();
             @Override
             public void run() {
                 startActivity(new Intent(MainActivity.this,main.class));
+                startService(new Intent(MainActivity.this, CoreSystem.class));
                 finish();
             }
         }, (long) (900));

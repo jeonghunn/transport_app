@@ -104,6 +104,7 @@ public void startFlow(Context cx, Location lc){
 global.log("conFlow");
         action_count++;
 
+
         int near_level = 0;
         ArrayList<InfoClass>  ic = null;
 
@@ -117,6 +118,19 @@ global.log("conFlow");
 
             if(i == 6) near_level = 7;
         }
+try {
+    DbOpenHelper mDbOpenHelper = new DbOpenHelper(this);
+    mDbOpenHelper.open();
+
+    for (int i = 0; i < ic.size(); i++) {
+        global.log("ok" + ic.size());
+        InfoClass get = ic.get(i);
+        mDbOpenHelper.insertFdColumn(global.getCountSrl(cx), get.id, get.country_srl, get.route_srl, get.station_srl, get.way_srl, lc.getLatitude(), lc.getLongitude(), get.station_latitude, get.station_longitude, location_mode);
+    }
+    //반대방향
+
+    mDbOpenHelper.close();
+}catch (Exception e){}
 
         //Check same placeㅇ
         if(dbid == ic.get(0).id && sis == ic.size() && location_mode == plm){
