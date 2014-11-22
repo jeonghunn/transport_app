@@ -67,7 +67,7 @@ checkMessage(messageEvent.getPath(), messageEvent.getData());
 
             global.Vibrate(this, 2000);
             Intent viewIntent = new Intent(this, StationList.class);
-            global.setNotifcation(this, noti_id, viewIntent, title, content, R.drawable.flag);
+            global.setNotifcation(this, noti_id, viewIntent, title, content, R.drawable.almost_background);
 //
 //            Intent i = new Intent(ListenerService.this, BusArrive.class);
 //            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

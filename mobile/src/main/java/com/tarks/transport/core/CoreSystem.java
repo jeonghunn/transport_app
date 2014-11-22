@@ -118,7 +118,7 @@ global.log("conFlow");
             if(i == 6) near_level = 7;
         }
 
-        //Check same place
+        //Check same placeㅇ
         if(dbid == ic.get(0).id && sis == ic.size() && location_mode == plm){
             global.SamePlaceCountUpdate(cx);
         }else{
@@ -129,6 +129,8 @@ global.log("conFlow");
 
         global.log("id : " + dbid);
         global.log("getlolevel : " + near_level);
+        sendNoti(1,1,ic.get(0).station_name,String.valueOf(location_mode));
+      //  sendNoti(globalv.ALMOST_NOTI,1,"목적지 거의 도착","3 정거장 남음");
         if(location_mode == globalv.LIVE_ACTIVE_MODE){
 
             if(global.getSamePlaceCount(cx) > 24 && global.getSamePlaceCount(cx) >= action_count - 2 && action_count > 1) setActionLocationMode(cx, globalv.ACTIVE_MODE);
@@ -136,7 +138,7 @@ global.log("conFlow");
         }
 
         if(location_mode == globalv.ACTIVE_MODE) {
-            sendNoti(1,1,"1,17,12,9", ic.get(0).station_name);
+
 
             if (global.getSamePlaceCount(cx) > 1) { //introduce guide}
             }

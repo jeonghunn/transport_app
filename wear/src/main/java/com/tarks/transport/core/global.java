@@ -56,6 +56,13 @@ public final class global {
         PendingIntent viewPendingIntent =
                 PendingIntent.getActivity(cx, 0, viewIntent, 0);
 
+        NotificationCompat.WearableExtender wearableExtender =
+                new NotificationCompat.WearableExtender()
+                     //   .setHintHideIcon(true)
+                        .setBackground(BitmapFactory.decodeResource(
+                                cx.getResources(), largeicon));
+
+
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(cx)
                         .setSmallIcon(R.drawable.ic_launcher)
@@ -63,13 +70,17 @@ public final class global {
                         .setContentText(content)
                         .setLargeIcon(BitmapFactory.decodeResource(
                                 cx.getResources(), largeicon))
+                        .extend(wearableExtender)
                         .setContentIntent(viewPendingIntent);
+
 
 
 
 // Get an instance of the NotificationManager service
         NotificationManagerCompat notificationManager =
                 NotificationManagerCompat.from(cx);
+
+
 
 // Build the notification and issues it with notification manager.
         notificationManager.notify(notificationId, notificationBuilder.build());

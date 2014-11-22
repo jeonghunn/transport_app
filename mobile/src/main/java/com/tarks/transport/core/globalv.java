@@ -27,6 +27,7 @@ public final class globalv {
 
 
     //Location
+
     public static final int HIBERNATION_MODE = 1;
     public static final int POWER_SAVED_MODE = 2;
     public static final int STANBY_MODE = 3;
@@ -35,6 +36,9 @@ public final class globalv {
     public static final int LIVE_ACTIVE_MODE = 6;
 
 
+    //Notification
+    public static final int DEFUALT_NOTI = 1;
+    public static final int ALMOST_NOTI = 2;
 
     }
 
