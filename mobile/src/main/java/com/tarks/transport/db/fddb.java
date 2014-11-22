@@ -20,6 +20,8 @@ public class fddb {
         public static final String LONGITUDE = "longitude";
         public static final String STATION_LATITUDE = "station_latitude";
         public static final String STATION_LONGITUDE = "station_longitude";
+        public static final String TIME = "time";
+        public static final String LOCATION_MODE = "location_mode";
         public static final String LOCATION_LEVEL = "location_level";
         public static final String _CREATE =
                 "create table "+_TABLENAME+"("
@@ -34,6 +36,8 @@ public class fddb {
                         +LONGITUDE+" double not null , "
                         +STATION_LATITUDE+" double not null , "
                         +STATION_LONGITUDE+" double not null, "
+                        +TIME+" int not null , "
+                        +LOCATION_MODE+" int not null , "
                         +LOCATION_LEVEL+" int not null);";
     }
 

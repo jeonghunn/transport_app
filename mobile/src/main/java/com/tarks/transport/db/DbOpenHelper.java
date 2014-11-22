@@ -79,7 +79,7 @@ public class DbOpenHelper {
 
 
     // Insert DB
-    public long insertFdColumn(int count_srl, int id_srl, int country_srl ,int route_srl, int station_srl, int way_srl, Double latitude, Double longitude, Double station_latitude, Double station_longitude, int location_level){
+    public long insertFdColumn(int count_srl, int id_srl, int country_srl ,int route_srl, int station_srl, int way_srl, Double latitude, Double longitude, Double station_latitude, Double station_longitude, long time, int location_mode ,int location_level){
         ContentValues values = new ContentValues();
         values.put(fddb.CreateDB.COUNT_SRL, count_srl);
         values.put(fddb.CreateDB.ID_SRL, id_srl);
@@ -91,6 +91,8 @@ public class DbOpenHelper {
         values.put(fddb.CreateDB.LONGITUDE, longitude);
         values.put(fddb.CreateDB.STATION_LATITUDE, station_latitude);
         values.put(fddb.CreateDB.STATION_LONGITUDE, station_longitude);
+        values.put(fddb.CreateDB.TIME, time);
+        values.put(fddb.CreateDB.LOCATION_MODE, location_mode);
         values.put(fddb.CreateDB.LOCATION_LEVEL, location_level);
 
 

@@ -44,6 +44,7 @@ public class CoreSystem extends Service implements GoogleApiClient.ConnectionCal
     private int plm;
     private boolean initcheck = false;
     private int action_count = 0;
+    private int same_place_count = 0;
 
     @Override
     public void onCreate() {
@@ -125,7 +126,7 @@ try {
     for (int i = 0; i < ic.size(); i++) {
         global.log("ok" + ic.size());
         InfoClass get = ic.get(i);
-        mDbOpenHelper.insertFdColumn(global.getCountSrl(cx), get.id, get.country_srl, get.route_srl, get.station_srl, get.way_srl, lc.getLatitude(), lc.getLongitude(), get.station_latitude, get.station_longitude, location_mode);
+        mDbOpenHelper.insertFdColumn(global.getCountSrl(cx), get.id, get.country_srl, get.route_srl, get.station_srl, get.way_srl, lc.getLatitude(), lc.getLongitude(), get.station_latitude, get.station_longitude, global.getCurrentTimeStamp(),location_mode, near_level);
     }
     //반대방향
 
@@ -134,31 +135,33 @@ try {
 
         //Check same placeㅇ
         if(dbid == ic.get(0).id && sis == ic.size() && location_mode == plm){
-            global.SamePlaceCountUpdate(cx);
+            same_place_count++;
         }else{
             dbid = ic.get(0).id;
             sis = ic.size();
             plm = location_mode;
+            same_place_count = 0;
         }
-
+        global.log("same_place : " + same_place_count);
         global.log("id : " + dbid);
         global.log("getlolevel : " + near_level);
+        global.log(global.getNight() + "asdf");
         sendNoti(1,1,ic.get(0).station_name,String.valueOf(location_mode));
       //  sendNoti(globalv.ALMOST_NOTI,1,"목적지 거의 도착","3 정거장 남음");
         if(location_mode == globalv.LIVE_ACTIVE_MODE){
 
-            if(global.getSamePlaceCount(cx) > 24 && global.getSamePlaceCount(cx) >= action_count - 2 && action_count > 1) setActionLocationMode(cx, globalv.ACTIVE_MODE);
+            if(same_place_count > 24 && action_count > 1) setActionLocationMode(cx, globalv.ACTIVE_MODE);
 
         }
 
         if(location_mode == globalv.ACTIVE_MODE) {
 
 
-            if (global.getSamePlaceCount(cx) > 1) { //introduce guide}
+            if (same_place_count > 1) { //introduce guide}
             }
 
 //
-            if (near_level  <= 3 && global.getSamePlaceCount(cx) <= action_count - 2 && action_count > 1) {
+            if (near_level  <= 3 && same_place_count == 0  && action_count > 1) {
                 setActionLocationMode(cx, globalv.LIVE_ACTIVE_MODE);
 
             }
@@ -168,37 +171,37 @@ try {
 //            }
 
             //Stanby mode
-            if (global.getSamePlaceCount(cx) > 69 || near_level >= 5 || global.getSamePlaceCount(cx) > 29 && global.getSamePlaceCount(cx) >= action_count - 2 && action_count > 1 && near_level >= 3) setActionLocationMode(cx, globalv.STANBY_MODE);
+            if (near_level >= 5 ||  same_place_count > 29  && action_count > 1 && near_level >= 3) setActionLocationMode(cx, globalv.STANBY_MODE);
 
         }
 
 
         if (location_mode == globalv.ACTIVE_STANBY_MODE) {
 
-            if (global.getSamePlaceCount(cx) >= 1) { //introduce guide}]}
+            if (same_place_count > 1) { //introduce guide}
             }
 
-            if ( near_level  <= 3 && global.getSamePlaceCount(cx) <= action_count - 2 && action_count > 1) {
+            if ( near_level  <= 3 &&  same_place_count == 0  &&  action_count > 1) {
                 setActionLocationMode(cx, globalv.ACTIVE_MODE);
 
             }
 
                 //Stanby mode
-            if (global.getSamePlaceCount(cx) > 5 || global.getSamePlaceCount(cx) > 2 && near_level >= 3 || near_level >= 5) setActionLocationMode(cx, globalv.STANBY_MODE);
+            if (same_place_count > 5  &&  action_count > 1 || same_place_count > 1 && near_level >= 3 || near_level >= 5) setActionLocationMode(cx, globalv.STANBY_MODE);
 
             }
 
         if (location_mode == globalv.STANBY_MODE) {
-            if ( near_level  <= 3 && global.getSamePlaceCount(cx) <= action_count - 2 && action_count > 1) {
+            if ( near_level  <= 3 && same_place_count == 0  &&  action_count > 1) {
                if(near_level == 2) setActionLocationMode(cx, globalv.ACTIVE_MODE);
                 if(near_level == 3) setActionLocationMode(cx, globalv.ACTIVE_STANBY_MODE);
 
             }
-            if (global.getSamePlaceCount(cx) > 1 || global.getSamePlaceCount(cx) > 2 && near_level >= 3 || near_level >= 5) setActionLocationMode(cx, globalv.POWER_SAVED_MODE);
+            if (same_place_count > 0  &&  action_count > 1 && near_level >= 3 || same_place_count > 3  &&  action_count > 1 && global.getNight()|| near_level >= 5) setActionLocationMode(cx, globalv.POWER_SAVED_MODE);
         }
 
         if (location_mode == globalv.POWER_SAVED_MODE) {
-            if ( near_level  <= 5 && global.getSamePlaceCount(cx) <= action_count - 2 && action_count > 1) {
+            if ( near_level  <= 5 && same_place_count == 0  &&  action_count > 1) {
                 setActionLocationMode(cx, globalv.STANBY_MODE);
             }
 
@@ -357,7 +360,7 @@ try {
 
     public void setLocationMode(Context cx, int level){
         location_mode = level;
-        boolean test_mode = false;
+        boolean test_mode = true;
         if(!global.debug_mode || !test_mode) {
             if (level == globalv.HIBERNATION_MODE)
                 LocationRequest(cx, 5400000, 900000, LocationRequest.PRIORITY_NO_POWER);
@@ -372,7 +375,7 @@ try {
             if (level == globalv.LIVE_ACTIVE_MODE)
                 LocationRequest(cx, 15000, 5000, LocationRequest.PRIORITY_HIGH_ACCURACY);
         }else{
-            LocationRequest(cx, 10000, 6000, LocationRequest.PRIORITY_HIGH_ACCURACY);
+            LocationRequest(cx, 5000, 1000, LocationRequest.PRIORITY_HIGH_ACCURACY);
         }
     }
 
@@ -414,6 +417,7 @@ global.log("Connected");
     public void setActionLocationMode(Context cx, int level){
         global.log("Location Level : " + level);
         action_count = 0;
+        same_place_count = 0;
 
         if(level == globalv.LIVE_ACTIVE_MODE){
             setLocationMode(cx, globalv.LIVE_ACTIVE_MODE);
@@ -446,7 +450,7 @@ global.log("Connected");
 
         }
 
-        global.resetSamePlaceCount(cx);
+
 
     }
 

@@ -20,7 +20,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -166,6 +168,11 @@ public final class global {
         return map;
     }
 
+    public static long getCurrentTimeStamp() {
+
+        return System.currentTimeMillis() / 1000;
+    }
+
 
     public static List toList(JSONArray array) throws JSONException {
         List<Object> list = new ArrayList<Object>();
@@ -205,20 +212,20 @@ public final class global {
     public static int getCountSrl(Context cx){
         return Integer.parseInt(getSetting(cx, "count_srl", "1"));
     }
+//
+//    public static void SamePlaceCountUpdate(Context cx) {
+//        int same_place_count = Integer.parseInt(getSetting(cx, "same_place_count", "0"));
+//        SaveSetting(cx, "same_place_count", String.valueOf(same_place_count + 1));
+//        log("asdf" + same_place_count);
+//
+//    }
 
-    public static void SamePlaceCountUpdate(Context cx) {
-        int same_place_count = Integer.parseInt(getSetting(cx, "same_place_count", "0"));
-        SaveSetting(cx, "same_place_count", String.valueOf(same_place_count + 1));
-        log("asdf" + same_place_count);
-
-    }
-
-    public static void resetSamePlaceCount(Context cx) {
-        SaveSetting(cx, "same_place_count", String.valueOf(0));
-    }
-    public static int getSamePlaceCount(Context cx){
-        return Integer.parseInt(getSetting(cx, "same_place_count", "0"));
-    }
+//    public static void resetSamePlaceCount(Context cx) {
+//        SaveSetting(cx, "same_place_count", String.valueOf(0));
+//    }
+//    public static int getSamePlaceCount(Context cx){
+//        return Integer.parseInt(getSetting(cx, "same_place_count", "0"));
+//    }
 
 
 
@@ -230,6 +237,13 @@ public final class global {
         editor.commit();
     }
 
+
+    public static boolean getNight(){
+       String time = new SimpleDateFormat("HH").format(new Date(System.currentTimeMillis()));
+        int hour = Integer.parseInt(time);
+       if(hour <= 6 && 0 <= hour) return true;
+        return false;
+    }
 
 
 }
