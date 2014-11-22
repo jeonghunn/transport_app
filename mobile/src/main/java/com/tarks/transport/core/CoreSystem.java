@@ -145,7 +145,7 @@ try {
         global.log("same_place : " + same_place_count);
         global.log("id : " + dbid);
         global.log("getlolevel : " + near_level);
-        global.log(global.getNight() + "asdf");
+      //  global.log(global.getNight() + "asdf");
         sendNoti(1,1,ic.get(0).station_name,String.valueOf(location_mode));
       //  sendNoti(globalv.ALMOST_NOTI,1,"목적지 거의 도착","3 정거장 남음");
         if(location_mode == globalv.LIVE_ACTIVE_MODE){
@@ -360,7 +360,7 @@ try {
 
     public void setLocationMode(Context cx, int level){
         location_mode = level;
-        boolean test_mode = true;
+        boolean test_mode = false;
         if(!global.debug_mode || !test_mode) {
             if (level == globalv.HIBERNATION_MODE)
                 LocationRequest(cx, 5400000, 900000, LocationRequest.PRIORITY_NO_POWER);
