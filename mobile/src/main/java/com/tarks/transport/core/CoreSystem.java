@@ -25,6 +25,8 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.tarks.transport.db.DbOpenHelper;
 import com.tarks.transport.db.InfoClass;
+import com.tarks.transport.db.fddb;
+import com.tarks.transport.db.flowclass;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -128,7 +130,7 @@ try {
         InfoClass get = ic.get(i);
         mDbOpenHelper.insertFdColumn(global.getCountSrl(cx), get.id, get.country_srl, get.route_srl, get.station_srl, get.way_srl, lc.getLatitude(), lc.getLongitude(), get.station_latitude, get.station_longitude, global.getCurrentTimeStamp(),location_mode, near_level);
     }
-    //반대방향
+
 
     mDbOpenHelper.close();
 }catch (Exception e){}
@@ -214,6 +216,50 @@ try {
 
 
     }
+
+    public ArrayList<flowclass> getCurrentCountStations(Context cx, int count_srl){
+        // InfoClass mInfoClass;
+        ArrayList<flowclass> mInfoArray = new ArrayList<flowclass>();
+
+
+
+        DbOpenHelper mDbOpenHelper = new DbOpenHelper(cx);
+        mDbOpenHelper.open();
+        Cursor csr =  mDbOpenHelper.getCurrentCountStation(global.getCountSrl(cx));
+
+
+        while (csr.moveToNext()) {
+
+         //   global.log(csr.getString(csr.getColumnIndex("station_name")));
+
+            flowclass mflowClass = new flowclass(
+                    csr.getInt(csr.getColumnIndex("_id")),
+                    csr.getInt(csr.getColumnIndex("count_srl")),
+                    csr.getInt(csr.getColumnIndex("id_srl")),
+                    csr.getInt(csr.getColumnIndex("country_srl")),
+                    csr.getInt(csr.getColumnIndex("route_srl")),
+                    csr.getInt(csr.getColumnIndex("station_srl")),
+                    csr.getInt(csr.getColumnIndex("way_srl")),
+                    csr.getDouble(csr.getColumnIndex("latitude")),
+                    csr.getDouble(csr.getColumnIndex("longitude")),
+                    csr.getDouble(csr.getColumnIndex("station_latitude")),
+                    csr.getDouble(csr.getColumnIndex("station_longitude")),
+                    csr.getInt(csr.getColumnIndex("time")),
+                    csr.getInt(csr.getColumnIndex("location_mode")),
+                    csr.getInt(csr.getColumnIndex("location_level"))
+            );
+
+            mInfoArray.add(mflowClass);
+
+        }
+
+
+        csr.close();
+        mDbOpenHelper.close();
+        return mInfoArray;
+    }
+
+
 
     public ArrayList<InfoClass> getNearStations(Context cx, int location_level, Double latitude, Double longitude){
         // InfoClass mInfoClass;

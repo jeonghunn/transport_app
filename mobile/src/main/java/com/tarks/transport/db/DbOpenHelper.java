@@ -196,6 +196,16 @@ public class DbOpenHelper {
     }
 
 
+    // 이름 검색 하기 (rawQuery)
+    public Cursor getCurrentCountStation(int db_count_srl){
+
+        Cursor c = mDB.rawQuery( "select * from flow where count_srl='" + db_count_srl + "' ORDER BY `location_mode` DESC,  `location_level` ASC"  , null);
+        return c;
+    }
+
+
+
+
 
 //    public Cursor getNowStation(Double latitude, Double longitude){
 //        Double max_latitude = latitude + 0.001;
