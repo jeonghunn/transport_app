@@ -82,6 +82,7 @@ public void startFlow(Context cx, Location lc){
 
         int near_level = 0;
 
+
         for (int i = 1; i <= 6; i++) {
             if(getStations(cx,lc,i).size() > 0) {
                 near_level = i;
@@ -109,6 +110,8 @@ global.log("conFlow");
 
 
         int near_level = 0;
+        final int count_srl = global.getCountSrl(cx);
+
         ArrayList<InfoClass>  ic = null;
 
         for (int i = 1; i <= 6; i++) {
@@ -128,12 +131,14 @@ try {
     for (int i = 0; i < ic.size(); i++) {
         global.log("ok" + ic.size());
         InfoClass get = ic.get(i);
-        mDbOpenHelper.insertFdColumn(global.getCountSrl(cx), get.id, get.country_srl, get.route_srl, get.station_srl, get.way_srl, lc.getLatitude(), lc.getLongitude(), get.station_latitude, get.station_longitude, global.getCurrentTimeStamp(),location_mode, near_level);
+        mDbOpenHelper.insertFdColumn(count_srl, get.id, get.country_srl, get.route_srl, get.station_srl, get.way_srl, lc.getLatitude(), lc.getLongitude(), get.station_latitude, get.station_longitude, global.getCurrentTimeStamp(),location_mode, near_level);
     }
 
 
     mDbOpenHelper.close();
 }catch (Exception e){}
+
+        ArrayList<flowclass>  mflow = selectflowStation(cx, count_srl);
 
         //Check same placeㅇ
         if(dbid == ic.get(0).id && sis == ic.size() && location_mode == plm){
@@ -148,11 +153,12 @@ try {
         global.log("id : " + dbid);
         global.log("getlolevel : " + near_level);
       //  global.log(global.getNight() + "asdf");
-        sendNoti(1,1,ic.get(0).station_name,String.valueOf(location_mode));
+      //  sendNoti(1,1,ic.get(0).station_name,String.valueOf(location_mode));
+       if(mflow.size() > 0) sendNoti(1,1,ic.get(0).station_name,"노선 : " + mflow.get(0).route_srl + "방향 : " +  mflow.get(0).way_srl);
       //  sendNoti(globalv.ALMOST_NOTI,1,"목적지 거의 도착","3 정거장 남음");
         if(location_mode == globalv.LIVE_ACTIVE_MODE){
 
-            if(same_place_count > 10 && action_count > 1) setActionLocationMode(cx, globalv.ACTIVE_MODE);
+            if(same_place_count > 10 && action_count > 1 || same_place_count > 4 && action_count > 1 && near_level >=3) setActionLocationMode(cx, globalv.ACTIVE_MODE);
 
         }
 
@@ -173,7 +179,7 @@ try {
 //            }
 
             //Stanby mode
-            if (near_level >= 5 ||  same_place_count > 29  && action_count > 1 && near_level >= 3) setActionLocationMode(cx, globalv.STANBY_MODE);
+            if (near_level >= 5 ||  same_place_count > 29  && action_count > 1 || same_place_count > 10  && action_count > 1  && near_level >= 3) setActionLocationMode(cx, globalv.STANBY_MODE);
 
         }
 
@@ -217,13 +223,13 @@ try {
 
     }
 
-    public void flowStation(Context cx){
-        //Get array from flow
-        ArrayList<flowclass> mInfoArray = getCurrentCountStations(cx, global.getCountSrl(cx));
-
-
-
-    }
+//    public void flowStation(Context cx){
+//        //Get array from flow
+//        ArrayList<flowclass> mInfoArray = getCurrentCountStations(cx, global.getCountSrl(cx));
+//
+//
+//
+//    }
 
     public ArrayList<flowclass> getCurrentCountStations(Context cx, int count_srl){
         // InfoClass mInfoClass;
@@ -280,51 +286,55 @@ try {
 
 
         //Save if 1- dozen
-        if(csr.getCount() == 1){
-
-            flowclass mflowClass = new flowclass(
-                    csr.getInt(csr.getColumnIndex("_id")),
-                    csr.getInt(csr.getColumnIndex("count_srl")),
-                    csr.getInt(csr.getColumnIndex("id_srl")),
-                    csr.getInt(csr.getColumnIndex("country_srl")),
-                    csr.getInt(csr.getColumnIndex("route_srl")),
-                    csr.getInt(csr.getColumnIndex("station_srl")),
-                    csr.getInt(csr.getColumnIndex("way_srl")),
-                    csr.getDouble(csr.getColumnIndex("latitude")),
-                    csr.getDouble(csr.getColumnIndex("longitude")),
-                    csr.getDouble(csr.getColumnIndex("station_latitude")),
-                    csr.getDouble(csr.getColumnIndex("station_longitude")),
-                    csr.getInt(csr.getColumnIndex("time")),
-                    csr.getInt(csr.getColumnIndex("location_mode")),
-                    csr.getInt(csr.getColumnIndex("location_level"))
-            );
-
-            mInfoArray.add(mflowClass);
-
-
-        }
+//        if(csr.getCount() == 1){
+//
+//            flowclass mflowClass = new flowclass(
+//                    csr.getInt(csr.getColumnIndex("_id")),
+//                    csr.getInt(csr.getColumnIndex("count_srl")),
+//                    csr.getInt(csr.getColumnIndex("id_srl")),
+//                    csr.getInt(csr.getColumnIndex("country_srl")),
+//                    csr.getInt(csr.getColumnIndex("route_srl")),
+//                    csr.getInt(csr.getColumnIndex("station_srl")),
+//                    csr.getInt(csr.getColumnIndex("way_srl")),
+//                    csr.getDouble(csr.getColumnIndex("latitude")),
+//                    csr.getDouble(csr.getColumnIndex("longitude")),
+//                    csr.getDouble(csr.getColumnIndex("station_latitude")),
+//                    csr.getDouble(csr.getColumnIndex("station_longitude")),
+//                    csr.getInt(csr.getColumnIndex("time")),
+//                    csr.getInt(csr.getColumnIndex("location_mode")),
+//                    csr.getInt(csr.getColumnIndex("location_level"))
+//            );
+//
+//            mInfoArray.add(mflowClass);
+//
+//
+//        }
         //dozen - dozen
-        if(csr.getCount() > 1){
+     //   if(csr.getCount() > 1){
             //0 position 1 count
-            int[] dcount = new int[0];
+            int pos = 0;
+            int count = 0;
 
         while (csr.moveToNext()) {
 
 
 
 
-                          Cursor csrc =  mDbOpenHelper.getDirectionRows(csr.getInt(csr.getColumnIndex("country_srl")), csr.getInt(csr.getColumnIndex("route_srl")), csr.getInt(csr.getColumnIndex("way_srl")), csr.getInt(csr.getColumnIndex("station_srl")));
+                          Cursor csrc =  mDbOpenHelper.getDirectionRows(count_srl ,csr.getInt(csr.getColumnIndex("country_srl")), csr.getInt(csr.getColumnIndex("route_srl")), csr.getInt(csr.getColumnIndex("way_srl")), csr.getInt(csr.getColumnIndex("station_srl")));
 
-         if(csrc.getCount() > dcount[1]){
-             dcount[0] = csrc.getPosition();
-             dcount[1] = csrc.getCount();
+         if(csrc.getCount() > count){
+
+           pos = csr.getPosition();
+             count = csrc.getCount();
+             global.log(pos  + "," + count);
          }
 
+            csrc.close();
 
 
         }
 
-            csr.moveToPosition(dcount[0]);
+            csr.moveToPosition(pos);
 
             flowclass mflowClass = new flowclass(
                     csr.getInt(csr.getColumnIndex("_id")),
@@ -346,7 +356,7 @@ try {
             mInfoArray.add(mflowClass);
 
 
-        }
+     //   }
 
         csr.close();
         mDbOpenHelper.close();
