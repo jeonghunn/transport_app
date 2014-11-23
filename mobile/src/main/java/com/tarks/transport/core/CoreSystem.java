@@ -152,7 +152,7 @@ try {
       //  sendNoti(globalv.ALMOST_NOTI,1,"목적지 거의 도착","3 정거장 남음");
         if(location_mode == globalv.LIVE_ACTIVE_MODE){
 
-            if(same_place_count > 24 && action_count > 1) setActionLocationMode(cx, globalv.ACTIVE_MODE);
+            if(same_place_count > 10 && action_count > 1) setActionLocationMode(cx, globalv.ACTIVE_MODE);
 
         }
 
@@ -204,7 +204,7 @@ try {
 
         if (location_mode == globalv.POWER_SAVED_MODE) {
             if ( near_level  <= 5 && same_place_count == 0  &&  action_count > 1) {
-                setActionLocationMode(cx, globalv.STANBY_MODE);
+                setActionLocationMode(cx, globalv.ACTIVE_STANBY_MODE);
             }
 
             //Delete Noti
