@@ -210,6 +210,11 @@ public class DbOpenHelper {
         return c;
     }
 
+    public Cursor getDirectionRows(int country_srl, int route_srl, int way_srl, int station_srl){
+
+        Cursor c = mDB.rawQuery( "select * from flow where country_srl='" + country_srl + "' AND route_srl= '" + route_srl + "' AND way_srl= '"+ way_srl +"' AND station_srl != '" + station_srl + "' ORDER BY `location_mode` DESC,  `location_level` ASC"  , null);
+        return c;
+    }
 
 
 //    public Cursor getNowStation(Double latitude, Double longitude){

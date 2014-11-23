@@ -278,46 +278,75 @@ try {
         Cursor csr =  mDbOpenHelper.getCurrentActiveCountStation(count_srl);
 
 
+
+        //Save if 1- dozen
+        if(csr.getCount() == 1){
+
+            flowclass mflowClass = new flowclass(
+                    csr.getInt(csr.getColumnIndex("_id")),
+                    csr.getInt(csr.getColumnIndex("count_srl")),
+                    csr.getInt(csr.getColumnIndex("id_srl")),
+                    csr.getInt(csr.getColumnIndex("country_srl")),
+                    csr.getInt(csr.getColumnIndex("route_srl")),
+                    csr.getInt(csr.getColumnIndex("station_srl")),
+                    csr.getInt(csr.getColumnIndex("way_srl")),
+                    csr.getDouble(csr.getColumnIndex("latitude")),
+                    csr.getDouble(csr.getColumnIndex("longitude")),
+                    csr.getDouble(csr.getColumnIndex("station_latitude")),
+                    csr.getDouble(csr.getColumnIndex("station_longitude")),
+                    csr.getInt(csr.getColumnIndex("time")),
+                    csr.getInt(csr.getColumnIndex("location_mode")),
+                    csr.getInt(csr.getColumnIndex("location_level"))
+            );
+
+            mInfoArray.add(mflowClass);
+
+
+        }
+        //dozen - dozen
+        if(csr.getCount() > 1){
+            //0 position 1 count
+            int[] dcount = new int[0];
+
         while (csr.moveToNext()) {
 
-            Cursor csrc =  mDbOpenHelper.getCurrentActiveCountStation(count_srl);
-
-            //Check just one row
-            if(csrc.getCount() <= 1) continue;
-
-            //Save if 1- dozen
-            if(csr.getCount() == 1){
-
-                flowclass mflowClass = new flowclass(
-                        csr.getInt(csr.getColumnIndex("_id")),
-                        csr.getInt(csr.getColumnIndex("count_srl")),
-                        csr.getInt(csr.getColumnIndex("id_srl")),
-                        csr.getInt(csr.getColumnIndex("country_srl")),
-                        csr.getInt(csr.getColumnIndex("route_srl")),
-                        csr.getInt(csr.getColumnIndex("station_srl")),
-                        csr.getInt(csr.getColumnIndex("way_srl")),
-                        csr.getDouble(csr.getColumnIndex("latitude")),
-                        csr.getDouble(csr.getColumnIndex("longitude")),
-                        csr.getDouble(csr.getColumnIndex("station_latitude")),
-                        csr.getDouble(csr.getColumnIndex("station_longitude")),
-                        csr.getInt(csr.getColumnIndex("time")),
-                        csr.getInt(csr.getColumnIndex("location_mode")),
-                        csr.getInt(csr.getColumnIndex("location_level"))
-                );
-
-                mInfoArray.add(mflowClass);
 
 
-            }
 
+                          Cursor csrc =  mDbOpenHelper.getDirectionRows(csr.getInt(csr.getColumnIndex("country_srl")), csr.getInt(csr.getColumnIndex("route_srl")), csr.getInt(csr.getColumnIndex("way_srl")), csr.getInt(csr.getColumnIndex("station_srl")));
 
-            if(csr.getCount() > 1){
+         if(csrc.getCount() > dcount[1]){
+             dcount[0] = csrc.getPosition();
+             dcount[1] = csrc.getCount();
+         }
 
-            }
 
 
         }
 
+            csr.moveToPosition(dcount[0]);
+
+            flowclass mflowClass = new flowclass(
+                    csr.getInt(csr.getColumnIndex("_id")),
+                    csr.getInt(csr.getColumnIndex("count_srl")),
+                    csr.getInt(csr.getColumnIndex("id_srl")),
+                    csr.getInt(csr.getColumnIndex("country_srl")),
+                    csr.getInt(csr.getColumnIndex("route_srl")),
+                    csr.getInt(csr.getColumnIndex("station_srl")),
+                    csr.getInt(csr.getColumnIndex("way_srl")),
+                    csr.getDouble(csr.getColumnIndex("latitude")),
+                    csr.getDouble(csr.getColumnIndex("longitude")),
+                    csr.getDouble(csr.getColumnIndex("station_latitude")),
+                    csr.getDouble(csr.getColumnIndex("station_longitude")),
+                    csr.getInt(csr.getColumnIndex("time")),
+                    csr.getInt(csr.getColumnIndex("location_mode")),
+                    csr.getInt(csr.getColumnIndex("location_level"))
+            );
+
+            mInfoArray.add(mflowClass);
+
+
+        }
 
         csr.close();
         mDbOpenHelper.close();
