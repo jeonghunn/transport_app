@@ -204,6 +204,11 @@ public class DbOpenHelper {
     }
 
 
+    public Cursor getCurrentActiveCountStation(int db_count_srl){
+
+        Cursor c = mDB.rawQuery( "select * from flow where count_srl='" + db_count_srl + "' AND location_mode > 3 ORDER BY `location_mode` DESC,  `location_level` ASC"  , null);
+        return c;
+    }
 
 
 

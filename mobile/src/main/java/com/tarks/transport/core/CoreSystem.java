@@ -217,6 +217,14 @@ try {
 
     }
 
+    public void flowStation(Context cx){
+        //Get array from flow
+        ArrayList<flowclass> mInfoArray = getCurrentCountStations(cx, global.getCountSrl(cx));
+
+
+
+    }
+
     public ArrayList<flowclass> getCurrentCountStations(Context cx, int count_srl){
         // InfoClass mInfoClass;
         ArrayList<flowclass> mInfoArray = new ArrayList<flowclass>();
@@ -225,7 +233,7 @@ try {
 
         DbOpenHelper mDbOpenHelper = new DbOpenHelper(cx);
         mDbOpenHelper.open();
-        Cursor csr =  mDbOpenHelper.getCurrentCountStation(global.getCountSrl(cx));
+        Cursor csr =  mDbOpenHelper.getCurrentCountStation(count_srl);
 
 
         while (csr.moveToNext()) {
@@ -258,6 +266,64 @@ try {
         mDbOpenHelper.close();
         return mInfoArray;
     }
+
+    public ArrayList<flowclass> selectflowStation(Context cx, int count_srl){
+        // InfoClass mInfoClass;
+        ArrayList<flowclass> mInfoArray = new ArrayList<flowclass>();
+
+
+
+        DbOpenHelper mDbOpenHelper = new DbOpenHelper(cx);
+        mDbOpenHelper.open();
+        Cursor csr =  mDbOpenHelper.getCurrentActiveCountStation(count_srl);
+
+
+        while (csr.moveToNext()) {
+
+            Cursor csrc =  mDbOpenHelper.getCurrentActiveCountStation(count_srl);
+
+            //Check just one row
+            if(csrc.getCount() <= 1) continue;
+
+            //Save if 1- dozen
+            if(csr.getCount() == 1){
+
+                flowclass mflowClass = new flowclass(
+                        csr.getInt(csr.getColumnIndex("_id")),
+                        csr.getInt(csr.getColumnIndex("count_srl")),
+                        csr.getInt(csr.getColumnIndex("id_srl")),
+                        csr.getInt(csr.getColumnIndex("country_srl")),
+                        csr.getInt(csr.getColumnIndex("route_srl")),
+                        csr.getInt(csr.getColumnIndex("station_srl")),
+                        csr.getInt(csr.getColumnIndex("way_srl")),
+                        csr.getDouble(csr.getColumnIndex("latitude")),
+                        csr.getDouble(csr.getColumnIndex("longitude")),
+                        csr.getDouble(csr.getColumnIndex("station_latitude")),
+                        csr.getDouble(csr.getColumnIndex("station_longitude")),
+                        csr.getInt(csr.getColumnIndex("time")),
+                        csr.getInt(csr.getColumnIndex("location_mode")),
+                        csr.getInt(csr.getColumnIndex("location_level"))
+                );
+
+                mInfoArray.add(mflowClass);
+
+
+            }
+
+
+            if(csr.getCount() > 1){
+
+            }
+
+
+        }
+
+
+        csr.close();
+        mDbOpenHelper.close();
+        return mInfoArray;
+    }
+
 
 
 
