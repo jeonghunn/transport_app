@@ -84,7 +84,7 @@ public void startFlow(Context cx, Location lc){
 
 
         for (int i = 1; i <= 6; i++) {
-            if(getStations(cx,lc,i).size() > 0) {
+            if(getNearStations(cx,lc,i).size() > 0) {
                 near_level = i;
                 break;
             }
@@ -115,7 +115,7 @@ global.log("conFlow");
         ArrayList<InfoClass>  ic = null;
 
         for (int i = 1; i <= 6; i++) {
-           ic = getStations(cx,lc,i);
+           ic = getNearStations(cx,lc,i);
             if(ic.size() > 0) {
                 near_level = i;
                 global.log("fggg" + i);
@@ -136,11 +136,16 @@ try {
 
 
     mDbOpenHelper.close();
-}catch (Exception e){}
+
 
         ArrayList<flowclass>  mflow = selectflowStation(cx, count_srl);
+    ArrayList<InfoClass>  stations = null;
+     //   if(mflow.size() > 0){
+          if(mflow.size() > 0)
+              stations = getStations(mflow.get(0).country_srl, mflow.get(0).route_srl, mflow.get(0).way_srl);
 
-        //Check same placeㅇ
+
+        //Check same place
         if(dbid == ic.get(0).id && sis == ic.size() && location_mode == plm){
             same_place_count++;
         }else{
@@ -154,7 +159,8 @@ try {
         global.log("getlolevel : " + near_level);
       //  global.log(global.getNight() + "asdf");
       //  sendNoti(1,1,ic.get(0).station_name,String.valueOf(location_mode));
-       if(mflow.size() > 0) sendNoti(1,1,ic.get(0).station_name,"노선 : " + mflow.get(0).route_srl + "방향 : " +  mflow.get(0).way_srl + " 모드 :" + location_mode);
+        String next_name = mflow.get(0).station_srl  < stations.size() ? stations.get(mflow.get(0).station_srl + 1).station_name : null;
+       if(mflow.size() > 0 && next_name != null) sendNoti(1,1,stations.get(mflow.get(0).station_srl).station_name, "▶ " + next_name);
       //  sendNoti(globalv.ALMOST_NOTI,1,"목적지 거의 도착","3 정거장 남음");
         if(location_mode == globalv.LIVE_ACTIVE_MODE){
 
@@ -179,7 +185,7 @@ try {
 //            }
 
             //Stanby mode
-            if (near_level >= 5 ||  same_place_count > 29  && action_count > 1 || same_place_count > 10  && action_count > 1  && near_level >= 3) setActionLocationMode(cx, globalv.STANBY_MODE);
+            if (near_level >= 5 ||  same_place_count > 10  && action_count > 1 || same_place_count > 5  && action_count > 1  && near_level >= 3) setActionLocationMode(cx, globalv.STANBY_MODE);
 
         }
 
@@ -220,7 +226,7 @@ try {
             if(near_level <= 6) setActionLocationMode(cx, globalv.STANBY_MODE);
         }
 
-
+}catch (Exception e){ e.printStackTrace();}
     }
 
 //    public void flowStation(Context cx){
@@ -422,7 +428,47 @@ station_srl_temp = 0;
 
 
 
-    public ArrayList<InfoClass> getStations(Context cx, Location location, int location_level){
+
+    public ArrayList<InfoClass> getStations(int country_srl, int route_srl, int way_srl){
+        // InfoClass mInfoClass;
+        ArrayList<InfoClass> mInfoArray = new ArrayList<InfoClass>();
+
+
+
+        DbOpenHelper mDbOpenHelper = new DbOpenHelper(cx);
+        mDbOpenHelper.open();;
+        Cursor csr = mDbOpenHelper.getStations(country_srl,route_srl,way_srl);
+
+
+        while (csr.moveToNext()) {
+
+           // global.log(csr.getString(csr.getColumnIndex("station_name")));
+
+            InfoClass mInfoClass = new InfoClass(
+                    csr.getInt(csr.getColumnIndex("_id")),
+                    csr.getInt(csr.getColumnIndex("country_srl")),
+                    csr.getInt(csr.getColumnIndex("route_srl")),
+                    csr.getInt(csr.getColumnIndex("way_srl")),
+                    csr.getInt(csr.getColumnIndex("station_srl")),
+                    csr.getString(csr.getColumnIndex("station_name")),
+                    csr.getDouble(csr.getColumnIndex("station_latitude")),
+                    csr.getDouble(csr.getColumnIndex("station_longitude"))
+            );
+
+            mInfoArray.add(mInfoClass);
+
+        }
+
+
+        csr.close();
+        mDbOpenHelper.close();
+        return mInfoArray;
+    }
+
+
+
+
+    public ArrayList<InfoClass> getNearStations(Context cx, Location location, int location_level){
 
 
         return getNearStations(cx, location_level ,location.getLatitude(), location.getLongitude());

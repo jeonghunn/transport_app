@@ -224,6 +224,12 @@ public class DbOpenHelper {
         return c;
     }
 
+    public Cursor getStations(int country_srl, int route_srl, int way_srl){
+
+        Cursor c = mDB.rawQuery( "select * from stations where country_srl='" + country_srl + "' AND route_srl= '" + route_srl + "' AND way_srl= '"+ way_srl +"' ORDER BY `station_srl` ASC" , null);
+        return c;
+    }
+
 //    public Cursor getNowStation(Double latitude, Double longitude){
 //        Double max_latitude = latitude + 0.001;
 //        Double min_latitude = latitude - 0.001;
