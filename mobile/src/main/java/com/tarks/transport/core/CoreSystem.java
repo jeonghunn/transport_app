@@ -131,7 +131,7 @@ try {
     for (int i = 0; i < ic.size(); i++) {
         global.log("ok" + ic.size());
         InfoClass get = ic.get(i);
-        mDbOpenHelper.insertFdColumn(count_srl, get.id, get.country_srl, get.route_srl, get.station_srl, get.way_srl, lc.getLatitude(), lc.getLongitude(), get.station_latitude, get.station_longitude, global.getCurrentTimeStamp(),location_mode, near_level);
+       mDbOpenHelper.insertFdColumn(count_srl, get.id, get.country_srl, get.route_srl, get.station_srl, get.way_srl, lc.getLatitude(), lc.getLongitude(), get.station_latitude, get.station_longitude, global.getCurrentTimeStamp(),location_mode, near_level);
     }
 
 
@@ -154,7 +154,7 @@ try {
         global.log("getlolevel : " + near_level);
       //  global.log(global.getNight() + "asdf");
       //  sendNoti(1,1,ic.get(0).station_name,String.valueOf(location_mode));
-       if(mflow.size() > 0) sendNoti(1,1,ic.get(0).station_name,"노선 : " + mflow.get(0).route_srl + "방향 : " +  mflow.get(0).way_srl);
+       if(mflow.size() > 0) sendNoti(1,1,ic.get(0).station_name,"노선 : " + mflow.get(0).route_srl + "방향 : " +  mflow.get(0).way_srl + " 모드 :" + location_mode);
       //  sendNoti(globalv.ALMOST_NOTI,1,"목적지 거의 도착","3 정거장 남음");
         if(location_mode == globalv.LIVE_ACTIVE_MODE){
 
@@ -295,7 +295,7 @@ try {
 //                    csr.getInt(csr.getColumnIndex("country_srl")),
 //                    csr.getInt(csr.getColumnIndex("route_srl")),
 //                    csr.getInt(csr.getColumnIndex("station_srl")),
-//                    csr.getInt(csr.getColumnIndex("way_srl")),
+//                   ,
 //                    csr.getDouble(csr.getColumnIndex("latitude")),
 //                    csr.getDouble(csr.getColumnIndex("longitude")),
 //                    csr.getDouble(csr.getColumnIndex("station_latitude")),
@@ -311,23 +311,40 @@ try {
 //        }
         //dozen - dozen
      //   if(csr.getCount() > 1){
-            //0 position 1 count
+            //0 position 1 counti
             int pos = 0;
-            int count = 0;
+            int best_count = 0;
+            int station_srl_count = 0;
+            int station_srl_temp = 0;
 
         while (csr.moveToNext()) {
 
-
+station_srl_temp = 0;
+            station_srl_count = 0;
 
 
                           Cursor csrc =  mDbOpenHelper.getDirectionRows(count_srl ,csr.getInt(csr.getColumnIndex("country_srl")), csr.getInt(csr.getColumnIndex("route_srl")), csr.getInt(csr.getColumnIndex("way_srl")), csr.getInt(csr.getColumnIndex("station_srl")));
 
-         if(csrc.getCount() > count){
+       //  if(csrc.getCount() > count){
+             while (csrc.moveToNext()) {
+                 if(   csrc.getInt(csrc.getColumnIndex("station_srl")) >station_srl_temp) {
+                     station_srl_temp =  csrc.getInt(csrc.getColumnIndex("station_srl"));
+                     global.log( csrc.getInt(csrc.getColumnIndex("station_srl")) + "station");
+                 }else{
+                     continue;
+                 }
+                 station_srl_count++;
+           //      global.log("station_srl_count" +station_srl_count + "temp" + station_srl_temp);
+             }
+            global.log(csr.getInt(csr.getColumnIndex("way_srl")) + "========");
+            if(best_count < station_srl_count){
+                pos = csr.getPosition();
+                best_count = station_srl_count;
+            }
 
-           pos = csr.getPosition();
-             count = csrc.getCount();
-             global.log(pos  + "," + count);
-         }
+            // count = csrc.getCount();
+       //      global.log(pos + "," + count);
+        // }
 
             csrc.close();
 
@@ -336,6 +353,7 @@ try {
 
             csr.moveToPosition(pos);
 
+        if(csr.getCount() != 0) {
             flowclass mflowClass = new flowclass(
                     csr.getInt(csr.getColumnIndex("_id")),
                     csr.getInt(csr.getColumnIndex("count_srl")),
@@ -354,7 +372,7 @@ try {
             );
 
             mInfoArray.add(mflowClass);
-
+        }
 
      //   }
 
