@@ -159,8 +159,18 @@ try {
         global.log("getlolevel : " + near_level);
       //  global.log(global.getNight() + "asdf");
       //  sendNoti(1,1,ic.get(0).station_name,String.valueOf(location_mode));
-        String next_name = mflow.get(0).station_srl  < stations.size() ? stations.get(mflow.get(0).station_srl + 1).station_name : null;
-       if(mflow.size() > 0 && next_name != null) sendNoti(1,1,stations.get(mflow.get(0).station_srl).station_name, "▶ " + next_name);
+
+    if(mflow.size() > 0 && stations.size() > 0){
+
+        global.log(mflow.get(0).station_srl + "/"+ stations.size());
+
+    String next_name = mflow.get(0).station_srl + 1 < stations.size() ? stations.get(mflow.get(0).station_srl).station_name : null;
+
+        if(mflow.size() > 0 && next_name != null) sendNoti(1,1,stations.get(mflow.get(0).station_srl-1).station_name, "▶ " + next_name);
+
+    }
+
+
       //  sendNoti(globalv.ALMOST_NOTI,1,"목적지 거의 도착","3 정거장 남음");
         if(location_mode == globalv.LIVE_ACTIVE_MODE){
 
@@ -333,19 +343,20 @@ station_srl_temp = 0;
 
        //  if(csrc.getCount() > count){
              while (csrc.moveToNext()) {
-                 if(   csrc.getInt(csrc.getColumnIndex("station_srl")) >station_srl_temp) {
+                 if(   csrc.getInt(csrc.getColumnIndex("station_srl")) >station_srl_temp && csrc.getInt(csrc.getColumnIndex("station_srl")) < station_srl_temp + 4 ) {
                      station_srl_temp =  csrc.getInt(csrc.getColumnIndex("station_srl"));
                      global.log( csrc.getInt(csrc.getColumnIndex("station_srl")) + "station");
-                 }else{
-                     continue;
+                     station_srl_count++;
                  }
-                 station_srl_count++;
-           //      global.log("station_srl_count" +station_srl_count + "temp" + station_srl_temp);
+
+
+           //
              }
             global.log(csr.getInt(csr.getColumnIndex("way_srl")) + "========");
             if(best_count < station_srl_count){
-                pos = csr.getPosition();
+                pos = csrc.getPosition();
                 best_count = station_srl_count;
+                global.log(" : " +pos + "best count  : " + best_count);
             }
 
             // count = csrc.getCount();
@@ -377,6 +388,7 @@ station_srl_temp = 0;
                     csr.getInt(csr.getColumnIndex("location_level"))
             );
 
+            global.log(csr.getInt(csr.getColumnIndex("id_srl")) + " : ID");
             mInfoArray.add(mflowClass);
         }
 
