@@ -354,7 +354,7 @@ station_srl_temp = 0;
              }
             global.log(csr.getInt(csr.getColumnIndex("way_srl")) + "========");
             if(best_count < station_srl_count){
-                pos = csrc.getPosition();
+                pos = csr.getPosition();
                 best_count = station_srl_count;
                 global.log(" : " +pos + "best count  : " + best_count);
             }
