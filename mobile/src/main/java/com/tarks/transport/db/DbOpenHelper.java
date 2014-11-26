@@ -220,7 +220,7 @@ public class DbOpenHelper {
 
     public Cursor getDirectionRows(int count_srl, int country_srl, int route_srl, int way_srl, int station_srl){
 
-        Cursor c = mDB.rawQuery( "select distinct _id, station_srl from flow where count_srl='" +  count_srl + "'AND country_srl='" + country_srl + "' AND route_srl= '" + route_srl + "' AND way_srl= '"+ way_srl +"' AND station_srl != '" + station_srl + "' ORDER BY `_id` ASC" , null);
+        Cursor c = mDB.rawQuery( "select distinct station_srl, way_srl from flow where count_srl='" +  count_srl + "'AND country_srl='" + country_srl + "' AND route_srl= '" + route_srl + "' AND way_srl= '"+ way_srl +"' AND station_srl != '" + station_srl + "' ORDER BY `_id` ASC" , null);
         return c;
     }
 
