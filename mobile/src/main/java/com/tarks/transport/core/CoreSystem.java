@@ -47,7 +47,8 @@ public class CoreSystem extends Service implements GoogleApiClient.ConnectionCal
     private boolean initcheck = false;
     private int action_count = 0;
     private int same_place_count = 0;
-    private int station_srl_temp = 0 ;
+    private int station_srl_temp = 0;
+    private int route_srl_temp = 0;
 
     @Override
     public void onCreate() {
@@ -132,7 +133,7 @@ try {
     for (int i = 0; i < ic.size(); i++) {
         global.log("ok" + ic.size());
         InfoClass get = ic.get(i);
-     if (get.station_srl <= station_srl_temp + 5)  mDbOpenHelper.insertFdColumn(count_srl, get.id, get.country_srl, get.route_srl, get.station_srl, get.way_srl, lc.getLatitude(), lc.getLongitude(), get.station_latitude, get.station_longitude, global.getCurrentTimeStamp(),location_mode, near_level);
+ mDbOpenHelper.insertFdColumn(count_srl, get.id, get.country_srl, get.route_srl, get.station_srl, get.way_srl, lc.getLatitude(), lc.getLongitude(), get.station_latitude, get.station_longitude, global.getCurrentTimeStamp(),location_mode, near_level);
     }
 
 
@@ -333,6 +334,7 @@ try {
             int best_count = 0;
             int station_srl_count = 0;
             int station_srl_temp = 0;
+            int timestamp_temp = 0;
 
         while (csr.moveToNext()) {
 
@@ -344,13 +346,13 @@ station_srl_temp = 0;
 
        //  if(csrc.getCount() > count){
              while (csrc.moveToNext()) {
-                 if(   csrc.getInt(csrc.getColumnIndex("station_srl")) >station_srl_temp && csrc.getInt(csrc.getColumnIndex("station_srl")) < station_srl_temp + 4 &&csr.getInt(csr.getColumnIndex("station_srl")) - csrc.getCount() < 4) {
+                 if(   csrc.getInt(csrc.getColumnIndex("station_srl")) >station_srl_temp && csrc.getInt(csrc.getColumnIndex("station_srl")) < station_srl_temp + 4 &&csr.getInt(csr.getColumnIndex("station_srl")) - csrc.getCount() < 4 && csr.getInt(csr.getColumnIndex("time")) >= timestamp_temp) {
                      station_srl_temp =  csrc.getInt(csrc.getColumnIndex("station_srl"));
-                     global.log( csrc.getInt(csrc.getColumnIndex("station_srl")) + "station");
+               //      global.log( csrc.getInt(csrc.getColumnIndex("station_srl")) + "station");
 
                      station_srl_count++;
                  }
-global.log(csr.getInt(csr.getColumnIndex("station_srl")) + "AND" + csrc.getCount() + "mistake");
+//global.log(csr.getInt(csr.getColumnIndex("station_srl")) + "AND" + csrc.getCount() + "mistake");
                 // global.log( csr.getInt(csr.getColumnIndex("station_srl")) + "VS" +csrc.getInt(csrc.getColumnIndex("station_srl")));
            //
              }
@@ -644,7 +646,7 @@ global.log("Connected");
     }
 
     public void setActionLocationMode(Context cx, int level){
-        global.log("Location Level : " + level);
+        global.log("Location Mode : " + level);
         action_count = 0;
         same_place_count = 0;
 
