@@ -47,7 +47,7 @@ public class CoreSystem extends Service implements GoogleApiClient.ConnectionCal
     private boolean initcheck = false;
     private int action_count = 0;
     private int same_place_count = 0;
-    private int station_srl_temp = 0;
+
     private int route_srl_temp = 0;
 
     @Override
@@ -335,27 +335,40 @@ try {
             int station_srl_count = 0;
 
             int timestamp_temp = 0;
+        int station_srl_temp = 0;
+        int station_srl_sub_temp = 0;
+
 
         while (csr.moveToNext()) {
 
-station_srl_temp = 0;
+            station_srl_sub_temp = 0;
             station_srl_count = 0;
-             station_srl_temp = 0;
+        //     station_srl_temp = 0;
 
 
                           Cursor csrc =  mDbOpenHelper.getDirectionRows(count_srl ,csr.getInt(csr.getColumnIndex("country_srl")), csr.getInt(csr.getColumnIndex("route_srl")), csr.getInt(csr.getColumnIndex("way_srl")), csr.getInt(csr.getColumnIndex("station_srl")));
 
        //  if(csrc.getCount() > count){
              while (csrc.moveToNext()) {
+                 global.log( "station_srl :" + csrc.getInt(csrc.getColumnIndex("station_srl")) + "station_srl_sub_temp :" + station_srl_sub_temp);
+                 if(  ( csrc.getInt(csrc.getColumnIndex("station_srl")) >station_srl_sub_temp) && (csr.getInt(csr.getColumnIndex("station_srl")) < station_srl_temp + 3 ||  station_srl_temp == 0)  && (csrc.getInt(csrc.getColumnIndex("station_srl")) < station_srl_sub_temp + 3 ||  station_srl_sub_temp == 0) && (csr.getInt(csr.getColumnIndex("time")) >= timestamp_temp)   ) {
 
-                 if(   csrc.getInt(csrc.getColumnIndex("station_srl")) >station_srl_temp && csrc.getInt(csrc.getColumnIndex("station_srl")) < station_srl_temp + 3 ||  station_srl_temp == 0 && csr.getInt(csr.getColumnIndex("time")) >= timestamp_temp) {
-                     station_srl_temp =  csrc.getInt(csrc.getColumnIndex("station_srl"));
+                     station_srl_temp =  csr.getInt(csr.getColumnIndex("station_srl"));
+                     station_srl_sub_temp =  csrc.getInt(csrc.getColumnIndex("station_srl"));
                      timestamp_temp = csr.getInt(csr.getColumnIndex("time"));
                     global.log( csrc.getInt(csrc.getColumnIndex("station_srl")) + "station");
 
+
                      station_srl_count++;
                  }
-global.log(csr.getInt(csr.getColumnIndex("station_srl")) + "AND" + csrc.getCount() + "mistake");
+//               if(   csrc.getInt(csrc.getColumnIndex("station_srl")) < station_srl_sub_temp + 3  ||  station_srl_sub_temp == 0){
+//                   global.log("true");
+//               }else{
+//                   global.log("false");
+//               }
+
+
+//global.log(csr.getInt(csr.getColumnIndex("station_srl")) + "AND" + csrc.getCount() );
                 // global.log( csr.getInt(csr.getColumnIndex("station_srl")) + "VS" +csrc.getInt(csrc.getColumnIndex("station_srl")));
            //
              }
