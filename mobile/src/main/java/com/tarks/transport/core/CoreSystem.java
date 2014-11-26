@@ -333,31 +333,33 @@ try {
             int pos = 0;
             int best_count = 0;
             int station_srl_count = 0;
-            int station_srl_temp = 0;
+
             int timestamp_temp = 0;
 
         while (csr.moveToNext()) {
 
 station_srl_temp = 0;
             station_srl_count = 0;
+             station_srl_temp = 0;
 
 
                           Cursor csrc =  mDbOpenHelper.getDirectionRows(count_srl ,csr.getInt(csr.getColumnIndex("country_srl")), csr.getInt(csr.getColumnIndex("route_srl")), csr.getInt(csr.getColumnIndex("way_srl")), csr.getInt(csr.getColumnIndex("station_srl")));
 
        //  if(csrc.getCount() > count){
              while (csrc.moveToNext()) {
-                 if(   csrc.getInt(csrc.getColumnIndex("station_srl")) >station_srl_temp && csrc.getInt(csrc.getColumnIndex("station_srl")) < station_srl_temp + 3 &&csr.getInt(csr.getColumnIndex("station_srl")) - csrc.getCount() < 4 && csr.getInt(csr.getColumnIndex("time")) >= timestamp_temp) {
+
+                 if(   csrc.getInt(csrc.getColumnIndex("station_srl")) >station_srl_temp && csrc.getInt(csrc.getColumnIndex("station_srl")) < station_srl_temp + 3 ||  station_srl_temp == 0 && csr.getInt(csr.getColumnIndex("time")) >= timestamp_temp) {
                      station_srl_temp =  csrc.getInt(csrc.getColumnIndex("station_srl"));
                      timestamp_temp = csr.getInt(csr.getColumnIndex("time"));
-               //      global.log( csrc.getInt(csrc.getColumnIndex("station_srl")) + "station");
+                    global.log( csrc.getInt(csrc.getColumnIndex("station_srl")) + "station");
 
                      station_srl_count++;
                  }
-//global.log(csr.getInt(csr.getColumnIndex("station_srl")) + "AND" + csrc.getCount() + "mistake");
+global.log(csr.getInt(csr.getColumnIndex("station_srl")) + "AND" + csrc.getCount() + "mistake");
                 // global.log( csr.getInt(csr.getColumnIndex("station_srl")) + "VS" +csrc.getInt(csrc.getColumnIndex("station_srl")));
            //
              }
-          //  global.log(csr.getInt(csr.getColumnIndex("way_srl")) + "========");
+            global.log(csr.getInt(csr.getColumnIndex("way_srl")) + "========");
             if(best_count < station_srl_count){
                 pos = csr.getPosition();
                 best_count = station_srl_count;
