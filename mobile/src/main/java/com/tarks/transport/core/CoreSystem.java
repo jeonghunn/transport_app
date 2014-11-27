@@ -340,7 +340,7 @@ try {
 
 
         while (csr.moveToNext()) {
-
+station_srl_temp = 0;
             station_srl_sub_temp = 0;
             station_srl_count = 0;
         //     station_srl_temp = 0;
@@ -350,8 +350,8 @@ try {
 
        //  if(csrc.getCount() > count){
              while (csrc.moveToNext()) {
-                 global.log( "station_srl :" + csrc.getInt(csrc.getColumnIndex("station_srl")) + "station_srl_sub_temp :" + station_srl_sub_temp);
-                 if(  ( csrc.getInt(csrc.getColumnIndex("station_srl")) >station_srl_sub_temp) && (csr.getInt(csr.getColumnIndex("station_srl")) < station_srl_temp + 3 ||  station_srl_temp == 0)  && (csrc.getInt(csrc.getColumnIndex("station_srl")) < station_srl_sub_temp + 3 ||  station_srl_sub_temp == 0) && (csr.getInt(csr.getColumnIndex("time")) >= timestamp_temp)   ) {
+                 global.log( "station_srl :" + csrc.getInt(csrc.getColumnIndex("station_srl")) + "station_srl_sub_temp :" + station_srl_sub_temp + "station_srl_temp" + station_srl_temp  );
+                 if(  ( csrc.getInt(csrc.getColumnIndex("station_srl")) >station_srl_sub_temp) &&  (csrc.getInt(csrc.getColumnIndex("station_srl")) <= station_srl_sub_temp + 3 ||  station_srl_sub_temp == 0) && (csr.getInt(csr.getColumnIndex("time")) >= timestamp_temp)   ) {
 
                      station_srl_temp =  csr.getInt(csr.getColumnIndex("station_srl"));
                      station_srl_sub_temp =  csrc.getInt(csrc.getColumnIndex("station_srl"));
@@ -360,8 +360,14 @@ try {
 
 
                      station_srl_count++;
+                     //prevent if csr number is strange
+
                  }
-//               if(   csrc.getInt(csrc.getColumnIndex("station_srl")) < station_srl_sub_temp + 3  ||  station_srl_sub_temp == 0){
+                 global.log(  "count : " + csrc.getCount() + "posistion : " + csrc.getPosition());
+                 //Trash csr row
+                 if(csrc.getPosition() + 1 == csrc.getCount() && csr.getInt(csr.getColumnIndex("station_srl")) >= station_srl_sub_temp + 3) station_srl_count = 0;
+//               if(
+//   csrc.getInt(csrc.getColumnIndex("station_srl")) < station_srl_sub_temp + 3  ||  station_srl_sub_temp == 0){
 //                   global.log("true");
 //               }else{
 //                   global.log("false");
@@ -373,7 +379,7 @@ try {
            //
              }
             global.log(csr.getInt(csr.getColumnIndex("way_srl")) + "========");
-            if(best_count < station_srl_count){
+            if(best_count <= station_srl_count){
                 pos = csr.getPosition();
                 best_count = station_srl_count;
                 global.log(" : " +pos + "best count  : " + best_count);
