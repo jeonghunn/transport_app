@@ -351,7 +351,9 @@ station_srl_temp = 0;
        //  if(csrc.getCount() > count){
              while (csrc.moveToNext()) {
                  global.log( "station_srl :" + csrc.getInt(csrc.getColumnIndex("station_srl")) + "station_srl_sub_temp :" + station_srl_sub_temp + "station_srl_temp" + station_srl_temp  );
-                 if(  ( csrc.getInt(csrc.getColumnIndex("station_srl")) >station_srl_sub_temp) &&  (csrc.getInt(csrc.getColumnIndex("station_srl")) <= station_srl_sub_temp + 3 ||  station_srl_sub_temp == 0) && (csr.getInt(csr.getColumnIndex("time")) >= timestamp_temp)   ) {
+                 //time prevent strange number
+                 if((csr.getInt(csr.getColumnIndex("time")) < timestamp_temp) || (csr.getInt(csr.getColumnIndex("station_srl")) >= station_srl_temp + 3 && station_srl_temp != 0)) break;
+                 if(  ( csrc.getInt(csrc.getColumnIndex("station_srl")) >station_srl_sub_temp) &&  (csrc.getInt(csrc.getColumnIndex("station_srl")) <= station_srl_sub_temp + 3 ||  station_srl_sub_temp == 0)) {
 
                      station_srl_temp =  csr.getInt(csr.getColumnIndex("station_srl"));
                      station_srl_sub_temp =  csrc.getInt(csrc.getColumnIndex("station_srl"));
@@ -361,7 +363,6 @@ station_srl_temp = 0;
 
                      station_srl_count++;
                      //prevent if csr number is strange
-
                  }
                  global.log(  "count : " + csrc.getCount() + "posistion : " + csrc.getPosition());
                  //Trash csr row
