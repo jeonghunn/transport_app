@@ -130,12 +130,13 @@ try {
     DbOpenHelper mDbOpenHelper = new DbOpenHelper(this);
     mDbOpenHelper.open();
 
-    for (int i = 0; i < ic.size(); i++) {
-        global.log("ok" + ic.size());
-        InfoClass get = ic.get(i);
- mDbOpenHelper.insertFdColumn(count_srl, get.id, get.country_srl, get.route_srl, get.station_srl, get.way_srl, lc.getLatitude(), lc.getLongitude(), get.station_latitude, get.station_longitude, global.getCurrentTimeStamp(),location_mode, near_level);
+    if(near_level < 3) {
+        for (int i = 0; i < ic.size(); i++) {
+            global.log("ok" + ic.size());
+            InfoClass get = ic.get(i);
+            mDbOpenHelper.insertFdColumn(count_srl, get.id, get.country_srl, get.route_srl, get.station_srl, get.way_srl, lc.getLatitude(), lc.getLongitude(), get.station_latitude, get.station_longitude, global.getCurrentTimeStamp(), location_mode, near_level);
+        }
     }
-
 
     mDbOpenHelper.close();
 
@@ -166,7 +167,7 @@ try {
 
         global.log(mflow.get(0).station_srl + "/"+ stations.size());
 
-    String next_name = mflow.get(0).station_srl + 1 < stations.size() ? stations.get(mflow.get(0).station_srl).station_name : null;
+    String next_name = mflow.get(0).station_srl  < stations.size() ? stations.get(mflow.get(0).station_srl).station_name : "끝";
 
         if(mflow.size() > 0 && next_name != null) sendNoti(1,1,stations.get(mflow.get(0).station_srl-1).station_name, "▶ " + next_name);
 
@@ -347,24 +348,24 @@ station_srl_temp = 0;
 
 
                           Cursor csrc =  mDbOpenHelper.getDirectionRows(count_srl ,csr.getInt(csr.getColumnIndex("country_srl")), csr.getInt(csr.getColumnIndex("route_srl")), csr.getInt(csr.getColumnIndex("way_srl")), csr.getInt(csr.getColumnIndex("station_srl")));
-
+ if(csr.getInt(csr.getColumnIndex("time")) < timestamp_temp) break;
        //  if(csrc.getCount() > count){
              while (csrc.moveToNext()) {
                  global.log( "station_srl :" + csrc.getInt(csrc.getColumnIndex("station_srl")) + "station_srl_sub_temp :" + station_srl_sub_temp + "station_srl_temp" + station_srl_temp  );
                  //time prevent strange number
-                 if((csr.getInt(csr.getColumnIndex("time")) < timestamp_temp) || (csr.getInt(csr.getColumnIndex("station_srl")) >= station_srl_temp + 3 && station_srl_temp != 0)) break;
+                 if(csr.getInt(csr.getColumnIndex("station_srl")) >= station_srl_temp + 3 && station_srl_temp != 0) break;
                  if(  ( csrc.getInt(csrc.getColumnIndex("station_srl")) >station_srl_sub_temp) &&  (csrc.getInt(csrc.getColumnIndex("station_srl")) <= station_srl_sub_temp + 3 ||  station_srl_sub_temp == 0)) {
 
                      station_srl_temp =  csr.getInt(csr.getColumnIndex("station_srl"));
                      station_srl_sub_temp =  csrc.getInt(csrc.getColumnIndex("station_srl"));
                      timestamp_temp = csr.getInt(csr.getColumnIndex("time"));
-                    global.log( csrc.getInt(csrc.getColumnIndex("station_srl")) + "station");
+             //       global.log( csrc.getInt(csrc.getColumnIndex("station_srl")) + "station");
 
 
                      station_srl_count++;
                      //prevent if csr number is strange
                  }
-                 global.log(  "count : " + csrc.getCount() + "posistion : " + csrc.getPosition());
+             //    global.log(  "count : " + csrc.getCount() + "posistion : " + csrc.getPosition());
                  //Trash csr row
                  if(csrc.getPosition() + 1 == csrc.getCount() && csr.getInt(csr.getColumnIndex("station_srl")) >= station_srl_sub_temp + 3) station_srl_count = 0;
 //               if(
