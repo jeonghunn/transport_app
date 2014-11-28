@@ -349,7 +349,7 @@ station_srl_temp = 0;
             station_srl_sub_temp = 0;
             station_srl_count = 0;
         //     station_srl_temp = 0;
-
+global.log(timestamp_best + " : timestmap best, " + csr.getInt(csr.getColumnIndex("time")) + ": time" );
 
                           Cursor csrc =  mDbOpenHelper.getDirectionRows(count_srl ,csr.getInt(csr.getColumnIndex("country_srl")), csr.getInt(csr.getColumnIndex("route_srl")), csr.getInt(csr.getColumnIndex("way_srl")), csr.getInt(csr.getColumnIndex("station_srl")));
  //if(csr.getInt(csr.getColumnIndex("time")) < timestamp_temp) break;
