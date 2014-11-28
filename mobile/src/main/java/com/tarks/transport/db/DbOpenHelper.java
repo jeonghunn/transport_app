@@ -230,6 +230,10 @@ public class DbOpenHelper {
         return c;
     }
 
+    public void DeleteFlowRow(int id){
+      mDB.rawQuery( "DELETE FROM flow WHERE _id =" + id , null);
+    }
+
 //    public Cursor getNowStation(Double latitude, Double longitude){
 //        Double max_latitude = latitude + 0.001;
 //        Double min_latitude = latitude - 0.001;

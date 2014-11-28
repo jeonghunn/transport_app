@@ -340,9 +340,13 @@ try {
         int station_srl_sub_temp = 0;
 
         int timestamp_best = 0;
+        int station_srl_best = 0;
 
         csr.moveToLast();
-if(csr.getCount() != 0) timestamp_best =  csr.getInt(csr.getColumnIndex("time"));
+if(csr.getCount() != 0) {
+    timestamp_best =  csr.getInt(csr.getColumnIndex("time"));
+    station_srl_best =  csr.getInt(csr.getColumnIndex("station_srl"));
+}
         csr.moveToFirst();
         while (csr.moveToNext()) {
 station_srl_temp = 0;
@@ -357,14 +361,16 @@ global.log(timestamp_best + " : timestmap best, " + csr.getInt(csr.getColumnInde
              while (csrc.moveToNext()) {
                  global.log( "station_srl :" + csrc.getInt(csrc.getColumnIndex("station_srl")) + "station_srl_sub_temp :" + station_srl_sub_temp + "station_srl_temp" + station_srl_temp  );
                  //time prevent strange number or prevant strange number if more bigger than last number
-                 if((csr.getInt(csr.getColumnIndex("station_srl")) >= station_srl_temp + 3 && station_srl_temp != 0) || (timestamp_best > csr.getInt(csr.getColumnIndex("time")) + 100)) break;
+                 if((csr.getInt(csr.getColumnIndex("station_srl")) >= station_srl_temp + 3 && station_srl_temp != 0) || (timestamp_best > csr.getInt(csr.getColumnIndex("time")) + 100) && csr.getCount() > 3) break;
                  if(  ( csrc.getInt(csrc.getColumnIndex("station_srl")) >station_srl_sub_temp) &&  (csrc.getInt(csrc.getColumnIndex("station_srl")) <= station_srl_sub_temp + 3 ||  station_srl_sub_temp == 0)) {
 
                      station_srl_temp =  csr.getInt(csr.getColumnIndex("station_srl"));
                      station_srl_sub_temp =  csrc.getInt(csrc.getColumnIndex("station_srl"));
                  //    timestamp_temp = csr.getInt(csr.getColumnIndex("time"));
-                //    global.log( csrc.getInt(csrc.getColumnIndex("station_srl")) + "station");
+                    global.log( csrc.getInt(csrc.getColumnIndex("station_srl")) + "station");
 
+                     //DROP NON NEED FLOW
+                     if(station_srl_best == csrc.getColumnIndex("station_srl") + 1) mDbOpenHelper.DeleteFlowRow(csrc.getColumnIndex("_id"));
 
                      station_srl_count++;
                      //prevent if csr number is strange
