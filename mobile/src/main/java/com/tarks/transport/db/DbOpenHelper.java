@@ -231,7 +231,7 @@ public class DbOpenHelper {
     }
 
     public void DeleteFlowRow(int id){
-      mDB.rawQuery( "DELETE FROM flow WHERE _id =" + id , null);
+      mDB.rawQuery( "DELETE FROM flow WHERE id_srl =" + id , null);
     }
 
 //    public Cursor getNowStation(Double latitude, Double longitude){
