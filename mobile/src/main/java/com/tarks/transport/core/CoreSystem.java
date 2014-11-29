@@ -366,7 +366,7 @@ global.log(timestamp_best + " : timestmap best, " + csr.getInt(csr.getColumnInde
 
                      station_srl_temp =  csr.getInt(csr.getColumnIndex("station_srl"));
                      station_srl_sub_temp =  csrc.getInt(csrc.getColumnIndex("station_srl"));
-                 //    timestamp_temp = csr.getInt(csr.getColumnIndex("time"));
+                 //    timestamp_temp = csr.getInt(cs7r.getColumnIndex("time"));
                     global.log( csrc.getInt(csrc.getColumnIndex("station_srl")) + "station");
 
 
@@ -376,9 +376,15 @@ global.log(timestamp_best + " : timestmap best, " + csr.getInt(csr.getColumnInde
              //    global.log(  "count : " + csrc.getCount() + "posistion : " + csrc.getPosition());
 
                  //DROP NON NEED FLOW
-                 if(station_srl_best == csrc.getInt(csrc.getColumnIndex("station_srl")) - 1) mDbOpenHelper.DeleteFlowRow(csrc.getInt(csrc.getColumnIndex("id_srl")));
+                 global.log("station_srl_best : " + station_srl_best + "station_srl" + csrc.getInt(csrc.getColumnIndex("station_srl")) );
+                 global.log( "id_srl : " + csrc.getInt(csrc.getColumnIndex("id_srl")));
+                 if(( csrc.getInt(csrc.getColumnIndex("station_srl")) >station_srl_sub_temp) && (station_srl_best == csrc.getInt(csrc.getColumnIndex("station_srl")) - 1)) {
+
+                     mDbOpenHelper.DeleteFlowRow( csrc.getInt(csrc.getColumnIndex("id_srl")));
+                 }
                  //Trash csr row
                  if(csrc.getPosition() + 1 == csrc.getCount() && csr.getInt(csr.getColumnIndex("station_srl")) >= station_srl_sub_temp + 3) station_srl_count = 0;
+
 //               if(
 //   csrc.getInt(csrc.getColumnIndex("station_srl")) < station_srl_sub_temp + 3  ||  station_srl_sub_temp == 0){
 //                   global.log("true");
