@@ -43,12 +43,10 @@ public class CoreSystem extends Service implements GoogleApiClient.ConnectionCal
     private String nodeId;
     private Context cx;
     private int location_mode;
-    private int dbid;
-    private int sis;
-    private int plm;
     private boolean initcheck = false;
     private int action_count = 0;
     private int same_place_count = 0;
+    private int same_place_id = 0;
 
     private int route_srl_temp = 0;
 
@@ -158,16 +156,16 @@ try {
 
 
         //Check same place
-        if(dbid == ic.get(0).id && sis == ic.size() && location_mode == plm){
-            same_place_count++;
-        }else{
-            dbid = ic.get(0).id;
-            sis = ic.size();
-            plm = location_mode;
-            same_place_count = 0;
-        }
+//        if(dbid == ic.get(0).id && sis == ic.size()){
+//            same_place_count++;
+//        }else{
+//            dbid = ic.get(0).id;
+//            sis = ic.size();
+//            plm = location_mode;
+//            same_place_count = 0;
+//        }
         global.log("same_place : " + same_place_count);
-        global.log("id : " + dbid);
+     //   global.log("id : " + dbid);
         global.log("getlolevel : " + near_level);
       //  global.log(global.getNight() + "asdf");
       //  sendNoti(1,1,ic.get(0).station_name,String.valueOf(location_mode));
@@ -186,7 +184,7 @@ try {
       //  sendNoti(globalv.ALMOST_NOTI,1,"목적지 거의 도착","3 정거장 남음");
         if(location_mode == globalv.LIVE_ACTIVE_MODE){
 
-            if(same_place_count > 10 && action_count > 1 || same_place_count > 4 && action_count > 1 && near_level >=3) setActionLocationMode(cx, globalv.ACTIVE_MODE);
+            if(same_place_count > 5 && action_count > 1 || same_place_count > 4 && action_count > 1 && near_level >=3) setActionLocationMode(cx, globalv.ACTIVE_MODE);
 
         }
 
@@ -206,6 +204,8 @@ try {
 //
 //            }
 
+            //ACTIVE STANBY
+            if(same_place_count > 5) setActionLocationMode(cx, globalv.ACTIVE_STANBY_MODE);
             //Stanby mode
             if (near_level >= 5 ||  same_place_count > 10  && action_count > 1 || same_place_count > 5  && action_count > 1  && near_level >= 3) setActionLocationMode(cx, globalv.STANBY_MODE);
 
@@ -223,7 +223,7 @@ try {
             }
 
                 //Stanby mode
-            if (same_place_count > 5  &&  action_count > 1 || same_place_count > 1 && near_level >= 3 || near_level >= 5) setActionLocationMode(cx, globalv.STANBY_MODE);
+            if (same_place_count > 14  &&  action_count > 1 || same_place_count > 9 && near_level >= 3 || near_level >= 5) setActionLocationMode(cx, globalv.STANBY_MODE);
 
             }
 
@@ -407,6 +407,9 @@ global.log(timestamp_best + " : timestmap best, " + csr.getInt(csr.getColumnInde
            //
              }
             global.log(csr.getInt(csr.getColumnIndex("way_srl")) + "========");
+
+
+         //   global.log("best_count : " + best_count + "station_srl_count : " + station_srl_count);
             if(best_count <= station_srl_count){
                 pos = csr.getPosition();
                 best_count = station_srl_count;
@@ -421,6 +424,8 @@ global.log(timestamp_best + " : timestmap best, " + csr.getInt(csr.getColumnInde
 
 
         }
+
+
 
             csr.moveToPosition(pos);
 
@@ -441,6 +446,13 @@ global.log(timestamp_best + " : timestmap best, " + csr.getInt(csr.getColumnInde
                     csr.getInt(csr.getColumnIndex("location_mode")),
                     csr.getInt(csr.getColumnIndex("location_level"))
             );
+
+
+            if(csr.getInt(csr.getColumnIndex("id_srl")) == same_place_id) {
+                same_place_count++;
+            }else{
+                same_place_id = csr.getInt(csr.getColumnIndex("id_srl"));
+            }
 
             global.log(csr.getInt(csr.getColumnIndex("id_srl")) + " : ID");
             mInfoArray.add(mflowClass);
