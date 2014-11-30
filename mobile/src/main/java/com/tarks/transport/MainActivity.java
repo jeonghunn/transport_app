@@ -76,20 +76,20 @@ startApp();
 
 
 
-        mDbOpenHelper.insertColumn(1,1,1,1, "쌍용고입구", 36.790517, 127.116706);
-        mDbOpenHelper.insertColumn(1,1,2,1, "월봉대우A",  36.795300, 127.114736);
-        mDbOpenHelper.insertColumn(1,1,3,1, "월봉벽산A", 36.798672, 127.115099);
-        mDbOpenHelper.insertColumn(1,1,4,1, "불당 한성A",  36.801750, 127.114672);
-        mDbOpenHelper.insertColumn(1,1,5,1, "월봉고등학교", 36.8020733, 127.1072477);
+        mDbOpenHelper.insertColumn(1,1,1,1, "쌍용고입구", 36.79051255938356,  127.11670571250683);
+        mDbOpenHelper.insertColumn(1,1,2,1, "월봉대우A",  36.79520471744649, 127.11479125873149);
+        mDbOpenHelper.insertColumn(1,1,3,1, "월봉벽산A", 36.798592555369275, 127.11514927133419);
+        mDbOpenHelper.insertColumn(1,1,4,1, "불당 한성A",  36.80183714989931, 127.11453782816889);
+        mDbOpenHelper.insertColumn(1,1,5,1, "월봉고등학교", 36.80216816714903,  127.10942412542681);
         mDbOpenHelper.insertColumn(1,1,6,1, "갤러리아백화점", 36.801495, 127.104141);
         mDbOpenHelper.insertColumn(1,1,7,1, "펜타포트",  36.797163, 127.100359);
         mDbOpenHelper.insertColumn(1,1,8,1, "아산패션1광장",  36.796265, 127.102140);
-        mDbOpenHelper.insertColumn(1,1,9,1, "충남북부상공회의소",  36.798140, 127.109394);
-        mDbOpenHelper.insertColumn(1,1,10,1, "불당한성A",  36.802947, 127.112450);
-        mDbOpenHelper.insertColumn(1,1,11,1, "불당대동다숲", 36.805122, 127.113161);
-        mDbOpenHelper.insertColumn(1,1,12,1, "불당동일하이빌",  36.807842, 127.113964);
-        mDbOpenHelper.insertColumn(1,1,13,1, "천안시청 서북구보건소",  36.813976, 127.115818);
-        mDbOpenHelper.insertColumn(1,1,14,1, "천안시청", 36.8162684, 127.1146088);
+        mDbOpenHelper.insertColumn(1,1,9,1, "충남북부상공회의소",  36.797899820869,  127.10918163034225);
+        mDbOpenHelper.insertColumn(1,1,10,1, "불당한성A",  36.80279422074784, 127.1125558616927);
+        mDbOpenHelper.insertColumn(1,1,11,1, "불당대동다숲", 36.80555984739637, 127.11338355075031);
+        mDbOpenHelper.insertColumn(1,1,12,1, "불당동일하이빌",  36.80778497844565, 127.11402559238209);
+        mDbOpenHelper.insertColumn(1,1,13,1, "천안시청 서북구보건소",  36.81390982473249,  127.11589283335526);
+        mDbOpenHelper.insertColumn(1,1,14,1, "천안시청", 36.81632424179095,  127.11460872282024);
 
 
         //반대방향
