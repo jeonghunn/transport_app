@@ -23,10 +23,12 @@ import com.google.android.gms.wearable.Wearable;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
+import com.tarks.transport.R;
 import com.tarks.transport.db.DbOpenHelper;
 import com.tarks.transport.db.InfoClass;
 import com.tarks.transport.db.fddb;
 import com.tarks.transport.db.flowclass;
+import com.tarks.transport.main;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,28 +84,35 @@ public void startFlow(Context cx, Location lc){
         global.log("firstFlow");
          global.DBCountSrlUpdate(cx);
 
-        int near_level = 0;
+
+        if(global.getLocationMode(cx) > globalv.STANBY_MODE){
+            setActionLocationMode(cx, global.getLocationMode(cx));
+        }else {
 
 
-        for (int i = 1; i <= 6; i++) {
-            if(getNearStations(cx,lc,i).size() > 0) {
-                near_level = i;
-                break;
+            int near_level = 0;
+
+
+            for (int i = 1; i <= 6; i++) {
+                if (getNearStations(cx, lc, i).size() > 0) {
+                    near_level = i;
+                    break;
+                }
+
+                if (i == 6) near_level = 7;
             }
 
-            if(i == 6) near_level = 7;
+
+            if (near_level == 1) setActionLocationMode(cx, globalv.ACTIVE_MODE);
+            if (near_level == 2) setActionLocationMode(cx, globalv.ACTIVE_STANBY_MODE);
+            if (near_level == 3) setActionLocationMode(cx, globalv.STANBY_MODE);
+            if (near_level == 4) setActionLocationMode(cx, globalv.POWER_SAVED_MODE);
+            if (near_level == 5) setActionLocationMode(cx, globalv.HIBERNATION_MODE);
+            if (near_level >= 6) setActionLocationMode(cx, globalv.HIBERNATION_MODE);
+
+
         }
-
-
-        if(near_level == 1) setActionLocationMode(cx, globalv.ACTIVE_MODE);
-        if(near_level == 2) setActionLocationMode(cx, globalv.ACTIVE_STANBY_MODE);
-        if(near_level == 3) setActionLocationMode(cx, globalv.STANBY_MODE);
-        if(near_level == 4) setActionLocationMode(cx, globalv.POWER_SAVED_MODE);
-        if(near_level == 5) setActionLocationMode(cx, globalv.HIBERNATION_MODE);
-        if(near_level >= 6) setActionLocationMode(cx, globalv.HIBERNATION_MODE);
-
         initcheck = true;
-
     }
 
     public void  conFlow(Context cx, Location lc){
@@ -622,6 +631,13 @@ global.log(timestamp_best + " : timestmap best, " + csr.getInt(csr.getColumnInde
     }
 
 
+public void arrivedAction(Context cx, String title, String content){
+   sendNoti(globalv.ARRIVED_NOTI, 1, title, content );
+   // Intent viewIntent = new Intent(this, main.class);
+   // global.setActiveNoti(cx, 1, viewIntent, title, content, R.drawable.ic_launcher, R.drawable.ic_launcher);
+}
+
+
 //    private void sendstations(Context cx, Location location){
 //        ArrayList<InfoClass> result_array = getNearStations(cx, location.getLatitude(), location.getLongitude());
 //        Gson gson = new GsonBuilder().create();
@@ -677,6 +693,7 @@ global.log("Connected");
             conFlow(cx, location);
         }else{
             firstFlow(cx, location);
+
         }
 
     }
@@ -722,7 +739,7 @@ global.log("Connected");
 
         }
 
-
+global.setLocationMode(cx, level);
 
     }
 

@@ -9,6 +9,7 @@ import android.support.wearable.view.CardScrollView;
 import android.support.wearable.view.WatchViewStub;
 import android.view.Gravity;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.tarks.transport.core.global;
@@ -23,6 +24,7 @@ public class BusArrive extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.almost);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         final WatchViewStub stub = (WatchViewStub) findViewById(R.id.watch_view_stub);
 
         Intent intent = getIntent(); // 인텐트 받아오고
@@ -43,7 +45,7 @@ public class BusArrive extends Activity {
                 cardScrollView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                       finish();
+                       //finish();
 
                     }
                 });
@@ -59,5 +61,12 @@ public class BusArrive extends Activity {
 
 
 
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        super.onStop();
     }
 }

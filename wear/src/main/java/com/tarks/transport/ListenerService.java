@@ -10,6 +10,7 @@ import android.widget.Toast;
 import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.WearableListenerService;
 import com.tarks.transport.core.InfoClass;
+import com.tarks.transport.core.WakeLock;
 import com.tarks.transport.core.global;
 
 import android.support.v4.app.NotificationCompat;
@@ -22,6 +23,8 @@ import org.json.JSONException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
+
+import static com.tarks.transport.core.WakeLock.acquireCpuWakeLock;
 
 public class ListenerService extends WearableListenerService {
 
@@ -59,7 +62,7 @@ checkMessage(messageEvent.getPath(), messageEvent.getData());
         //Normal noti
         if (kind == 1) {
             Intent viewIntent = new Intent(this, StationList.class);
-            global.setNotifcation(this, noti_id, viewIntent, title, content, R.drawable.bus_background);
+            global.setNotifcation(this, noti_id, viewIntent, title, content,R.drawable.ic_launcher,  R.drawable.bus_background);
         }
 
         //Bus almost arrived
@@ -67,7 +70,7 @@ checkMessage(messageEvent.getPath(), messageEvent.getData());
 
             global.Vibrate(this, 2000);
             Intent viewIntent = new Intent(this, StationList.class);
-            global.setNotifcation(this, noti_id, viewIntent, title, content, R.drawable.almost_background);
+            global.setNotifcation(this, noti_id, viewIntent, title, content, R.drawable.ic_launcher, R.drawable.almost_background);
 //
 //            Intent i = new Intent(ListenerService.this, BusArrive.class);
 //            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -77,10 +80,34 @@ checkMessage(messageEvent.getPath(), messageEvent.getData());
 
         }
 
+
+        //Bus arrived
+        if (kind == 3) {
+         //   global.Vibrate(this, 7000);
+//            Intent viewIntent = new Intent(this, StationList.class);
+//            global.setActiveNoti(this, noti_id, viewIntent, title, content, R.drawable.ic_launcher, R.drawable.flag);
+
+            arrivedAction(title, content);
+        }
+
     }
 
 
+private void arrivedAction(String title, String content){
+   // WakeLock.acquireCpuWakeLock(ListenerService.this);
 
+
+
+                Intent i = new Intent(this, BusArrive.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            i.putExtra("title", title);
+            i.putExtra("content", content);
+            startActivity(i);
+    global.Vibrate(this, 4000);
+   // WakeLock.releaseCpuLock();
+    Intent viewIntent = new Intent(this, StationList.class);
+    global.setActiveNoti(this, 1, viewIntent, title, content, R.drawable.ic_launcher, R.drawable.flag);
+}
 
 
 

@@ -1,5 +1,6 @@
 package com.tarks.transport.core;
 
+import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -212,6 +213,14 @@ public final class global {
     public static int getCountSrl(Context cx){
         return Integer.parseInt(getSetting(cx, "count_srl", "1"));
     }
+
+    public static int getLocationMode(Context cx){
+        return Integer.parseInt(getSetting(cx, "location_mode", "0"));
+    }
+    public static void setLocationMode(Context cx, int location_mode) {
+        int count_srl = Integer.parseInt(getSetting(cx, "location_mode", "0"));
+        SaveSetting(cx, "location_mode", String.valueOf(location_mode));
+    }
 //
 //    public static void SamePlaceCountUpdate(Context cx) {
 //        int same_place_count = Integer.parseInt(getSetting(cx, "same_place_count", "0"));
@@ -243,6 +252,47 @@ public final class global {
         int hour = Integer.parseInt(time);
        if(hour <= 6 && 0 <= hour) return true;
         return false;
+    }
+
+    public static void setActiveNoti(Context cx, int notificationId, Intent viewIntent, String title, String content, int icon, int largeicon){
+
+// Build intent for notification content
+        // Intent viewIntent = new Intent(this, StationList.class);
+        //  viewIntent.putExtra("1234", eventId);
+        PendingIntent viewPendingIntent =
+                PendingIntent.getActivity(cx, 0, viewIntent, 0);
+
+        NotificationCompat.WearableExtender wearableExtender =
+                new NotificationCompat.WearableExtender()
+                        //   .setHintHideIcon(true)
+
+                        .setBackground(BitmapFactory.decodeResource(
+                                cx.getResources(), largeicon));
+
+
+        NotificationCompat.Builder notificationBuilder =
+                new NotificationCompat.Builder(cx)
+                        .setSmallIcon(icon)
+                        .setContentTitle(title)
+                        .setDefaults(Notification.DEFAULT_ALL)
+                        .setPriority(5)
+                        .setContentText(content)
+                        .setLargeIcon(BitmapFactory.decodeResource(
+                                cx.getResources(), largeicon))
+                        .extend(wearableExtender)
+                        .setContentIntent(viewPendingIntent);
+
+
+
+
+// Get an instance of the NotificationManager service
+        NotificationManagerCompat notificationManager =
+                NotificationManagerCompat.from(cx);
+
+
+
+// Build the notification and issues it with notification manager.
+        notificationManager.notify(notificationId, notificationBuilder.build());
     }
 
 

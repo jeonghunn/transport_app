@@ -39,6 +39,7 @@ public final class globalv {
     //Notification
     public static final int DEFUALT_NOTI = 1;
     public static final int ALMOST_NOTI = 2;
+    public static final int ARRIVED_NOTI = 3;
 
     }
 
