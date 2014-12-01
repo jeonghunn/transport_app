@@ -79,9 +79,10 @@ public class DbOpenHelper {
 
 
     // Insert DB
-    public long insertFdColumn(int count_srl, int id_srl, int country_srl ,int route_srl, int station_srl, int way_srl, Double latitude, Double longitude, Double station_latitude, Double station_longitude, long time, int location_mode ,int location_level){
+    public long insertFdColumn(int count_srl, int action_srl,  int id_srl, int country_srl ,int route_srl, int station_srl, int way_srl, Double latitude, Double longitude, Double station_latitude, Double station_longitude, long time, int location_mode ,int location_level){
         ContentValues values = new ContentValues();
         values.put(fddb.CreateDB.COUNT_SRL, count_srl);
+        values.put(fddb.CreateDB.ACTION_SRL, action_srl);
         values.put(fddb.CreateDB.ID_SRL, id_srl);
         values.put(fddb.CreateDB.COUNTRY_SRL, country_srl);
         values.put(fddb.CreateDB.ROUTE_SRL, route_srl);
@@ -231,7 +232,7 @@ public class DbOpenHelper {
     }
 
     public void DeleteFlowRow( int id){
-        mDB.execSQL("DELETE FROM flow WHERE id_srl =" + id);
+        mDB.execSQL("DELETE FROM flow WHERE id_srl >=" + id + " AND id_srl <  3 + " + id);
     }
 
 //    public Cursor getNowStation(Double latitude, Double longitude){

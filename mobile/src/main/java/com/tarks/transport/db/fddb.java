@@ -11,6 +11,7 @@ public class fddb {
     public static final class CreateDB implements BaseColumns {
         public static final String _TABLENAME = "flow";
         public static final String COUNT_SRL = "count_srl";
+        public static final String ACTION_SRL = "action_srl";
         public static final String ID_SRL = "id_srl";
         public static final String COUNTRY_SRL = "country_srl";
         public static final String ROUTE_SRL = "route_srl";
@@ -27,6 +28,7 @@ public class fddb {
                 "create table "+_TABLENAME+"("
                         +_ID+" integer primary key autoincrement, "
                         +COUNT_SRL+" int not null , "
+                        +ACTION_SRL+" int not null , "
                         +ID_SRL+" int not null , "
                         +COUNTRY_SRL+" int not null , "
                         +ROUTE_SRL+" int not null , "

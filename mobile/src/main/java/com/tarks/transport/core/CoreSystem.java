@@ -83,7 +83,7 @@ public void startFlow(Context cx, Location lc){
          global.DBCountSrlUpdate(cx);
 
 
-        if(global.getLocationMode(cx) > globalv.STANBY_MODE){
+        if(global.getLocationMode(cx) > globalv.POWER_SAVED_MODE){
             setActionLocationMode(cx, global.getLocationMode(cx));
         }else {
 
@@ -141,7 +141,7 @@ try {
         for (int i = 0; i < ic.size(); i++) {
             global.log("ok" + ic.size());
             InfoClass get = ic.get(i);
-            mDbOpenHelper.insertFdColumn(count_srl, get.id, get.country_srl, get.route_srl, get.station_srl, get.way_srl, lc.getLatitude(), lc.getLongitude(), get.station_latitude, get.station_longitude, global.getCurrentTimeStamp(), location_mode, near_level);
+            mDbOpenHelper.insertFdColumn(count_srl, action_count, get.id, get.country_srl, get.route_srl, get.station_srl, get.way_srl, lc.getLatitude(), lc.getLongitude(), get.station_latitude, get.station_longitude, global.getCurrentTimeStamp(), location_mode, near_level);
         }
     }
 
@@ -184,7 +184,7 @@ try {
       //  sendNoti(globalv.ALMOST_NOTI,1,"목적지 거의 도착","3 정거장 남음");
         if(location_mode == globalv.LIVE_ACTIVE_MODE){
 
-            if(same_place_count > 5 && action_count > 1 || same_place_count > 4 && action_count > 1 && near_level >=3) setActionLocationMode(cx, globalv.ACTIVE_MODE);
+            if(same_place_count > 10 && action_count > 1 || same_place_count > 4 && action_count > 1 && near_level >=3) setActionLocationMode(cx, globalv.ACTIVE_MODE);
 
         }
 
@@ -207,7 +207,7 @@ try {
             //ACTIVE STANBY
             if(same_place_count > 5) setActionLocationMode(cx, globalv.ACTIVE_STANBY_MODE);
             //Stanby mode
-            if (near_level >= 5 ||  same_place_count > 10  && action_count > 1 || same_place_count > 5  && action_count > 1  && near_level >= 3) setActionLocationMode(cx, globalv.STANBY_MODE);
+            if ( same_place_count > 10  && action_count > 1 || same_place_count > 5  && action_count > 1  && near_level >= 3) setActionLocationMode(cx, globalv.STANBY_MODE);
 
         }
 
@@ -223,7 +223,7 @@ try {
             }
 
                 //Stanby mode
-            if (same_place_count > 14  &&  action_count > 1 || same_place_count > 9 && near_level >= 3 || near_level >= 5) setActionLocationMode(cx, globalv.STANBY_MODE);
+            if (same_place_count > 7  &&  action_count > 1 || same_place_count > 4 && near_level > 3 || near_level >= 5) setActionLocationMode(cx, globalv.STANBY_MODE);
 
             }
 
@@ -233,7 +233,7 @@ try {
                 if(near_level == 3) setActionLocationMode(cx, globalv.ACTIVE_STANBY_MODE);
 
             }
-            if (same_place_count > 9 || same_place_count > 0  &&  action_count > 1 && near_level >= 3 || same_place_count > 3  &&  action_count > 1 && global.getNight()|| near_level >= 5) setActionLocationMode(cx, globalv.POWER_SAVED_MODE);
+            if (same_place_count > 6 || same_place_count > 0  &&  action_count > 1 && near_level >= 3 || same_place_count > 3  &&  action_count > 1 && global.getNight()|| near_level >= 5) setActionLocationMode(cx, globalv.POWER_SAVED_MODE);
         }
 
         if (location_mode == globalv.POWER_SAVED_MODE) {
@@ -277,6 +277,7 @@ try {
             flowclass mflowClass = new flowclass(
                     csr.getInt(csr.getColumnIndex("_id")),
                     csr.getInt(csr.getColumnIndex("count_srl")),
+                    csr.getInt(csr.getColumnIndex("action_srl")),
                     csr.getInt(csr.getColumnIndex("id_srl")),
                     csr.getInt(csr.getColumnIndex("country_srl")),
                     csr.getInt(csr.getColumnIndex("route_srl")),
@@ -370,7 +371,7 @@ global.log(timestamp_best + " : timestmap best, " + csr.getInt(csr.getColumnInde
              while (csrc.moveToNext()) {
                  global.log( "station_srl :" + csrc.getInt(csrc.getColumnIndex("station_srl")) + "station_srl_sub_temp :" + station_srl_sub_temp + "station_srl_temp" + station_srl_temp  );
                  //time prevent strange number or prevant strange number if more bigger than last number
-                 if((csr.getInt(csr.getColumnIndex("station_srl")) >= station_srl_temp + 3 && station_srl_temp != 0) || (timestamp_best > csr.getInt(csr.getColumnIndex("time")) + 100) && csr.getCount() > 3) break;
+                 if((csr.getInt(csr.getColumnIndex("station_srl")) >= station_srl_temp + 3 && station_srl_temp != 0) || (timestamp_best > csr.getInt(csr.getColumnIndex("time")) + 300) && csr.getCount() > 3) break;
                  if(  ( csrc.getInt(csrc.getColumnIndex("station_srl")) >station_srl_sub_temp) &&  (csrc.getInt(csrc.getColumnIndex("station_srl")) <= station_srl_sub_temp + 3 ||  station_srl_sub_temp == 0)) {
 
                      station_srl_temp =  csr.getInt(csr.getColumnIndex("station_srl"));
@@ -433,6 +434,7 @@ global.log(timestamp_best + " : timestmap best, " + csr.getInt(csr.getColumnInde
             flowclass mflowClass = new flowclass(
                     csr.getInt(csr.getColumnIndex("_id")),
                     csr.getInt(csr.getColumnIndex("count_srl")),
+                    csr.getInt(csr.getColumnIndex("action_srl")),
                     csr.getInt(csr.getColumnIndex("id_srl")),
                     csr.getInt(csr.getColumnIndex("country_srl")),
                     csr.getInt(csr.getColumnIndex("route_srl")),
@@ -514,7 +516,7 @@ global.log(timestamp_best + " : timestmap best, " + csr.getInt(csr.getColumnInde
 
 
         DbOpenHelper mDbOpenHelper = new DbOpenHelper(cx);
-        mDbOpenHelper.open();;
+        mDbOpenHelper.open();
         Cursor csr = mDbOpenHelper.getStations(country_srl,route_srl,way_srl);
 
 
@@ -671,9 +673,9 @@ public void arrivedAction(Context cx, String title, String content){
             if (level == globalv.ACTIVE_STANBY_MODE)
                 LocationRequest(cx, 300000, 60000, LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
             if (level == globalv.ACTIVE_MODE)
-                LocationRequest(cx, 25000, 10000, LocationRequest.PRIORITY_HIGH_ACCURACY);
+                LocationRequest(cx, 25000, 7000, LocationRequest.PRIORITY_HIGH_ACCURACY);
             if (level == globalv.LIVE_ACTIVE_MODE)
-                LocationRequest(cx, 15000, 5000, LocationRequest.PRIORITY_HIGH_ACCURACY);
+                LocationRequest(cx, 15000, 3000, LocationRequest.PRIORITY_HIGH_ACCURACY);
         }else{
             LocationRequest(cx, 5000, 1000, LocationRequest.PRIORITY_HIGH_ACCURACY);
         }
