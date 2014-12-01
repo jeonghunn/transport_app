@@ -233,7 +233,7 @@ try {
                 if(near_level == 3) setActionLocationMode(cx, globalv.ACTIVE_STANBY_MODE);
 
             }
-            if (same_place_count > 0  &&  action_count > 1 && near_level >= 3 || same_place_count > 3  &&  action_count > 1 && global.getNight()|| near_level >= 5) setActionLocationMode(cx, globalv.POWER_SAVED_MODE);
+            if (same_place_count > 9 || same_place_count > 0  &&  action_count > 1 && near_level >= 3 || same_place_count > 3  &&  action_count > 1 && global.getNight()|| near_level >= 5) setActionLocationMode(cx, globalv.POWER_SAVED_MODE);
         }
 
         if (location_mode == globalv.POWER_SAVED_MODE) {
@@ -687,7 +687,7 @@ public void arrivedAction(Context cx, String title, String content){
     @Override
     public void onConnected(Bundle bundle) {
 global.log("Connected");
-     setActionLocationMode(cx, globalv.ACTIVE_MODE);
+        setLocationMode(cx, globalv.ACTIVE_MODE);
 
 
     }
