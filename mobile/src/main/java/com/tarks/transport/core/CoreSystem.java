@@ -84,7 +84,7 @@ public void startFlow(Context cx, Location lc){
         global.log("firstFlow");
          global.DBCountSrlUpdate(cx);
 
-
+//global.setGoalID(cx, 18);
 
 
         if(global.getLocationMode(cx) > globalv.POWER_SAVED_MODE){
@@ -146,6 +146,7 @@ try {
             global.log("ok" + ic.size());
             InfoClass get = ic.get(i);
             mDbOpenHelper.insertFdColumn(count_srl, action_count, get.id, get.country_srl, get.route_srl, get.station_srl, get.way_srl, lc.getLatitude(), lc.getLongitude(), get.station_latitude, get.station_longitude, global.getCurrentTimeStamp(), location_mode, near_level);
+            if(global.getGoalID(cx) == get.id) arrivedAction(cx, "목적지 도착", get.station_name);
         }
     }
 
@@ -652,6 +653,7 @@ global.log(timestamp_best + " : timestmap best, " + csr.getInt(csr.getColumnInde
 
 public void arrivedAction(Context cx, String title, String content){
    sendNoti(globalv.ARRIVED_NOTI, 1, title, content );
+    setActionLocationMode(cx, 3);
    // Intent viewIntent = new Intent(this, main.class);
    // global.setActiveNoti(cx, 1, viewIntent, title, content, R.drawable.ic_launcher, R.drawable.ic_launcher);
 }

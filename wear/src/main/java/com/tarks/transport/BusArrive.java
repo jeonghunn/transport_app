@@ -67,6 +67,6 @@ public class BusArrive extends Activity {
     public void onPause() {
         super.onPause();
 
-        super.onStop();
+      finish();
     }
 }

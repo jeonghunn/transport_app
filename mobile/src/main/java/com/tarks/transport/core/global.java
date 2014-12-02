@@ -5,7 +5,13 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Rect;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
@@ -221,6 +227,14 @@ public final class global {
         int count_srl = Integer.parseInt(getSetting(cx, "location_mode", "0"));
         SaveSetting(cx, "location_mode", String.valueOf(location_mode));
     }
+
+    public static int getGoalID(Context cx){
+        return Integer.parseInt(getSetting(cx, "goal_id", "0"));
+    }
+    public static void setGoalID(Context cx, int goal_id) {
+        int count_srl = Integer.parseInt(getSetting(cx, "goal_id", "0"));
+        SaveSetting(cx, "goal_id", String.valueOf(goal_id));
+    }
 //
 //    public static void SamePlaceCountUpdate(Context cx) {
 //        int same_place_count = Integer.parseInt(getSetting(cx, "same_place_count", "0"));
@@ -294,6 +308,8 @@ public final class global {
 // Build the notification and issues it with notification manager.
         notificationManager.notify(notificationId, notificationBuilder.build());
     }
+
+
 
 
 }
