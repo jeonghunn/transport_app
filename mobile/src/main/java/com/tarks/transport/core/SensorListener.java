@@ -17,6 +17,7 @@ public class SensorListener implements SensorEventListener {
     private SensorManager mSensorManager;
     private Sensor mGyroscope;
     private Sensor accSensor;
+    private int count_srl;
 
     int gyroX;
     int gyroY;
@@ -38,7 +39,7 @@ public class SensorListener implements SensorEventListener {
     public void onSensorChanged(android.hardware.SensorEvent event) {
         Sensor sensor = event.sensor;
 
-
+//global.log(globalv.moving_now + "aaaaa");
 
         if (sensor.getType() == Sensor.TYPE_GYROSCOPE) {
            int x = Math.round(event.values[0] * 1000);
@@ -58,18 +59,21 @@ public class SensorListener implements SensorEventListener {
 
     public void checkMoving(int X, int Y, int Z, int nowx, int nowy, int nowz){
         int result = (X + Y + Z) - (nowx + nowy + nowz);
- if(result <= 50 ||  result >= -50 ) globalv.moving_now = globalv.STOP_STATE;
-        if(result >= 500 ||  result <= -500 ) globalv.moving_now = globalv.ACTIVE_STATE;
-
-        if(globalv.moving_now == 0) globalv.moving_now =globalv.NORMAL_STATE;
 
 
+        if(count_srl > 20) {
+            if (result <= 50 || result >= -50) globalv.moving_now = globalv.STOP_STATE;
+
+            if (result >= 50 || result <= -50) globalv.moving_now = globalv.ACTIVE_STATE;
 
 
-         gyroX = nowx;
-        gyroY = nowy;
-        gyroZ = nowz;
+            gyroX = nowx;
+            gyroY = nowy;
+            gyroZ = nowz;
 
+            count_srl = 0;
+        }
+        count_srl++;
     }
 
     // 주기 설명

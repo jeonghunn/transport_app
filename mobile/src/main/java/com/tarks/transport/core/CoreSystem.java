@@ -183,12 +183,13 @@ try {
         if(mflow.size() > 0 && next_name != null) sendNoti(1,1,stations.get(mflow.get(0).station_srl-1).station_name, "▶ " + next_name);
 
     }
+    if(globalv.moving_now == globalv.ACTIVE_STATE) same_place_count = 0;
 
 
       //  sendNoti(globalv.ALMOST_NOTI,1,"목적지 거의 도착","3 정거장 남음");
         if(location_mode == globalv.LIVE_ACTIVE_MODE){
 
-            if(same_place_count > 10 && action_count > 1 && globalv.moving_now < globalv.ACTIVE_MODE || same_place_count > 4 && action_count > 1 && near_level >=3) setActionLocationMode(cx, globalv.ACTIVE_MODE);
+            if(same_place_count > 10 && action_count > 1  || same_place_count > 4 && action_count > 1 && near_level >=3) setActionLocationMode(cx, globalv.ACTIVE_MODE);
 
         }
 
@@ -209,7 +210,7 @@ try {
 //            }
 
             //ACTIVE STANBY
-            if(same_place_count > 12 && globalv.moving_now < globalv.NORMAL_STATE) setActionLocationMode(cx, globalv.ACTIVE_STANBY_MODE);
+            if(same_place_count > 12) setActionLocationMode(cx, globalv.ACTIVE_STANBY_MODE);
             //Stanby mode
 
 
@@ -221,18 +222,18 @@ try {
             if (same_place_count > 1) { //introduce guide}
             }
 
-            if ( near_level  <= 3 &&  same_place_count == 0  &&  action_count > 1 && globalv.moving_now >= globalv.NORMAL_STATE) {
+            if ( near_level  <= 4 &&  same_place_count == 0  &&  action_count > 1 ) {
                 setActionLocationMode(cx, globalv.ACTIVE_MODE);
 
             }
 
                 //Stanby mode
-            if (same_place_count > 2  &&  action_count > 1 &&   globalv.moving_now <= globalv.STOP_STATE ||  near_level >= 5) setActionLocationMode(cx, globalv.STANBY_MODE);
+            if (same_place_count > 2  &&  action_count > 1) setActionLocationMode(cx, globalv.STANBY_MODE);
 
             }
 
         if (location_mode == globalv.STANBY_MODE) {
-            if ( near_level  <= 3 && same_place_count == 0  &&  action_count > 1) {
+            if ( near_level  <= 3 && same_place_count == 0  && globalv.moving_now == globalv.ACTIVE_STATE) {
                if(near_level == 2) setActionLocationMode(cx, globalv.ACTIVE_MODE);
                 if(near_level == 3) setActionLocationMode(cx, globalv.ACTIVE_STANBY_MODE);
 
@@ -241,7 +242,7 @@ try {
         }
 
         if (location_mode == globalv.POWER_SAVED_MODE) {
-            if ( near_level  <= 5 && same_place_count == 0  &&  action_count > 1) {
+            if ( near_level  <= 5 && same_place_count == 0  && globalv.moving_now == globalv.ACTIVE_STATE) {
                 setActionLocationMode(cx, globalv.ACTIVE_STANBY_MODE);
             }
 
@@ -741,6 +742,7 @@ global.log("Connected");
 
         if(level == globalv.ACTIVE_STANBY_MODE){
             setLocationMode(cx, globalv.ACTIVE_STANBY_MODE);
+            sl.uregSensor();
         }
 
 
