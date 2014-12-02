@@ -50,6 +50,8 @@ public class CoreSystem extends Service implements GoogleApiClient.ConnectionCal
 
     private int route_srl_temp = 0;
 
+    SensorListener sl;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -81,6 +83,8 @@ public void startFlow(Context cx, Location lc){
     public void firstFlow(Context cx, Location lc){
         global.log("firstFlow");
          global.DBCountSrlUpdate(cx);
+
+
 
 
         if(global.getLocationMode(cx) > globalv.POWER_SAVED_MODE){
@@ -184,7 +188,7 @@ try {
       //  sendNoti(globalv.ALMOST_NOTI,1,"목적지 거의 도착","3 정거장 남음");
         if(location_mode == globalv.LIVE_ACTIVE_MODE){
 
-            if(same_place_count > 10 && action_count > 1 || same_place_count > 4 && action_count > 1 && near_level >=3) setActionLocationMode(cx, globalv.ACTIVE_MODE);
+            if(same_place_count > 10 && action_count > 1 && globalv.moving_now < globalv.ACTIVE_MODE || same_place_count > 4 && action_count > 1 && near_level >=3) setActionLocationMode(cx, globalv.ACTIVE_MODE);
 
         }
 
@@ -205,9 +209,9 @@ try {
 //            }
 
             //ACTIVE STANBY
-            if(same_place_count > 5) setActionLocationMode(cx, globalv.ACTIVE_STANBY_MODE);
+            if(same_place_count > 12 && globalv.moving_now < globalv.NORMAL_STATE) setActionLocationMode(cx, globalv.ACTIVE_STANBY_MODE);
             //Stanby mode
-            if ( same_place_count > 10  && action_count > 1 || same_place_count > 5  && action_count > 1  && near_level >= 3) setActionLocationMode(cx, globalv.STANBY_MODE);
+
 
         }
 
@@ -217,13 +221,13 @@ try {
             if (same_place_count > 1) { //introduce guide}
             }
 
-            if ( near_level  <= 3 &&  same_place_count == 0  &&  action_count > 1) {
+            if ( near_level  <= 3 &&  same_place_count == 0  &&  action_count > 1 && globalv.moving_now >= globalv.NORMAL_STATE) {
                 setActionLocationMode(cx, globalv.ACTIVE_MODE);
 
             }
 
                 //Stanby mode
-            if (same_place_count > 7  &&  action_count > 1 || same_place_count > 4 && near_level > 3 || near_level >= 5) setActionLocationMode(cx, globalv.STANBY_MODE);
+            if (same_place_count > 2  &&  action_count > 1 &&   globalv.moving_now <= globalv.STOP_STATE ||  near_level >= 5) setActionLocationMode(cx, globalv.STANBY_MODE);
 
             }
 
@@ -371,7 +375,7 @@ global.log(timestamp_best + " : timestmap best, " + csr.getInt(csr.getColumnInde
              while (csrc.moveToNext()) {
                  global.log( "station_srl :" + csrc.getInt(csrc.getColumnIndex("station_srl")) + "station_srl_sub_temp :" + station_srl_sub_temp + "station_srl_temp" + station_srl_temp  );
                  //time prevent strange number or prevant strange number if more bigger than last number
-                 if((csr.getInt(csr.getColumnIndex("station_srl")) >= station_srl_temp + 3 && station_srl_temp != 0) || (timestamp_best > csr.getInt(csr.getColumnIndex("time")) + 300) && csr.getCount() > 3) break;
+                 if((csr.getInt(csr.getColumnIndex("station_srl")) >= station_srl_temp + 3 && station_srl_temp != 0) || (timestamp_best > csr.getInt(csr.getColumnIndex("time")) + 120) && csr.getCount() > 3) break;
                  if(  ( csrc.getInt(csrc.getColumnIndex("station_srl")) >station_srl_sub_temp) &&  (csrc.getInt(csrc.getColumnIndex("station_srl")) <= station_srl_sub_temp + 3 ||  station_srl_sub_temp == 0)) {
 
                      station_srl_temp =  csr.getInt(csr.getColumnIndex("station_srl"));
@@ -722,6 +726,10 @@ global.log("Connected");
         action_count = 0;
         same_place_count = 0;
 
+        //Sensor
+        sl = new SensorListener();
+        sl.sensorStart(CoreSystem.this);
+
         if(level == globalv.LIVE_ACTIVE_MODE){
             setLocationMode(cx, globalv.LIVE_ACTIVE_MODE);
         }
@@ -739,17 +747,20 @@ global.log("Connected");
         if(level == globalv.STANBY_MODE){
             setLocationMode(cx, globalv.STANBY_MODE);
             global.CountSrlUpdate(cx);
+            sl.uregSensor();
         }
 
 
         if(level == globalv.POWER_SAVED_MODE){
             setLocationMode(cx, globalv.POWER_SAVED_MODE);
             global.CountSrlUpdate(cx);
+            sl.uregSensor();
         }
 
         if(level == globalv.HIBERNATION_MODE){
             setLocationMode(cx, globalv.HIBERNATION_MODE);
             global.CountSrlUpdate(cx);
+            sl.uregSensor();
 
         }
 

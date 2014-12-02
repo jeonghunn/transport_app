@@ -41,5 +41,13 @@ public final class globalv {
     public static final int ALMOST_NOTI = 2;
     public static final int ARRIVED_NOTI = 3;
 
+
+    //gyro
+    public static int moving_now = 0;
+    //gyro int
+    public static final int STOP_STATE = 1;
+    public static final int NORMAL_STATE = 2;
+    public static final int ACTIVE_STATE = 3;
+
     }
 
