@@ -113,6 +113,25 @@ startApp();
         mDbOpenHelper.insertColumn(1,1,17,2, "월봉5차현대",36.7952017,127.1147494);
         mDbOpenHelper.insertColumn(1,1,18,2, "쌍용고입구",  36.790258, 127.116989);
 
+        //14번
+
+        mDbOpenHelper.insertColumn(1,14,1,1, "천안시청 서북구보건소", 36.814084938710245,  127.11558601872773);
+        mDbOpenHelper.insertColumn(1,14,2,1, "트윈팰리스",  36.81170919398989, 127.11225960061137);
+        mDbOpenHelper.insertColumn(1,14,3,1, "불당아이파크", 36.80873247669883, 127.11070876206753);
+        mDbOpenHelper.insertColumn(1,14,4,1, "불당대동108동앞",  36.806433323566765, 127.11211742490335);
+        mDbOpenHelper.insertColumn(1,14,5,1, "불당대원A", 36.80478889963442,  127.11669263506853);
+        mDbOpenHelper.insertColumn(1,14,6,1, "쌍용3동주민센터", 36.80306571570392, 127.11877426996514);
+
+        //반대
+        mDbOpenHelper.insertColumn(1,14,1,2, "쌍용3동주민센터", 36.80313302449671, 127.11904891238021);
+        mDbOpenHelper.insertColumn(1,14,2,2, "쌍용마을뜨란채",36.80449416002755, 127.11859157947404);
+        mDbOpenHelper.insertColumn(1,14,3,2, "불당호반A",36.80555538075787, 127.11614470385437);
+        mDbOpenHelper.insertColumn(1,14,4,2, "불당동일하이빌3단지", 36.80678072527221,  127.11161365311186);
+        mDbOpenHelper.insertColumn(1,14,5,2, "불당동일하이빌2단지 ", 36.80847989959284, 127.11099416243687);
+        mDbOpenHelper.insertColumn(1,14,6,2, "트윈팰리스",   36.81163772230328, 127.11160389307832);
+        mDbOpenHelper.insertColumn(1,14,7,2, "천안시청보건소",36.81389991690382,  127.11588833553128);
+
+
 
         mDbOpenHelper.close();
         finishedfirstTask();

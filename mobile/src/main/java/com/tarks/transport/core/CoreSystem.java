@@ -124,6 +124,7 @@ global.log("conFlow");
 
         int near_level = 0;
         final int count_srl = global.getCountSrl(cx);
+        final int goal_id = global.getGoalID(cx);
 
         ArrayList<InfoClass>  ic = null;
 
@@ -146,7 +147,7 @@ try {
             global.log("ok" + ic.size());
             InfoClass get = ic.get(i);
             mDbOpenHelper.insertFdColumn(count_srl, action_count, get.id, get.country_srl, get.route_srl, get.station_srl, get.way_srl, lc.getLatitude(), lc.getLongitude(), get.station_latitude, get.station_longitude, global.getCurrentTimeStamp(), location_mode, near_level);
-            if(global.getGoalID(cx) == get.id) arrivedAction(cx, "목적지 도착", get.station_name);
+            if(goal_id == get.id) arrivedAction(cx, "목적지 도착", get.station_name);
         }
     }
 
@@ -156,10 +157,16 @@ try {
         ArrayList<flowclass>  mflow = selectflowStation(cx, count_srl);
     ArrayList<InfoClass>  stations = null;
      //   if(mflow.size() > 0){
+     int station_left = 0;
+
           if(mflow.size() > 0)
               stations = getStations(mflow.get(0).country_srl, mflow.get(0).route_srl, mflow.get(0).way_srl);
-
-
+if(stations.size() > 0) {
+    for (int i = 0; i < stations.size(); i++) {
+        if (stations.get(i).id == goal_id)
+            station_left = stations.get(i).station_srl - mflow.get(0).station_srl;
+    }
+}
         //Check same place
 //        if(dbid == ic.get(0).id && sis == ic.size()){
 //            same_place_count++;
@@ -179,9 +186,17 @@ try {
 
         global.log(mflow.get(0).station_srl + "/"+ stations.size());
 
-    String next_name = mflow.get(0).station_srl  < stations.size() ? stations.get(mflow.get(0).station_srl).station_name : "끝";
 
-        if(mflow.size() > 0 && next_name != null) sendNoti(1,1,stations.get(mflow.get(0).station_srl-1).station_name, "▶ " + next_name);
+   //Next Station noti
+        String next_name = mflow.get(0).station_srl  < stations.size() ? "▶ " + stations.get(mflow.get(0).station_srl).station_name : " : " + getString(R.string.terminal);
+
+        if(global.getGoalID(cx)  == 0){
+
+
+        if(mflow.size() > 0 && next_name != null) sendNoti(1,1,stations.get(mflow.get(0).station_srl-1).station_name,  next_name);
+        }else{
+            if(mflow.size() > 0 && next_name != null) sendNoti(1,1,  station_left + "개 정거장 남음", stations.get(mflow.get(0).station_srl-1).station_name + "\n" + next_name);
+        }
 
     }
     if(globalv.moving_now == globalv.ACTIVE_STATE) same_place_count = 0;
@@ -652,8 +667,9 @@ global.log(timestamp_best + " : timestmap best, " + csr.getInt(csr.getColumnInde
 
 
 public void arrivedAction(Context cx, String title, String content){
+    setActionLocationMode(cx, 4);
    sendNoti(globalv.ARRIVED_NOTI, 1, title, content );
-    setActionLocationMode(cx, 3);
+    global.setGoalID(cx, 0);
    // Intent viewIntent = new Intent(this, main.class);
    // global.setActiveNoti(cx, 1, viewIntent, title, content, R.drawable.ic_launcher, R.drawable.ic_launcher);
 }
