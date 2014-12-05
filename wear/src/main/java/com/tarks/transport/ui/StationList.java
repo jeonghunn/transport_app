@@ -1,4 +1,4 @@
-package com.tarks.transport;
+package com.tarks.transport.ui;
 
 import android.app.Activity;
 import android.content.Context;
@@ -18,6 +18,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.MessageApi;
 import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.Wearable;
+import com.tarks.transport.R;
 
 import java.util.concurrent.TimeUnit;
 

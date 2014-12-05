@@ -147,7 +147,7 @@ try {
             global.log("ok" + ic.size());
             InfoClass get = ic.get(i);
             mDbOpenHelper.insertFdColumn(count_srl, action_count, get.id, get.country_srl, get.route_srl, get.station_srl, get.way_srl, lc.getLatitude(), lc.getLongitude(), get.station_latitude, get.station_longitude, global.getCurrentTimeStamp(), location_mode, near_level);
-            if(goal_id == get.id) arrivedAction(cx, "목적지 도착", get.station_name);
+            if(goal_id == get.id) arrivedAction(cx, getString(R.string.destinaton_arrived), get.station_name);
         }
     }
 
@@ -155,16 +155,17 @@ try {
 
 
         ArrayList<flowclass>  mflow = selectflowStation(cx, count_srl);
+    flowclass flowget = mflow.get(0);
     ArrayList<InfoClass>  stations = null;
      //   if(mflow.size() > 0){
      int station_left = 0;
 
           if(mflow.size() > 0)
-              stations = getStations(mflow.get(0).country_srl, mflow.get(0).route_srl, mflow.get(0).way_srl);
+              stations = getStations(flowget.country_srl, flowget.route_srl, flowget.way_srl);
 if(mflow.size() > 0 && stations.size() > 0 && goal_id != 0) {
     for (int i = 0; i < stations.size(); i++) {
         if (stations.get(i).id == goal_id)
-            station_left = stations.get(i).station_srl - mflow.get(0).station_srl;
+            station_left = stations.get(i).station_srl - flowget.station_srl;
     }
 }
         //Check same place
@@ -193,9 +194,12 @@ if(mflow.size() > 0 && stations.size() > 0 && goal_id != 0) {
         if(global.getGoalID(cx)  == 0){
 
 
-        if(mflow.size() > 0 && next_name != null) sendNoti(1,1,stations.get(mflow.get(0).station_srl-1).station_name,  next_name);
+
+
+        if(mflow.size() > 0 && next_name != null) sendBusNoti(1, 1, stations.get(flowget.station_srl - 1).station_name, next_name, flowget.country_srl, flowget.route_srl, flowget.way_srl, flowget.station_srl);
         }else{
-            if(mflow.size() > 0 && next_name != null) sendNoti(1,1,  station_left + "개 정거장 남음", stations.get(mflow.get(0).station_srl-1).station_name + "\n" + next_name);
+
+            if(mflow.size() > 0 && next_name != null) sendBusNoti(1, 1, station_left + "개 정거장 남음", stations.get(flowget.station_srl - 1).station_name + "\n" + next_name, flowget.country_srl, flowget.route_srl, flowget.way_srl, flowget.station_srl);
         }
 
     }
@@ -672,6 +676,18 @@ global.log(timestamp_best + " : timestmap best, " + csr.getInt(csr.getColumnInde
 
     }
 
+
+    public void sendBusNoti(int kind, int noti_id, String title, String content, int country_srl, int route_srl, int way_srl, int station_srl ) {
+        ArrayList<BusNotiClass> notiarray = new ArrayList<BusNotiClass>();
+        BusNotiClass mnoticalss = new BusNotiClass(kind, noti_id, title, content, country_srl, route_srl, way_srl, station_srl );
+
+        notiarray.add(mnoticalss);
+        Gson gson = new GsonBuilder().create();
+        JsonArray noti_json_result = gson.toJsonTree(notiarray).getAsJsonArray();
+        global.log(noti_json_result.toString());
+        sendMessage("notification//" + noti_json_result.toString(), null);
+
+    }
 
 public void arrivedAction(Context cx, String title, String content){
     setActionLocationMode(cx, 4);

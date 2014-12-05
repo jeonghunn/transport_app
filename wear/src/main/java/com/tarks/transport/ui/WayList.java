@@ -1,9 +1,11 @@
-package com.tarks.transport;
+package com.tarks.transport.ui;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.wearable.view.WearableListView;
+
+import com.tarks.transport.R;
 
 public class WayList extends Activity
         implements WearableListView.ClickListener {

@@ -1,11 +1,13 @@
-package com.tarks.transport;
+package com.tarks.transport.ui;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.wearable.view.WearableListView;
 
-public class BusList extends Activity
+import com.tarks.transport.R;
+
+public class RouteList extends Activity
         implements WearableListView.ClickListener {
 
     // Sample dataset for the list
@@ -15,7 +17,7 @@ public class BusList extends Activity
     public void onClick(WearableListView.ViewHolder viewHolder) {
 
    //     if(viewHolder.getItemId() == 0){
-            Intent i = new Intent(BusList.this, WayList.class);
+            Intent i = new Intent(RouteList.this, WayList.class);
             startActivity(i);
      //   }
     }

@@ -14,7 +14,7 @@
         android:theme="@android:style/Theme.DeviceDefault" >
         <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
         <service
-            android:name="com.tarks.transport.ListenerService" >
+            android:name=".core.ListenerService" >
             <intent-filter>
                 <action android:name="com.google.android.gms.wearable.BIND_LISTENER" />
             </intent-filter>
@@ -29,23 +29,23 @@
             </intent-filter>
 </activity>
         <activity
-            android:name="com.tarks.transport.BusList"
+            android:name=".ui.RouteList"
             android:label="@string/app_name" />
 
         <activity
-            android:name="com.tarks.transport.StationList"
+            android:name=".ui.StationList"
             android:exported="true"
             android:allowEmbedded="true"
             android:taskAffinity=""
             android:label="@string/app_name" />
 
         <activity
-            android:name="com.tarks.transport.WayList"
+            android:name=".ui.WayList"
             android:label="@string/app_name" />
 
 
         <activity
-            android:name=".BusArrive"
+            android:name=".ui.BusArrive"
             android:label="@string/app_name" />
     </application>
 

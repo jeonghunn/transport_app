@@ -15,11 +15,11 @@ import android.os.Vibrator;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.tarks.transport.MainActivity;
 import com.tarks.transport.R;
-import com.tarks.transport.StationList;
+import com.tarks.transport.ui.RouteList;
+import com.tarks.transport.ui.StationList;
+import com.tarks.transport.ui.WayList;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -102,16 +102,19 @@ public final class global {
     //Temp function
     public static void BusNoti(Context cx, int notificationId, Intent viewIntent, String title, String content, int icon, int largeicon){
 
-// Build intent for notification content
-      //   Intent aviewIntent = new Intent(cx, StationList.class);
-        //  viewIntent.putExtra("1234", eventId);
-//        PendingIntent viewPendingIntent =
-//                PendingIntent.getActivity(cx, 0, viewIntent, 0);
+
 
         PendingIntent viewPendingIntent = PendingIntent.getActivity(cx, 0, viewIntent, 0);
 
-       // Intent detailintent = new Intent(cx, MainActivity.class);
-        PendingIntent pendingdetailintent = PendingIntent.getActivity(cx, 0, viewIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Intent stationIntent = new Intent(cx, StationList.class);
+        PendingIntent pendingStationIntent = PendingIntent.getActivity(cx, 0, stationIntent, 0);
+
+        Intent wayIntent = new Intent(cx, WayList.class);
+        PendingIntent pendingWayIntent = PendingIntent.getActivity(cx, 0, wayIntent, 0);
+
+        Intent routeIntent = new Intent(cx, RouteList.class);
+        PendingIntent pendingRouteIntent = PendingIntent.getActivity(cx, 0, routeIntent, 0);
 
 
         // Create a big text style for the second page
@@ -124,7 +127,6 @@ public final class global {
         Notification secondPageNotification =
                 new NotificationCompat.Builder(cx)
                         .setStyle(secondPageStyle)
-                        .setContentIntent(pendingdetailintent)
                         .build();
 
 
@@ -143,14 +145,18 @@ public final class global {
                 new NotificationCompat.Builder(cx)
                         .setSmallIcon(icon)
                         .setContentTitle(title)
-                        .setContentText(content)     .setSubText("백석농공단지 방면")
+                        .setContentText(content)
                         .setLargeIcon(BitmapFactory.decodeResource(
                                 cx.getResources(), largeicon))
                         .extend(wearableExtender)
                         .addAction(R.drawable.ic_directions_bus_white,
-                                cx.getString(R.string.stations), viewPendingIntent)
+                                cx.getString(R.string.stations), pendingStationIntent)
                         .addAction(R.drawable.ic_directions_white,
-                                cx.getString(R.string.way), viewPendingIntent)
+                                cx.getString(R.string.way), pendingWayIntent)
+                        .addAction(R.drawable.ic_directions_white,
+                                cx.getString(R.string.route), pendingRouteIntent)
+                        .addAction(R.drawable.ic_directions_bus_white,
+                                cx.getString(R.string.riding), viewPendingIntent)
                         .setContentIntent(viewPendingIntent);
 
 

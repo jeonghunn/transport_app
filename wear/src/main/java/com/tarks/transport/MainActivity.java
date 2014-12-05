@@ -9,6 +9,8 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
 
+import com.tarks.transport.ui.RouteList;
+
 public class MainActivity extends Activity {
 
     private TextView mTextView;
@@ -37,7 +39,7 @@ public class MainActivity extends Activity {
                 cardScrollView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent i = new Intent(MainActivity.this, BusList.class);
+                        Intent i = new Intent(MainActivity.this, RouteList.class);
                         startActivity(i);
                     }
                 });

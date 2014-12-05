@@ -1,4 +1,4 @@
-package com.tarks.transport;
+package com.tarks.transport.ui;
 
 import android.app.Activity;
 import android.content.Context;
@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.tarks.transport.R;
 import com.tarks.transport.core.global;
 
 import java.util.Map;

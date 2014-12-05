@@ -1,10 +1,12 @@
-package com.tarks.transport;
+package com.tarks.transport.core;
 
 import android.content.Intent;
 
 import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.WearableListenerService;
-import com.tarks.transport.core.global;
+import com.tarks.transport.ui.BusArrive;
+import com.tarks.transport.R;
+import com.tarks.transport.ui.StationList;
 
 import java.util.Map;
 
@@ -44,7 +46,7 @@ checkMessage(messageEvent.getPath(), messageEvent.getData());
         //Normal noti
         if (kind == 1) {
             Intent viewIntent = new Intent(ListenerService.this, StationList.class);
-            global.BusNoti(ListenerService.this, noti_id, viewIntent, title, content,R.drawable.ic_launcher,  R.drawable.ride_bus_background);
+            global.BusNoti(ListenerService.this, noti_id, viewIntent, title, content, R.drawable.ic_launcher,  R.drawable.ride_bus_background);
         }
 
         //Bus almost arrived
