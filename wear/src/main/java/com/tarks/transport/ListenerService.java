@@ -61,16 +61,16 @@ checkMessage(messageEvent.getPath(), messageEvent.getData());
 
         //Normal noti
         if (kind == 1) {
-            Intent viewIntent = new Intent(this, StationList.class);
-            global.setNotifcation(this, noti_id, viewIntent, title, content,R.drawable.ic_launcher,  R.drawable.bus_background);
+            Intent viewIntent = new Intent(ListenerService.this, StationList.class);
+            global.BusNoti(ListenerService.this, noti_id, viewIntent, title, content,R.drawable.ic_launcher,  R.drawable.bus_background);
         }
 
         //Bus almost arrived
         if (kind == 2) {
 
             global.Vibrate(this, 2000);
-            Intent viewIntent = new Intent(this, StationList.class);
-            global.setNotifcation(this, noti_id, viewIntent, title, content, R.drawable.ic_launcher, R.drawable.almost_background);
+            Intent viewIntent = new Intent(ListenerService.this, StationList.class);
+            global.BusNoti(ListenerService.this, noti_id, viewIntent, title, content, R.drawable.ic_launcher, R.drawable.almost_background);
 //
 //            Intent i = new Intent(ListenerService.this, BusArrive.class);
 //            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

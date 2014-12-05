@@ -125,8 +125,8 @@ public class StationList extends Activity
         listView.setAdapter(new ListAdapter(this, elements));
         // Set a click listener
         listView.setClickListener(this);
-        MyAsyncTask t = new MyAsyncTask();
-        t.execute();
+//        MyAsyncTask t = new MyAsyncTask();
+//        t.execute();
 
 
 

@@ -161,7 +161,7 @@ try {
 
           if(mflow.size() > 0)
               stations = getStations(mflow.get(0).country_srl, mflow.get(0).route_srl, mflow.get(0).way_srl);
-if(stations.size() > 0) {
+if(mflow.size() > 0 && stations.size() > 0 && goal_id != 0) {
     for (int i = 0; i < stations.size(); i++) {
         if (stations.get(i).id == goal_id)
             station_left = stations.get(i).station_srl - mflow.get(0).station_srl;
@@ -249,16 +249,23 @@ if(stations.size() > 0) {
             }
 
         if (location_mode == globalv.STANBY_MODE) {
-            if ( near_level  <= 3 && same_place_count == 0  && globalv.moving_now == globalv.ACTIVE_STATE) {
+            gyroSensorStart();
+            if (( near_level  <= 3 && same_place_count == 0 && action_count < 1 ) || ( globalv.moving_now == globalv.ACTIVE_STATE)) {
                if(near_level == 2) setActionLocationMode(cx, globalv.ACTIVE_MODE);
                 if(near_level == 3) setActionLocationMode(cx, globalv.ACTIVE_STANBY_MODE);
 
+            }else{
+                sl.uregSensor();
             }
-            if (same_place_count > 6 || same_place_count > 0  &&  action_count > 1 && near_level >= 3 || same_place_count > 3  &&  action_count > 1 && global.getNight()|| near_level >= 5) setActionLocationMode(cx, globalv.POWER_SAVED_MODE);
+
+           if (((same_place_count > 6 || same_place_count > 0)  &&  (action_count > 1 && near_level >= 3)) || (same_place_count > 3  &&  action_count > 1 && (global.getNight()|| near_level >= 5)))setActionLocationMode(cx, globalv.POWER_SAVED_MODE);
+
+            //disconnect
+
         }
 
         if (location_mode == globalv.POWER_SAVED_MODE) {
-            if ( near_level  <= 5 && same_place_count == 0  && globalv.moving_now == globalv.ACTIVE_STATE) {
+            if ( near_level  <= 5 && same_place_count == 0) {
                 setActionLocationMode(cx, globalv.ACTIVE_STANBY_MODE);
             }
 
@@ -740,14 +747,18 @@ global.log("Connected");
         global.log("onConnectionFailed");
     }
 
+
+    public void gyroSensorStart(){
+        sl = new SensorListener();
+        sl.sensorStart(CoreSystem.this);
+    }
     public void setActionLocationMode(Context cx, int level){
         global.log("Location Mode : " + level);
         action_count = 0;
         same_place_count = 0;
 
         //Sensor
-        sl = new SensorListener();
-        sl.sensorStart(CoreSystem.this);
+        gyroSensorStart();
 
         if(level == globalv.LIVE_ACTIVE_MODE){
             setLocationMode(cx, globalv.LIVE_ACTIVE_MODE);
@@ -767,7 +778,7 @@ global.log("Connected");
         if(level == globalv.STANBY_MODE){
             setLocationMode(cx, globalv.STANBY_MODE);
             global.CountSrlUpdate(cx);
-            sl.uregSensor();
+
         }
 
 

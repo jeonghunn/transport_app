@@ -1,5 +1,6 @@
 package com.tarks.transport.core;
 
+import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -16,6 +17,7 @@ import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.tarks.transport.MainActivity;
 import com.tarks.transport.R;
 import com.tarks.transport.StationList;
 
@@ -59,15 +61,20 @@ public final class global {
 // Build intent for notification content
         // Intent viewIntent = new Intent(this, StationList.class);
         //  viewIntent.putExtra("1234", eventId);
-        PendingIntent viewPendingIntent =
-                PendingIntent.getActivity(cx, 0, viewIntent, 0);
+
+
+
+
+
 
         NotificationCompat.WearableExtender wearableExtender =
                 new NotificationCompat.WearableExtender()
-                        .setHintHideIcon(true)
+                       .setHintHideIcon(true)
                         .setBackground(BitmapFactory.decodeResource(
                                 cx.getResources(), largeicon));
 
+        PendingIntent viewPendingIntent =
+                PendingIntent.getActivity(cx, 0, viewIntent, 0);
 
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(cx)
@@ -78,7 +85,6 @@ public final class global {
                                 cx.getResources(), largeicon))
                         .extend(wearableExtender)
                         .setContentIntent(viewPendingIntent);
-
 
 
 
@@ -97,26 +103,54 @@ public final class global {
     public static void BusNoti(Context cx, int notificationId, Intent viewIntent, String title, String content, int icon, int largeicon){
 
 // Build intent for notification content
-        // Intent viewIntent = new Intent(this, StationList.class);
+      //   Intent aviewIntent = new Intent(cx, StationList.class);
         //  viewIntent.putExtra("1234", eventId);
-        PendingIntent viewPendingIntent =
-                PendingIntent.getActivity(cx, 0, viewIntent, 0);
+//        PendingIntent viewPendingIntent =
+//                PendingIntent.getActivity(cx, 0, viewIntent, 0);
+
+        PendingIntent viewPendingIntent = PendingIntent.getActivity(cx, 0, viewIntent, 0);
+
+       // Intent detailintent = new Intent(cx, MainActivity.class);
+        PendingIntent pendingdetailintent = PendingIntent.getActivity(cx, 0, viewIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+
+        // Create a big text style for the second page
+        NotificationCompat.BigTextStyle secondPageStyle = new NotificationCompat.BigTextStyle();
+        secondPageStyle.setBigContentTitle("백석농공단지 방면")
+                .bigText("현재 : 천안시청\n\n천안시청보건소\n\n동일하이빌\n\n불당대동다숲\n\n불당한성A\n\n천안시교육지청\n\n천안시서북구상공회의소");
+
+
+// Create second page notification
+        Notification secondPageNotification =
+                new NotificationCompat.Builder(cx)
+                        .setStyle(secondPageStyle)
+                        .setContentIntent(pendingdetailintent)
+                        .build();
+
+
+
 
         NotificationCompat.WearableExtender wearableExtender =
                 new NotificationCompat.WearableExtender()
-                        //   .setHintHideIcon(true)
+                           .setHintHideIcon(true)
+                        //.setDisplayIntent(pendingdetailintent)
+                        .addPage(secondPageNotification)
                         .setBackground(BitmapFactory.decodeResource(
                                 cx.getResources(), largeicon));
 
 
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(cx)
-                    //    .setSmallIcon(icon)
+                        .setSmallIcon(icon)
                         .setContentTitle(title)
-                        .setContentText(content)
+                        .setContentText(content)     .setSubText("백석농공단지 방면")
                         .setLargeIcon(BitmapFactory.decodeResource(
                                 cx.getResources(), largeicon))
                         .extend(wearableExtender)
+                        .addAction(R.drawable.ic_directions_bus_white,
+                                cx.getString(R.string.stations), viewPendingIntent)
+                        .addAction(R.drawable.ic_directions_white,
+                                cx.getString(R.string.way), viewPendingIntent)
                         .setContentIntent(viewPendingIntent);
 
 
