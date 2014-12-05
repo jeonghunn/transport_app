@@ -1,30 +1,12 @@
 package com.tarks.transport;
 
-import android.app.PendingIntent;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.WearableListenerService;
-import com.tarks.transport.core.InfoClass;
-import com.tarks.transport.core.WakeLock;
 import com.tarks.transport.core.global;
 
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
-import android.support.v4.app.NotificationCompat.WearableExtender;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Map;
-
-import static com.tarks.transport.core.WakeLock.acquireCpuWakeLock;
 
 public class ListenerService extends WearableListenerService {
 
@@ -62,7 +44,7 @@ checkMessage(messageEvent.getPath(), messageEvent.getData());
         //Normal noti
         if (kind == 1) {
             Intent viewIntent = new Intent(ListenerService.this, StationList.class);
-            global.BusNoti(ListenerService.this, noti_id, viewIntent, title, content,R.drawable.ic_launcher,  R.drawable.bus_background);
+            global.BusNoti(ListenerService.this, noti_id, viewIntent, title, content,R.drawable.ic_launcher,  R.drawable.ride_bus_background);
         }
 
         //Bus almost arrived
@@ -70,7 +52,7 @@ checkMessage(messageEvent.getPath(), messageEvent.getData());
 
             global.Vibrate(this, 2000);
             Intent viewIntent = new Intent(ListenerService.this, StationList.class);
-            global.BusNoti(ListenerService.this, noti_id, viewIntent, title, content, R.drawable.ic_launcher, R.drawable.almost_background);
+            global.BusNoti(ListenerService.this, noti_id, viewIntent, title, content, R.drawable.ic_launcher, R.drawable.flag);
 //
 //            Intent i = new Intent(ListenerService.this, BusArrive.class);
 //            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
