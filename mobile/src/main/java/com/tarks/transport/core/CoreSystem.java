@@ -157,9 +157,9 @@ public class CoreSystem extends Service implements GoogleApiClient.ConnectionCal
 
             mDbOpenHelper.close();
 
-
+            flowclass flowget = null;
             ArrayList<flowclass> mflow = selectflowStation(cx, count_srl);
-            flowclass flowget = mflow.get(0);
+          if(mflow.size() > 0 && mflow != null)   flowget = mflow.get(0);
             ArrayList<InfoClass> stations = null;
             //   if(mflow.size() > 0){
             int station_left = 0;
@@ -213,7 +213,7 @@ public class CoreSystem extends Service implements GoogleApiClient.ConnectionCal
             //  sendNoti(globalv.ALMOST_NOTI,1,"목적지 거의 도착","3 정거장 남음");
             if (location_mode == globalv.LIVE_ACTIVE_MODE) {
 
-                if (same_place_count > 10 && action_count > 1 || same_place_count > 4 && action_count > 1 && near_level >= 3)
+                if (same_place_count > 7 && action_count > 1 || same_place_count > 4 && action_count > 1 && near_level >= 3)
                     setActionLocationMode(cx, globalv.ACTIVE_MODE);
 
             }
@@ -235,7 +235,7 @@ public class CoreSystem extends Service implements GoogleApiClient.ConnectionCal
 //            }
 
                 //ACTIVE STANBY
-                if (same_place_count > 12) setActionLocationMode(cx, globalv.ACTIVE_STANBY_MODE);
+                if (same_place_count > 7) setActionLocationMode(cx, globalv.ACTIVE_STANBY_MODE);
                 //Stanby mode
 
 
@@ -260,7 +260,7 @@ public class CoreSystem extends Service implements GoogleApiClient.ConnectionCal
 
             if (location_mode == globalv.STANBY_MODE) {
                 gyroSensorStart();
-                if ((near_level <= 3 && same_place_count == 0 && action_count < 1) || (globalv.moving_now == globalv.ACTIVE_STATE)) {
+                if ((near_level <= 3 && same_place_count == 0 && action_count > 1) || (globalv.moving_now == globalv.ACTIVE_STATE)) {
                     if (near_level == 2) setActionLocationMode(cx, globalv.ACTIVE_MODE);
                     if (near_level == 3) setActionLocationMode(cx, globalv.ACTIVE_STANBY_MODE);
 
