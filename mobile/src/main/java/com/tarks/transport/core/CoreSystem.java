@@ -6,7 +6,10 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
+import android.os.Messenger;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -51,45 +54,45 @@ public class CoreSystem extends Service implements GoogleApiClient.ConnectionCal
     private int route_srl_temp = 0;
 
     SensorListener sl;
+    private Intent intent;
+
+    final Messenger mMessenger = new Messenger(new IncomingHandler());
+
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-global.log("HI service start!");
+        global.log("HI service start!");
         cx = CoreSystem.this;
         initCore(CoreSystem.this);
     }
 
-    public void initCore(Context cx){
+    public void initCore(Context cx) {
         setGoogleApiClient(cx);
     }
 
-public void startFlow(Context cx, Location lc){
+    public void startFlow(Context cx, Location lc) {
 
 
-
-
-
-   // if(global.getDBCountSrl(cx) < global.getCountSrl(cx)){
+        // if(global.getDBCountSrl(cx) < global.getCountSrl(cx)){
         firstFlow(cx, lc);
 
-      //  conFlow(cx, lc);
+        //  conFlow(cx, lc);
 
-}
+    }
 
 
-
-    public void firstFlow(Context cx, Location lc){
+    public void firstFlow(Context cx, Location lc) {
         global.log("firstFlow");
-         global.DBCountSrlUpdate(cx);
+        global.DBCountSrlUpdate(cx);
 
 //global.setGoalID(cx, 18);
 
 
-        if(global.getLocationMode(cx) > globalv.POWER_SAVED_MODE){
+        if (global.getLocationMode(cx) > globalv.POWER_SAVED_MODE) {
             setActionLocationMode(cx, global.getLocationMode(cx));
-        }else {
+        } else {
 
 
             int near_level = 0;
@@ -117,8 +120,8 @@ public void startFlow(Context cx, Location lc){
         initcheck = true;
     }
 
-    public void  conFlow(Context cx, Location lc){
-global.log("conFlow");
+    public void conFlow(Context cx, Location lc) {
+        global.log("conFlow");
         action_count++;
 
 
@@ -126,49 +129,50 @@ global.log("conFlow");
         final int count_srl = global.getCountSrl(cx);
         final int goal_id = global.getGoalID(cx);
 
-        ArrayList<InfoClass>  ic = null;
+        ArrayList<InfoClass> ic = null;
 
         for (int i = 1; i <= 6; i++) {
-           ic = getNearStations(cx,lc,i);
-            if(ic.size() > 0) {
+            ic = getNearStations(cx, lc, i);
+            if (ic.size() > 0) {
                 near_level = i;
                 global.log("fggg" + i);
                 break;
             }
 
-            if(i == 6) near_level = 7;
+            if (i == 6) near_level = 7;
         }
-try {
-    DbOpenHelper mDbOpenHelper = new DbOpenHelper(this);
-    mDbOpenHelper.open();
+        try {
+            DbOpenHelper mDbOpenHelper = new DbOpenHelper(this);
+            mDbOpenHelper.open();
 
-    if(near_level < 3) {
-        for (int i = 0; i < ic.size(); i++) {
-            global.log("ok" + ic.size());
-            InfoClass get = ic.get(i);
-            mDbOpenHelper.insertFdColumn(count_srl, action_count, get.id, get.country_srl, get.route_srl, get.station_srl, get.way_srl, lc.getLatitude(), lc.getLongitude(), get.station_latitude, get.station_longitude, global.getCurrentTimeStamp(), location_mode, near_level);
-            if(goal_id == get.id) arrivedAction(cx, getString(R.string.destinaton_arrived), get.station_name);
-        }
-    }
+            if (near_level < 3) {
+                for (int i = 0; i < ic.size(); i++) {
+                    global.log("ok" + ic.size());
+                    InfoClass get = ic.get(i);
+                    mDbOpenHelper.insertFdColumn(count_srl, action_count, get.id, get.country_srl, get.route_srl, get.station_srl, get.way_srl, lc.getLatitude(), lc.getLongitude(), get.station_latitude, get.station_longitude, global.getCurrentTimeStamp(), location_mode, near_level);
+                    if (goal_id == get.id)
+                        arrivedAction(cx, getString(R.string.destinaton_arrived), get.station_name);
+                }
+            }
 
-    mDbOpenHelper.close();
+            mDbOpenHelper.close();
 
 
-        ArrayList<flowclass>  mflow = selectflowStation(cx, count_srl);
-    flowclass flowget = mflow.get(0);
-    ArrayList<InfoClass>  stations = null;
-     //   if(mflow.size() > 0){
-     int station_left = 0;
+            ArrayList<flowclass> mflow = selectflowStation(cx, count_srl);
+            flowclass flowget = mflow.get(0);
+            ArrayList<InfoClass> stations = null;
+            //   if(mflow.size() > 0){
+            int station_left = 0;
 
-          if(mflow.size() > 0)
-              stations = getStations(flowget.country_srl, flowget.route_srl, flowget.way_srl);
-if(mflow.size() > 0 && stations.size() > 0 && goal_id != 0) {
-    for (int i = 0; i < stations.size(); i++) {
-        if (stations.get(i).id == goal_id)
-            station_left = stations.get(i).station_srl - flowget.station_srl;
-    }
-}
-        //Check same place
+            if (mflow.size() > 0)
+                stations = getStations(flowget.country_srl, flowget.route_srl, flowget.way_srl);
+            if (mflow.size() > 0 && stations.size() > 0 && goal_id != 0) {
+                for (int i = 0; i < stations.size(); i++) {
+                    if (stations.get(i).id == goal_id)
+                        station_left = stations.get(i).station_srl - flowget.station_srl;
+                }
+            }
+            //Check same place
 //        if(dbid == ic.get(0).id && sis == ic.size()){
 //            same_place_count++;
 //        }else{
@@ -177,110 +181,115 @@ if(mflow.size() > 0 && stations.size() > 0 && goal_id != 0) {
 //            plm = location_mode;
 //            same_place_count = 0;
 //        }
-        global.log("same_place : " + same_place_count);
-     //   global.log("id : " + dbid);
-        global.log("getlolevel : " + near_level);
-      //  global.log(global.getNight() + "asdf");
-      //  sendNoti(1,1,ic.get(0).station_name,String.valueOf(location_mode));
+            global.log("same_place : " + same_place_count);
+            //   global.log("id : " + dbid);
+            global.log("getlolevel : " + near_level);
+            //  global.log(global.getNight() + "asdf");
+            //  sendNoti(1,1,ic.get(0).station_name,String.valueOf(location_mode));
 
-    if(mflow.size() > 0 && stations.size() > 0){
+            if (mflow.size() > 0 && stations.size() > 0) {
 
-        global.log(mflow.get(0).station_srl + "/"+ stations.size());
-
-
-   //Next Station noti
-        String next_name = mflow.get(0).station_srl  < stations.size() ? "▶ " + stations.get(mflow.get(0).station_srl).station_name : " : " + getString(R.string.terminal);
-
-        if(global.getGoalID(cx)  == 0){
+                global.log(mflow.get(0).station_srl + "/" + stations.size());
 
 
+                //Next Station noti
+                String next_name = mflow.get(0).station_srl < stations.size() ? "▶ " + stations.get(mflow.get(0).station_srl).station_name : " : " + getString(R.string.terminal);
+
+                if (global.getGoalID(cx) == 0) {
 
 
-        if(mflow.size() > 0 && next_name != null) sendBusNoti(1, 1, stations.get(flowget.station_srl - 1).station_name, next_name, flowget.country_srl, flowget.route_srl, flowget.way_srl, flowget.station_srl);
-        }else{
+                    if (mflow.size() > 0 && next_name != null)
+                        sendBusNoti(1, 1, stations.get(flowget.station_srl - 1).station_name, next_name, flowget.country_srl, flowget.route_srl, flowget.way_srl, flowget.station_srl);
+                } else {
 
-            if(mflow.size() > 0 && next_name != null) sendBusNoti(1, 1, station_left + "개 정거장 남음", stations.get(flowget.station_srl - 1).station_name + "\n" + next_name, flowget.country_srl, flowget.route_srl, flowget.way_srl, flowget.station_srl);
-        }
+                    if (mflow.size() > 0 && next_name != null)
+                        sendBusNoti(1, 1, station_left + "개 정거장 남음", stations.get(flowget.station_srl - 1).station_name + "\n" + next_name, flowget.country_srl, flowget.route_srl, flowget.way_srl, flowget.station_srl);
+                }
 
-    }
-    if(globalv.moving_now == globalv.ACTIVE_STATE) same_place_count = 0;
-
-
-      //  sendNoti(globalv.ALMOST_NOTI,1,"목적지 거의 도착","3 정거장 남음");
-        if(location_mode == globalv.LIVE_ACTIVE_MODE){
-
-            if(same_place_count > 10 && action_count > 1  || same_place_count > 4 && action_count > 1 && near_level >=3) setActionLocationMode(cx, globalv.ACTIVE_MODE);
-
-        }
-
-        if(location_mode == globalv.ACTIVE_MODE) {
-
-
-            if (same_place_count > 1) { //introduce guide}
             }
+            if (globalv.moving_now == globalv.ACTIVE_STATE) same_place_count = 0;
+
+
+            //  sendNoti(globalv.ALMOST_NOTI,1,"목적지 거의 도착","3 정거장 남음");
+            if (location_mode == globalv.LIVE_ACTIVE_MODE) {
+
+                if (same_place_count > 10 && action_count > 1 || same_place_count > 4 && action_count > 1 && near_level >= 3)
+                    setActionLocationMode(cx, globalv.ACTIVE_MODE);
+
+            }
+
+            if (location_mode == globalv.ACTIVE_MODE) {
+
+
+                if (same_place_count > 1) { //introduce guide}
+                }
 
 //
-            if (near_level  <= 3 && same_place_count == 0  && action_count > 1) {
-                setActionLocationMode(cx, globalv.LIVE_ACTIVE_MODE);
+                if (near_level <= 3 && same_place_count == 0 && action_count > 1) {
+                    setActionLocationMode(cx, globalv.LIVE_ACTIVE_MODE);
 
-            }
+                }
 //                if (global.getSamePlaceCount(cx) < 2 && global.getSamePlaceCount(cx) < 3) {
 //                    setActionLocationMode(cx, globalv.ACTIVE_MODE);
 //
 //            }
 
-            //ACTIVE STANBY
-            if(same_place_count > 12) setActionLocationMode(cx, globalv.ACTIVE_STANBY_MODE);
-            //Stanby mode
+                //ACTIVE STANBY
+                if (same_place_count > 12) setActionLocationMode(cx, globalv.ACTIVE_STANBY_MODE);
+                //Stanby mode
 
 
-        }
-
-
-        if (location_mode == globalv.ACTIVE_STANBY_MODE) {
-
-            if (same_place_count > 1) { //introduce guide}
             }
 
-            if ( near_level  <= 4 &&  same_place_count == 0  &&  action_count > 1 ) {
-                setActionLocationMode(cx, globalv.ACTIVE_MODE);
 
-            }
+            if (location_mode == globalv.ACTIVE_STANBY_MODE) {
+
+                if (same_place_count > 1) { //introduce guide}
+                }
+
+                if (near_level <= 4 && same_place_count == 0 && action_count > 1) {
+                    setActionLocationMode(cx, globalv.ACTIVE_MODE);
+
+                }
 
                 //Stanby mode
-            if (same_place_count > 2  &&  action_count > 1) setActionLocationMode(cx, globalv.STANBY_MODE);
+                if (same_place_count > 2 && action_count > 1)
+                    setActionLocationMode(cx, globalv.STANBY_MODE);
 
             }
 
-        if (location_mode == globalv.STANBY_MODE) {
-            gyroSensorStart();
-            if (( near_level  <= 3 && same_place_count == 0 && action_count < 1 ) || ( globalv.moving_now == globalv.ACTIVE_STATE)) {
-               if(near_level == 2) setActionLocationMode(cx, globalv.ACTIVE_MODE);
-                if(near_level == 3) setActionLocationMode(cx, globalv.ACTIVE_STANBY_MODE);
+            if (location_mode == globalv.STANBY_MODE) {
+                gyroSensorStart();
+                if ((near_level <= 3 && same_place_count == 0 && action_count < 1) || (globalv.moving_now == globalv.ACTIVE_STATE)) {
+                    if (near_level == 2) setActionLocationMode(cx, globalv.ACTIVE_MODE);
+                    if (near_level == 3) setActionLocationMode(cx, globalv.ACTIVE_STANBY_MODE);
 
-            }else{
-                sl.uregSensor();
+                } else {
+                    sl.uregSensor();
+                }
+
+                if (((same_place_count > 6 || same_place_count > 0) && (action_count > 1 && near_level >= 3)) || (same_place_count > 3 && action_count > 1 && (global.getNight() || near_level >= 5)))
+                    setActionLocationMode(cx, globalv.POWER_SAVED_MODE);
+
+                //disconnect
+
             }
 
-           if (((same_place_count > 6 || same_place_count > 0)  &&  (action_count > 1 && near_level >= 3)) || (same_place_count > 3  &&  action_count > 1 && (global.getNight()|| near_level >= 5)))setActionLocationMode(cx, globalv.POWER_SAVED_MODE);
+            if (location_mode == globalv.POWER_SAVED_MODE) {
+                if (near_level <= 5 && same_place_count == 0) {
+                    setActionLocationMode(cx, globalv.ACTIVE_STANBY_MODE);
+                }
 
-            //disconnect
-
-        }
-
-        if (location_mode == globalv.POWER_SAVED_MODE) {
-            if ( near_level  <= 5 && same_place_count == 0) {
-                setActionLocationMode(cx, globalv.ACTIVE_STANBY_MODE);
+                //Delete Noti
             }
 
-            //Delete Noti
-        }
+            if (location_mode == globalv.HIBERNATION_MODE) {
+                if (near_level <= 6) setActionLocationMode(cx, globalv.STANBY_MODE);
+            }
 
-        if (location_mode == globalv.HIBERNATION_MODE) {
-            if(near_level <= 6) setActionLocationMode(cx, globalv.STANBY_MODE);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-}catch (Exception e){ e.printStackTrace();}
     }
 
 //    public void flowStation(Context cx){
@@ -291,20 +300,19 @@ if(mflow.size() > 0 && stations.size() > 0 && goal_id != 0) {
 //
 //    }
 
-    public ArrayList<flowclass> getCurrentCountStations(Context cx, int count_srl){
+    public ArrayList<flowclass> getCurrentCountStations(Context cx, int count_srl) {
         // InfoClass mInfoClass;
         ArrayList<flowclass> mInfoArray = new ArrayList<flowclass>();
 
 
-
         DbOpenHelper mDbOpenHelper = new DbOpenHelper(cx);
         mDbOpenHelper.open();
-        Cursor csr =  mDbOpenHelper.getCurrentCountStation(count_srl);
+        Cursor csr = mDbOpenHelper.getCurrentCountStation(count_srl);
 
 
         while (csr.moveToNext()) {
 
-         //   global.log(csr.getString(csr.getColumnIndex("station_name")));
+            //   global.log(csr.getString(csr.getColumnIndex("station_name")));
 
             flowclass mflowClass = new flowclass(
                     csr.getInt(csr.getColumnIndex("_id")),
@@ -334,16 +342,14 @@ if(mflow.size() > 0 && stations.size() > 0 && goal_id != 0) {
         return mInfoArray;
     }
 
-    public ArrayList<flowclass> selectflowStation(Context cx, int count_srl){
+    public ArrayList<flowclass> selectflowStation(Context cx, int count_srl) {
         // InfoClass mInfoClass;
         ArrayList<flowclass> mInfoArray = new ArrayList<flowclass>();
 
 
-
         DbOpenHelper mDbOpenHelper = new DbOpenHelper(cx);
         mDbOpenHelper.open();
-        Cursor csr =  mDbOpenHelper.getCurrentActiveCountStation(count_srl);
-
+        Cursor csr = mDbOpenHelper.getCurrentActiveCountStation(count_srl);
 
 
         //Save if 1- dozen
@@ -371,11 +377,11 @@ if(mflow.size() > 0 && stations.size() > 0 && goal_id != 0) {
 //
 //        }
         //dozen - dozen
-     //   if(csr.getCount() > 1){
-            //0 position 1 counti
-            int pos = 0;
-            int best_count = 0;
-            int station_srl_count = 0;
+        //   if(csr.getCount() > 1){
+        //0 position 1 counti
+        int pos = 0;
+        int best_count = 0;
+        int station_srl_count = 0;
 
 
         int station_srl_temp = 0;
@@ -385,47 +391,49 @@ if(mflow.size() > 0 && stations.size() > 0 && goal_id != 0) {
         int station_srl_best = 0;
 
         csr.moveToLast();
-if(csr.getCount() != 0) {
-    timestamp_best =  csr.getInt(csr.getColumnIndex("time"));
-    station_srl_best =  csr.getInt(csr.getColumnIndex("station_srl"));
-}
+        if (csr.getCount() != 0) {
+            timestamp_best = csr.getInt(csr.getColumnIndex("time"));
+            station_srl_best = csr.getInt(csr.getColumnIndex("station_srl"));
+        }
         csr.moveToFirst();
         while (csr.moveToNext()) {
-station_srl_temp = 0;
+            station_srl_temp = 0;
             station_srl_sub_temp = 0;
             station_srl_count = 0;
-        //     station_srl_temp = 0;
-global.log(timestamp_best + " : timestmap best, " + csr.getInt(csr.getColumnIndex("time")) + ": time" );
+            //     station_srl_temp = 0;
+            global.log(timestamp_best + " : timestmap best, " + csr.getInt(csr.getColumnIndex("time")) + ": time");
 
-                          Cursor csrc =  mDbOpenHelper.getDirectionRows(count_srl ,csr.getInt(csr.getColumnIndex("country_srl")), csr.getInt(csr.getColumnIndex("route_srl")), csr.getInt(csr.getColumnIndex("way_srl")), csr.getInt(csr.getColumnIndex("station_srl")));
- //if(csr.getInt(csr.getColumnIndex("time")) < timestamp_temp) break;
-       //  if(csrc.getCount() > count){
-             while (csrc.moveToNext()) {
-                 global.log( "station_srl :" + csrc.getInt(csrc.getColumnIndex("station_srl")) + "station_srl_sub_temp :" + station_srl_sub_temp + "station_srl_temp" + station_srl_temp  );
-                 //time prevent strange number or prevant strange number if more bigger than last number
-                 if((csr.getInt(csr.getColumnIndex("station_srl")) >= station_srl_temp + 3 && station_srl_temp != 0) || (timestamp_best > csr.getInt(csr.getColumnIndex("time")) + 120) && csr.getCount() > 3) break;
-                 if(  ( csrc.getInt(csrc.getColumnIndex("station_srl")) >station_srl_sub_temp) &&  (csrc.getInt(csrc.getColumnIndex("station_srl")) <= station_srl_sub_temp + 3 ||  station_srl_sub_temp == 0)) {
+            Cursor csrc = mDbOpenHelper.getDirectionRows(count_srl, csr.getInt(csr.getColumnIndex("country_srl")), csr.getInt(csr.getColumnIndex("route_srl")), csr.getInt(csr.getColumnIndex("way_srl")), csr.getInt(csr.getColumnIndex("station_srl")));
+            //if(csr.getInt(csr.getColumnIndex("time")) < timestamp_temp) break;
+            //  if(csrc.getCount() > count){
+            while (csrc.moveToNext()) {
+                global.log("station_srl :" + csrc.getInt(csrc.getColumnIndex("station_srl")) + "station_srl_sub_temp :" + station_srl_sub_temp + "station_srl_temp" + station_srl_temp);
+                //time prevent strange number or prevant strange number if more bigger than last number
+                if ((csr.getInt(csr.getColumnIndex("station_srl")) >= station_srl_temp + 3 && station_srl_temp != 0) || (timestamp_best > csr.getInt(csr.getColumnIndex("time")) + 120) && csr.getCount() > 3)
+                    break;
+                if ((csrc.getInt(csrc.getColumnIndex("station_srl")) > station_srl_sub_temp) && (csrc.getInt(csrc.getColumnIndex("station_srl")) <= station_srl_sub_temp + 3 || station_srl_sub_temp == 0)) {
 
-                     station_srl_temp =  csr.getInt(csr.getColumnIndex("station_srl"));
-                     station_srl_sub_temp =  csrc.getInt(csrc.getColumnIndex("station_srl"));
-                 //    timestamp_temp = csr.getInt(cs7r.getColumnIndex("time"));
-                    global.log( csrc.getInt(csrc.getColumnIndex("station_srl")) + "station");
+                    station_srl_temp = csr.getInt(csr.getColumnIndex("station_srl"));
+                    station_srl_sub_temp = csrc.getInt(csrc.getColumnIndex("station_srl"));
+                    //    timestamp_temp = csr.getInt(cs7r.getColumnIndex("time"));
+                    global.log(csrc.getInt(csrc.getColumnIndex("station_srl")) + "station");
 
 
-                     station_srl_count++;
-                     //prevent if csr number is strange
-                 }
-             //    global.log(  "count : " + csrc.getCount() + "posistion : " + csrc.getPosition());
+                    station_srl_count++;
+                    //prevent if csr number is strange
+                }
+                //    global.log(  "count : " + csrc.getCount() + "posistion : " + csrc.getPosition());
 
-                 //DROP NON NEED FLOW
-                 global.log("station_srl_best : " + station_srl_best + "station_srl" + csrc.getInt(csrc.getColumnIndex("station_srl")) );
-                 global.log( "id_srl : " + csrc.getInt(csrc.getColumnIndex("id_srl")));
-                 if(( csrc.getInt(csrc.getColumnIndex("station_srl")) >station_srl_sub_temp) && (station_srl_best == csrc.getInt(csrc.getColumnIndex("station_srl")) - 1)) {
+                //DROP NON NEED FLOW
+                global.log("station_srl_best : " + station_srl_best + "station_srl" + csrc.getInt(csrc.getColumnIndex("station_srl")));
+                global.log("id_srl : " + csrc.getInt(csrc.getColumnIndex("id_srl")));
+                if ((csrc.getInt(csrc.getColumnIndex("station_srl")) > station_srl_sub_temp) && (station_srl_best == csrc.getInt(csrc.getColumnIndex("station_srl")) - 1)) {
 
-                     mDbOpenHelper.DeleteFlowRow( csrc.getInt(csrc.getColumnIndex("id_srl")));
-                 }
-                 //Trash csr row
-                 if(csrc.getPosition() + 1 == csrc.getCount() && csr.getInt(csr.getColumnIndex("station_srl")) >= station_srl_sub_temp + 3) station_srl_count = 0;
+                    mDbOpenHelper.DeleteFlowRow(csrc.getInt(csrc.getColumnIndex("id_srl")));
+                }
+                //Trash csr row
+                if (csrc.getPosition() + 1 == csrc.getCount() && csr.getInt(csr.getColumnIndex("station_srl")) >= station_srl_sub_temp + 3)
+                    station_srl_count = 0;
 
 //               if(
 //   csrc.getInt(csrc.getColumnIndex("station_srl")) < station_srl_sub_temp + 3  ||  station_srl_sub_temp == 0){
@@ -437,21 +445,21 @@ global.log(timestamp_best + " : timestmap best, " + csr.getInt(csr.getColumnInde
 
 //global.log(csr.getInt(csr.getColumnIndex("station_srl")) + "AND" + csrc.getCount() );
                 // global.log( csr.getInt(csr.getColumnIndex("station_srl")) + "VS" +csrc.getInt(csrc.getColumnIndex("station_srl")));
-           //
-             }
+                //
+            }
             global.log(csr.getInt(csr.getColumnIndex("way_srl")) + "========");
 
 
-         //   global.log("best_count : " + best_count + "station_srl_count : " + station_srl_count);
-            if(best_count <= station_srl_count){
+            //   global.log("best_count : " + best_count + "station_srl_count : " + station_srl_count);
+            if (best_count <= station_srl_count) {
                 pos = csr.getPosition();
                 best_count = station_srl_count;
-                global.log(" : " +pos + "best count  : " + best_count);
+                global.log(" : " + pos + "best count  : " + best_count);
             }
 
             // count = csrc.getCount();
-       //      global.log(pos + "," + count);
-        // }
+            //      global.log(pos + "," + count);
+            // }
 
             csrc.close();
 
@@ -459,10 +467,9 @@ global.log(timestamp_best + " : timestmap best, " + csr.getInt(csr.getColumnInde
         }
 
 
+        csr.moveToPosition(pos);
 
-            csr.moveToPosition(pos);
-
-        if(csr.getCount() != 0) {
+        if (csr.getCount() != 0) {
             flowclass mflowClass = new flowclass(
                     csr.getInt(csr.getColumnIndex("_id")),
                     csr.getInt(csr.getColumnIndex("count_srl")),
@@ -482,9 +489,9 @@ global.log(timestamp_best + " : timestmap best, " + csr.getInt(csr.getColumnInde
             );
 
 
-            if(csr.getInt(csr.getColumnIndex("id_srl")) == same_place_id) {
+            if (csr.getInt(csr.getColumnIndex("id_srl")) == same_place_id) {
                 same_place_count++;
-            }else{
+            } else {
                 same_place_id = csr.getInt(csr.getColumnIndex("id_srl"));
             }
 
@@ -492,7 +499,7 @@ global.log(timestamp_best + " : timestmap best, " + csr.getInt(csr.getColumnInde
             mInfoArray.add(mflowClass);
         }
 
-     //   }
+        //   }
 
         csr.close();
         mDbOpenHelper.close();
@@ -500,12 +507,9 @@ global.log(timestamp_best + " : timestmap best, " + csr.getInt(csr.getColumnInde
     }
 
 
-
-
-    public ArrayList<InfoClass> getNearStations(Context cx, int location_level, Double latitude, Double longitude){
+    public ArrayList<InfoClass> getNearStations(Context cx, int location_level, Double latitude, Double longitude) {
         // InfoClass mInfoClass;
         ArrayList<InfoClass> mInfoArray = new ArrayList<InfoClass>();
-
 
 
         DbOpenHelper mDbOpenHelper = new DbOpenHelper(cx);
@@ -539,22 +543,19 @@ global.log(timestamp_best + " : timestmap best, " + csr.getInt(csr.getColumnInde
     }
 
 
-
-
-    public ArrayList<InfoClass> getStations(int country_srl, int route_srl, int way_srl){
+    public ArrayList<InfoClass> getStations(int country_srl, int route_srl, int way_srl) {
         // InfoClass mInfoClass;
         ArrayList<InfoClass> mInfoArray = new ArrayList<InfoClass>();
 
 
-
         DbOpenHelper mDbOpenHelper = new DbOpenHelper(cx);
         mDbOpenHelper.open();
-        Cursor csr = mDbOpenHelper.getStations(country_srl,route_srl,way_srl);
+        Cursor csr = mDbOpenHelper.getStations(country_srl, route_srl, way_srl);
 
 
         while (csr.moveToNext()) {
 
-           // global.log(csr.getString(csr.getColumnIndex("station_name")));
+            // global.log(csr.getString(csr.getColumnIndex("station_name")));
 
             InfoClass mInfoClass = new InfoClass(
                     csr.getInt(csr.getColumnIndex("_id")),
@@ -578,16 +579,14 @@ global.log(timestamp_best + " : timestmap best, " + csr.getInt(csr.getColumnInde
     }
 
 
+    public ArrayList<InfoClass> getNearStations(Context cx, Location location, int location_level) {
 
 
-    public ArrayList<InfoClass> getNearStations(Context cx, Location location, int location_level){
-
-
-        return getNearStations(cx, location_level ,location.getLatitude(), location.getLongitude());
+        return getNearStations(cx, location_level, location.getLatitude(), location.getLongitude());
     }
 
 
-    public void setGoogleApiClient(Context cx){
+    public void setGoogleApiClient(Context cx) {
         mGoogleApiClient = new GoogleApiClient.Builder(cx)
                 .addApi(LocationServices.API)
                 .addApi(Wearable.API)  // used for data layer API
@@ -600,7 +599,7 @@ global.log(timestamp_best + " : timestmap best, " + csr.getInt(csr.getColumnInde
     }
 
 
-    public void LocationRequest(Context cx, int interval, int fastestinterval, int priority){
+    public void LocationRequest(Context cx, int interval, int fastestinterval, int priority) {
         global.log("LocationRequest");
         LocationRequest locationRequest = LocationRequest.create()
                 .setPriority(priority)
@@ -633,12 +632,11 @@ global.log(timestamp_best + " : timestmap best, " + csr.getInt(csr.getColumnInde
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                //    mGoogleApiClient.blockingConnect(10000, TimeUnit.MILLISECONDS);
+                    //    mGoogleApiClient.blockingConnect(10000, TimeUnit.MILLISECONDS);
                     Wearable.MessageApi.sendMessage(mGoogleApiClient, nodeId, msg, data);
                 }
             }).start();
         }
-
 
 
     }
@@ -648,17 +646,16 @@ global.log(timestamp_best + " : timestmap best, " + csr.getInt(csr.getColumnInde
         new Thread(new Runnable() {
             @Override
             public void run() {
-                  mGoogleApiClient.blockingConnect(10000, TimeUnit.MILLISECONDS);
+                mGoogleApiClient.blockingConnect(10000, TimeUnit.MILLISECONDS);
                 NodeApi.GetConnectedNodesResult result =
                         Wearable.NodeApi.getConnectedNodes(mGoogleApiClient).await();
                 List<Node> nodes = result.getNodes();
                 if (nodes.size() > 0) {
-                            nodeId = nodes.get(0).getId();
+                    nodeId = nodes.get(0).getId();
                 }
                 //  mGoogleApiClient.disconnect();
             }
         }).start();
-
 
 
     }
@@ -677,9 +674,9 @@ global.log(timestamp_best + " : timestmap best, " + csr.getInt(csr.getColumnInde
     }
 
 
-    public void sendBusNoti(int kind, int noti_id, String title, String content, int country_srl, int route_srl, int way_srl, int station_srl ) {
+    public void sendBusNoti(int kind, int noti_id, String title, String content, int country_srl, int route_srl, int way_srl, int station_srl) {
         ArrayList<BusNotiClass> notiarray = new ArrayList<BusNotiClass>();
-        BusNotiClass mnoticalss = new BusNotiClass(kind, noti_id, title, content, country_srl, route_srl, way_srl, station_srl );
+        BusNotiClass mnoticalss = new BusNotiClass(kind, noti_id, title, content, country_srl, route_srl, way_srl, station_srl);
 
         notiarray.add(mnoticalss);
         Gson gson = new GsonBuilder().create();
@@ -689,13 +686,13 @@ global.log(timestamp_best + " : timestmap best, " + csr.getInt(csr.getColumnInde
 
     }
 
-public void arrivedAction(Context cx, String title, String content){
-    setActionLocationMode(cx, 4);
-   sendNoti(globalv.ARRIVED_NOTI, 1, title, content );
-    global.setGoalID(cx, 0);
-   // Intent viewIntent = new Intent(this, main.class);
-   // global.setActiveNoti(cx, 1, viewIntent, title, content, R.drawable.ic_launcher, R.drawable.ic_launcher);
-}
+    public void arrivedAction(Context cx, String title, String content) {
+        setActionLocationMode(cx, 4);
+        sendNoti(globalv.ARRIVED_NOTI, 1, title, content);
+        global.setGoalID(cx, 0);
+        // Intent viewIntent = new Intent(this, main.class);
+        // global.setActiveNoti(cx, 1, viewIntent, title, content, R.drawable.ic_launcher, R.drawable.ic_launcher);
+    }
 
 
 //    private void sendstations(Context cx, Location location){
@@ -706,10 +703,10 @@ public void arrivedAction(Context cx, String title, String content){
 //        sendMessage("stations//" + json_array_result.toString(), null);
 //    }
 
-    public void setLocationMode(Context cx, int level){
+    public void setLocationMode(Context cx, int level) {
         location_mode = level;
         boolean test_mode = false;
-        if(!global.debug_mode || !test_mode) {
+        if (!global.debug_mode || !test_mode) {
             if (level == globalv.HIBERNATION_MODE)
                 LocationRequest(cx, 5400000, 900000, LocationRequest.PRIORITY_NO_POWER);
             if (level == globalv.POWER_SAVED_MODE)
@@ -722,19 +719,15 @@ public void arrivedAction(Context cx, String title, String content){
                 LocationRequest(cx, 25000, 7000, LocationRequest.PRIORITY_HIGH_ACCURACY);
             if (level == globalv.LIVE_ACTIVE_MODE)
                 LocationRequest(cx, 15000, 3000, LocationRequest.PRIORITY_HIGH_ACCURACY);
-        }else{
+        } else {
             LocationRequest(cx, 5000, 1000, LocationRequest.PRIORITY_HIGH_ACCURACY);
         }
     }
 
 
-
-
-
-
     @Override
     public void onConnected(Bundle bundle) {
-global.log("Connected");
+        global.log("Connected");
         setLocationMode(cx, globalv.ACTIVE_MODE);
 
 
@@ -747,11 +740,11 @@ global.log("Connected");
 
     @Override
     public void onLocationChanged(Location location) {
-        global.log( "Success." + location.getLatitude() + "," +  location.getLongitude());
+        global.log("Success." + location.getLatitude() + "," + location.getLongitude());
 
-        if(initcheck){
+        if (initcheck) {
             conFlow(cx, location);
-        }else{
+        } else {
             firstFlow(cx, location);
 
         }
@@ -764,11 +757,12 @@ global.log("Connected");
     }
 
 
-    public void gyroSensorStart(){
+    public void gyroSensorStart() {
         sl = new SensorListener();
         sl.sensorStart(CoreSystem.this);
     }
-    public void setActionLocationMode(Context cx, int level){
+
+    public void setActionLocationMode(Context cx, int level) {
         global.log("Location Mode : " + level);
         action_count = 0;
         same_place_count = 0;
@@ -776,58 +770,70 @@ global.log("Connected");
         //Sensor
         gyroSensorStart();
 
-        if(level == globalv.LIVE_ACTIVE_MODE){
+        if (level == globalv.LIVE_ACTIVE_MODE) {
             setLocationMode(cx, globalv.LIVE_ACTIVE_MODE);
         }
 
-        if(level == globalv.ACTIVE_MODE){
+        if (level == globalv.ACTIVE_MODE) {
             setLocationMode(cx, globalv.ACTIVE_MODE);
         }
 
 
-        if(level == globalv.ACTIVE_STANBY_MODE){
+        if (level == globalv.ACTIVE_STANBY_MODE) {
             setLocationMode(cx, globalv.ACTIVE_STANBY_MODE);
             sl.uregSensor();
         }
 
 
-        if(level == globalv.STANBY_MODE){
+        if (level == globalv.STANBY_MODE) {
             setLocationMode(cx, globalv.STANBY_MODE);
             global.CountSrlUpdate(cx);
 
         }
 
 
-        if(level == globalv.POWER_SAVED_MODE){
+        if (level == globalv.POWER_SAVED_MODE) {
             setLocationMode(cx, globalv.POWER_SAVED_MODE);
             global.CountSrlUpdate(cx);
             sl.uregSensor();
         }
 
-        if(level == globalv.HIBERNATION_MODE){
+        if (level == globalv.HIBERNATION_MODE) {
             setLocationMode(cx, globalv.HIBERNATION_MODE);
             global.CountSrlUpdate(cx);
             sl.uregSensor();
 
         }
 
-global.setLocationMode(cx, level);
+        global.setLocationMode(cx, level);
 
     }
 
-
-
-
-
-
-
-
-    private void almost_arrived(String this_station, String next_station){
-        sendNoti(2,1, this_station, next_station);
-    }
 
     @Override
     public IBinder onBind(Intent intent) {
-        return null;
+        return mMessenger.getBinder();
     }
+
+    class IncomingHandler extends Handler { // Handler of incoming messages from clients.
+
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 1:
+
+                    global.log(msg.obj.toString());
+                    break;
+
+                default:
+                    super.handleMessage(msg);
+            }
+        }
+    }
+
+
+    private void almost_arrived(String this_station, String next_station) {
+        sendNoti(2, 1, this_station, next_station);
+    }
+
 }

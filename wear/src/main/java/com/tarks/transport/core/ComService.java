@@ -3,12 +3,9 @@ package com.tarks.transport.core;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.wearable.MessageApi;
 import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.NodeApi;
@@ -22,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-public class ListenerService extends WearableListenerService implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class ComService extends WearableListenerService implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
 
     GoogleApiClient mGoogleApiClient;
@@ -44,11 +41,19 @@ checkMessage(messageEvent.getPath(), messageEvent.getData());
 
     }
     private void checkMessage(String message, byte[] bytes){
-        String[] array = message.split("//");
-        String action_kind = array[0];
-        String data = array[1];
+        try {
+            String[] array = message.split("//");
+            String action_kind = array[0];
+            String data = array[1];
 
-        if(action_kind.matches("notification")) actionNoti(data);
+            if(action_kind.matches("notification")) actionNoti(data);
+
+        } catch (Exception e){
+
+            e.printStackTrace();
+        }
+
+
 
 
     }
@@ -69,17 +74,17 @@ checkMessage(messageEvent.getPath(), messageEvent.getData());
 
         //Normal noti
         if (kind == 1) {
-            Intent viewIntent = new Intent(ListenerService.this, StationList.class);
-            global.BusNoti(ListenerService.this, noti_id, viewIntent, title, content, R.drawable.ic_launcher,  R.drawable.ride_bus_background);
-            sendMessage("smsdfsfsdf느금", null);
+            Intent viewIntent = new Intent(ComService.this, StationList.class);
+            global.BusNoti(ComService.this, noti_id, viewIntent, title, content, R.drawable.ic_launcher,  R.drawable.ride_bus_background);
+            sendMessage("request_stations_data//ㄹㅇ허ㅏㅣㅇㄹ너하ㅣㅇ허ㅏㅣㅇㄴ하ㅣㄴㅇㄹ", null);
         }
 
         //Bus almost arrived
         if (kind == 2) {
 
             global.Vibrate(this, 2000);
-            Intent viewIntent = new Intent(ListenerService.this, StationList.class);
-            global.BusNoti(ListenerService.this, noti_id, viewIntent, title, content, R.drawable.ic_launcher, R.drawable.flag);
+            Intent viewIntent = new Intent(ComService.this, StationList.class);
+            global.BusNoti(ComService.this, noti_id, viewIntent, title, content, R.drawable.ic_launcher, R.drawable.flag);
 //
 //            Intent i = new Intent(ListenerService.this, BusArrive.class);
 //            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
