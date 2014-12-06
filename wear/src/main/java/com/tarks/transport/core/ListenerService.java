@@ -1,16 +1,39 @@
 package com.tarks.transport.core;
 
+import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.wearable.MessageApi;
 import com.google.android.gms.wearable.MessageEvent;
+import com.google.android.gms.wearable.Node;
+import com.google.android.gms.wearable.NodeApi;
+import com.google.android.gms.wearable.Wearable;
 import com.google.android.gms.wearable.WearableListenerService;
 import com.tarks.transport.ui.BusArrive;
 import com.tarks.transport.R;
 import com.tarks.transport.ui.StationList;
 
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
-public class ListenerService extends WearableListenerService {
+public class ListenerService extends WearableListenerService implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+
+
+    GoogleApiClient mGoogleApiClient;
+    private String nodeId;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+        setGoogleApiClient(this);
+    }
 
     @Override
     public void onMessageReceived(MessageEvent messageEvent) {
@@ -30,6 +53,7 @@ checkMessage(messageEvent.getPath(), messageEvent.getData());
 
     }
 
+
     private void actionNoti(String data) {
         //ID
         // 1 : transport, arrived, next stop
@@ -47,6 +71,7 @@ checkMessage(messageEvent.getPath(), messageEvent.getData());
         if (kind == 1) {
             Intent viewIntent = new Intent(ListenerService.this, StationList.class);
             global.BusNoti(ListenerService.this, noti_id, viewIntent, title, content, R.drawable.ic_launcher,  R.drawable.ride_bus_background);
+            sendMessage("smsdfsfsdf느금", null);
         }
 
         //Bus almost arrived
@@ -92,7 +117,53 @@ private void arrivedAction(String title, String content){
     Intent viewIntent = new Intent(this, StationList.class);
     global.setActiveNoti(this, 1, viewIntent, title, content, R.drawable.ic_launcher, R.drawable.flag);
 }
+    private void setGoogleApiClient(Context cx){
+        mGoogleApiClient = new GoogleApiClient.Builder(cx)
+                .addApi(Wearable.API)  // used for data layer API
+                .addConnectionCallbacks((GoogleApiClient.ConnectionCallbacks) cx)
+                .addOnConnectionFailedListener((GoogleApiClient.OnConnectionFailedListener) cx)
+                .build();
 
+        mGoogleApiClient.connect();
+        retrieveDeviceNode();
+    }
+
+
+
+    private void retrieveDeviceNode() {
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                mGoogleApiClient.blockingConnect(10000, TimeUnit.MILLISECONDS);
+                NodeApi.GetConnectedNodesResult result =
+                        Wearable.NodeApi.getConnectedNodes(mGoogleApiClient).await();
+                List<Node> nodes = result.getNodes();
+                if (nodes.size() > 0) {
+                    nodeId = nodes.get(0).getId();
+                }
+                //  mGoogleApiClient.disconnect();
+            }
+        }).start();
+
+
+
+    }
+
+    public void sendMessage(final String msg, final byte[] data) {
+       // if (nodeId != null) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    //    mGoogleApiClient.blockingConnect(10000, TimeUnit.MILLISECONDS);
+                    Wearable.MessageApi.sendMessage(mGoogleApiClient, nodeId, msg, data);
+                }
+            }).start();
+     //   }
+
+
+
+    }
 
 
     private void showToast(String message)  {
@@ -105,4 +176,18 @@ private void arrivedAction(String title, String content){
 
 }
 
+    @Override
+    public void onConnected(Bundle bundle) {
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+
+    }
 }
