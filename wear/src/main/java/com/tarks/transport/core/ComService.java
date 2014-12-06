@@ -2,6 +2,7 @@ package com.tarks.transport.core;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -11,10 +12,15 @@ import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.Wearable;
 import com.google.android.gms.wearable.WearableListenerService;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.tarks.transport.db.*;
 import com.tarks.transport.ui.BusArrive;
 import com.tarks.transport.R;
 import com.tarks.transport.ui.StationList;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -76,7 +82,11 @@ checkMessage(messageEvent.getPath(), messageEvent.getData());
         if (kind == 1) {
             Intent viewIntent = new Intent(ComService.this, StationList.class);
             global.BusNoti(ComService.this, noti_id, viewIntent, title, content, R.drawable.ic_launcher,  R.drawable.ride_bus_background);
-            sendMessage("request_stations_data//ㄹㅇ허ㅏㅣㅇㄹ너하ㅣㅇ허ㅏㅣㅇㄴ하ㅣㄴㅇㄹ", null);
+            int country_srl = Integer.parseInt(String.valueOf(resultmap.get("country_srl")));
+            int route_srl = Integer.parseInt(String.valueOf(resultmap.get("route_srl")));
+            int way_srl = Integer.parseInt(String.valueOf(resultmap.get("way_srl")));
+            int station_srl = Integer.parseInt(String.valueOf(resultmap.get("station_srl")));
+            checkDataDB(country_srl, route_srl, way_srl, station_srl);
         }
 
         //Bus almost arrived
@@ -170,6 +180,35 @@ private void arrivedAction(String title, String content){
 
     }
 
+
+    private void checkDataDB(int country_srl, int route_srl, int way_srl, int station_srl){
+        DbOpenHelper mDbOpenHelper = new DbOpenHelper(this);
+        mDbOpenHelper.open();
+
+
+       if(mDbOpenHelper.checkStations(country_srl, route_srl, way_srl)){
+
+
+       }else{
+
+           ArrayList<StationClass> notiarray = new ArrayList<StationClass>();
+           StationClass mnoticalss = new StationClass(country_srl, route_srl, way_srl, station_srl);
+
+           notiarray.add(mnoticalss);
+           Gson gson = new GsonBuilder().create();
+           JsonArray noti_json_result = gson.toJsonTree(notiarray).getAsJsonArray();
+           global.log(noti_json_result.toString());
+           sendMessage("request_stations_data//" + noti_json_result.toString(), null);
+
+       }
+
+
+
+
+
+
+        mDbOpenHelper.close();
+    }
 
     private void showToast(String message)  {
         //Toast.makeText(this, message, Toast.LENGTH_LONG).show();

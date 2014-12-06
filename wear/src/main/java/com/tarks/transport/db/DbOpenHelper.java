@@ -191,6 +191,16 @@ public class DbOpenHelper {
         return c;
     }
 
+
+    public boolean  checkStations(int country_srl, int route_srl, int way_srl){
+
+        Cursor c = mDB.rawQuery( "select * from stations where country_srl='" + country_srl + "' AND route_srl= '" + route_srl + "' AND way_srl= '"+ way_srl +"' ORDER BY `station_srl` ASC" , null);
+
+        if(c.getCount() > 0) return true;
+
+        return false;
+    }
+
     public void DeleteFlowRow( int id){
         mDB.execSQL("DELETE FROM flow WHERE id_srl >=" + id + " AND id_srl <  3 + " + id);
     }

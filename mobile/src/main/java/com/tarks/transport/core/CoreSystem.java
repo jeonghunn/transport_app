@@ -276,7 +276,7 @@ public class CoreSystem extends Service implements GoogleApiClient.ConnectionCal
             }
 
             if (location_mode == globalv.POWER_SAVED_MODE) {
-                if (near_level <= 5 && same_place_count == 0) {
+                if ((near_level <= 5 && same_place_count == 0 && action_count > 1) || (globalv.moving_now == globalv.ACTIVE_STATE)) {
                     setActionLocationMode(cx, globalv.ACTIVE_STANBY_MODE);
                 }
 
@@ -687,7 +687,7 @@ public class CoreSystem extends Service implements GoogleApiClient.ConnectionCal
     }
 
     public void arrivedAction(Context cx, String title, String content) {
-        setActionLocationMode(cx, 4);
+        setActionLocationMode(cx, 3);
         sendNoti(globalv.ARRIVED_NOTI, 1, title, content);
         global.setGoalID(cx, 0);
         // Intent viewIntent = new Intent(this, main.class);

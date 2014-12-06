@@ -25,7 +25,7 @@ dependencies {
 
     compile 'com.google.android.support:wearable:+'
     compile 'com.google.android.gms:play-services-wearable:6.1.11'
-
+    compile 'com.google.code.gson:gson:2.3'
 
 
 }
