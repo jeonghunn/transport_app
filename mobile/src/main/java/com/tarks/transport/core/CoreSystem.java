@@ -51,7 +51,7 @@ public class CoreSystem extends Service implements GoogleApiClient.ConnectionCal
     private int same_place_count = 0;
     private int same_place_id = 0;
 
-    private int route_srl_temp = 0;
+    private int last_station_id = 0;
 
     SensorListener sl;
     private Intent intent;
@@ -187,9 +187,10 @@ public class CoreSystem extends Service implements GoogleApiClient.ConnectionCal
             //  global.log(global.getNight() + "asdf");
             //  sendNoti(1,1,ic.get(0).station_name,String.valueOf(location_mode));
 
-            if (mflow.size() > 0 && stations.size() > 0) {
+            if ((mflow.size() > 0 && stations.size() > 0) && (last_station_id != flowget.id_srl)) {
 
-                global.log(mflow.get(0).station_srl + "/" + stations.size());
+                 last_station_id = flowget.id_srl;
+              //  global.log(mflow.get(0).station_srl + "/" + stations.size());
 
 
                 //Next Station noti
@@ -203,7 +204,7 @@ public class CoreSystem extends Service implements GoogleApiClient.ConnectionCal
                 } else {
 
                     if (mflow.size() > 0 && next_name != null)
-                        sendBusNoti(1, 1, station_left + "개 정거장 남음", stations.get(flowget.station_srl - 1).station_name + "\n" + next_name, flowget.country_srl, flowget.route_srl, flowget.way_srl, flowget.station_srl);
+                        sendBusNoti(1, 1, station_left + getString(R.string._stations_left), stations.get(flowget.station_srl - 1).station_name + "\n" + next_name, flowget.country_srl, flowget.route_srl, flowget.way_srl, flowget.station_srl);
                 }
 
             }
@@ -268,7 +269,7 @@ public class CoreSystem extends Service implements GoogleApiClient.ConnectionCal
                     sl.uregSensor();
                 }
 
-                if (((same_place_count > 6 || same_place_count > 0) && (action_count > 1 && near_level >= 3)) || (same_place_count > 3 && action_count > 1 && (global.getNight() || near_level >= 5)))
+                if (((same_place_count > 3 && action_count > 1 && near_level >= 3)) || (same_place_count > 3 && action_count > 1 && (global.getNight() || near_level >= 5)))
                     setActionLocationMode(cx, globalv.POWER_SAVED_MODE);
 
                 //disconnect
