@@ -35,6 +35,7 @@ import com.tarks.transport.main;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -695,6 +696,27 @@ public class CoreSystem extends Service implements GoogleApiClient.ConnectionCal
         // global.setActiveNoti(cx, 1, viewIntent, title, content, R.drawable.ic_launcher, R.drawable.ic_launcher);
     }
 
+    public void sendStationsData(int country_srl, int route_srl, int way_srl){
+        ArrayList<InfoClass> stations = getStations(country_srl, route_srl, way_srl);
+        Gson gson = new GsonBuilder().create();
+        JsonArray json_result = gson.toJsonTree(stations).getAsJsonArray();
+        global.log(json_result.toString());
+        sendMessage("stations_data//" + json_result.toString(), null);
+    }
+
+    public void jsonSendStationData(String data){
+        Map<String, String> resultmap = null;
+        resultmap = global.getJSONArray(data);
+
+        int country_srl = Integer.parseInt(String.valueOf(resultmap.get("country_srl")));
+        int route_srl = Integer.parseInt(String.valueOf(resultmap.get("route_srl")));
+        int way_srl = Integer.parseInt(String.valueOf(resultmap.get("way_srl")));
+
+        sendStationsData(country_srl, route_srl, way_srl);
+
+
+    }
+
 
 //    private void sendstations(Context cx, Location location){
 //        ArrayList<InfoClass> result_array = getNearStations(cx, location.getLatitude(), location.getLongitude());
@@ -822,7 +844,7 @@ public class CoreSystem extends Service implements GoogleApiClient.ConnectionCal
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 1:
-
+                    jsonSendStationData(msg.obj.toString());
                     global.log(msg.obj.toString());
                     break;
 

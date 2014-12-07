@@ -106,21 +106,6 @@ String send_data;
         }
     };
 
-    private void sendMessageToService(int intvaluetosend, String data) {
-        if (mIsBound) {
-            if (mService != null) {
-                try {
-                    Message msg = Message.obtain();
-                 //   msg.replyTo = mMessenger;
-msg.what = 1;
-                 msg.obj = "gjhghghjgjgjh";
-                    mService.send(msg);
-                }
-                catch (RemoteException e) {
-                }
-            }
-        }
-    }
 
     void doUnbindService() {
         send_data = null;

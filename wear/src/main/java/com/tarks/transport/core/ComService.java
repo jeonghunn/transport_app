@@ -53,6 +53,7 @@ checkMessage(messageEvent.getPath(), messageEvent.getData());
             String data = array[1];
 
             if(action_kind.matches("notification")) actionNoti(data);
+            if(action_kind.matches("stations_data")) StationsDataDBInput(data);
 
         } catch (Exception e){
 
@@ -115,6 +116,7 @@ checkMessage(messageEvent.getPath(), messageEvent.getData());
         }
 
     }
+
 
 
 private void arrivedAction(String title, String content){
@@ -180,6 +182,24 @@ private void arrivedAction(String title, String content){
 
     }
 
+    private void StationsDataDBInput(String data){
+         ArrayList<InfoClass> infoArraylist = new ArrayList<InfoClass>();
+        infoArraylist = global.getJSONArrayListByInfoClass(data);
+
+     //   global.log(data.toString());
+
+        DbOpenHelper mDbOpenHelper = new DbOpenHelper(this);
+        mDbOpenHelper.open();
+
+        for (int i = 0; i < infoArraylist.size(); i++) {
+           // global.log(infoArraylist.get(i).station_name);
+            InfoClass get = infoArraylist.get(i);
+            mDbOpenHelper.insertColumn(get.country_srl,get.route_srl,get.station_srl,get.way_srl, get.station_name, get.station_latitude,  get.station_longitude);
+        }
+
+        mDbOpenHelper.close();
+    }
+
 
     private void checkDataDB(int country_srl, int route_srl, int way_srl, int station_srl){
         DbOpenHelper mDbOpenHelper = new DbOpenHelper(this);
@@ -197,7 +217,7 @@ private void arrivedAction(String title, String content){
            notiarray.add(mnoticalss);
            Gson gson = new GsonBuilder().create();
            JsonArray noti_json_result = gson.toJsonTree(notiarray).getAsJsonArray();
-           global.log(noti_json_result.toString());
+         //  global.log(noti_json_result.toString());
            sendMessage("request_stations_data//" + noti_json_result.toString(), null);
 
        }

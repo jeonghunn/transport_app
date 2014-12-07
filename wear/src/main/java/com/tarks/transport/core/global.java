@@ -16,7 +16,10 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.tarks.transport.R;
+import com.tarks.transport.db.InfoClass;
 import com.tarks.transport.ui.RouteList;
 import com.tarks.transport.ui.StationList;
 import com.tarks.transport.ui.WayList;
@@ -172,6 +175,10 @@ public final class global {
         notificationManager.notify(notificationId, notificationBuilder.build());
     }
 
+
+
+
+
     public static void setActiveNoti(Context cx, int notificationId, Intent viewIntent, String title, String content, int icon, int largeicon){
 
 // Build intent for notification content
@@ -226,6 +233,18 @@ public final class global {
 
 
         notificationManager.cancel(notificationId);
+    }
+
+    public static ArrayList<InfoClass> getJSONArrayListByInfoClass(String content) {
+        ArrayList<InfoClass> yourArray = null;
+        try {
+            JSONArray array = new JSONArray(content);
+            yourArray   = new Gson().fromJson(array.toString(), new TypeToken<List<InfoClass>>(){}.getType());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+return yourArray;
     }
 
 
