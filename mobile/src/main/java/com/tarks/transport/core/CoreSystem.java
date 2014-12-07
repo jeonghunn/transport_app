@@ -263,8 +263,8 @@ public class CoreSystem extends Service implements GoogleApiClient.ConnectionCal
             if (location_mode == globalv.STANBY_MODE) {
                 gyroSensorStart();
                 if ((near_level <= 3 && same_place_count == 0 && action_count > 1) || (globalv.moving_now == globalv.ACTIVE_STATE)) {
-                    if (near_level == 2) setActionLocationMode(cx, globalv.ACTIVE_MODE);
-                    if (near_level == 3) setActionLocationMode(cx, globalv.ACTIVE_STANBY_MODE);
+                    if (near_level == 1) setActionLocationMode(cx, globalv.ACTIVE_MODE);
+                    if (near_level == 2) setActionLocationMode(cx, globalv.ACTIVE_STANBY_MODE);
 
                 } else {
                     sl.uregSensor();
