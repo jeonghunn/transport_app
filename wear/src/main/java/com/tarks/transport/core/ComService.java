@@ -4,6 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.IBinder;
+import android.os.Message;
+import android.os.Messenger;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -30,12 +34,34 @@ public class ComService extends WearableListenerService implements GoogleApiClie
 
     GoogleApiClient mGoogleApiClient;
     private String nodeId;
+    final Messenger mMessenger = new Messenger(new IncomingHandler());
+    private Intent intent;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
         setGoogleApiClient(this);
+
+    }
+
+
+
+
+    class IncomingHandler extends Handler { // Handler of incoming messages from clients.
+
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 1:
+                  //  jsonSendStationData(msg.obj.toString());
+
+                    break;
+
+                default:
+                    super.handleMessage(msg);
+            }
+        }
     }
 
     @Override
@@ -54,6 +80,7 @@ checkMessage(messageEvent.getPath(), messageEvent.getData());
 
             if(action_kind.matches("notification")) actionNoti(data);
             if(action_kind.matches("stations_data")) StationsDataDBInput(data);
+            if(action_kind.matches("requestLocationMode")) requestLocationMode(Integer.parseInt(data));
 
         } catch (Exception e){
 
@@ -64,6 +91,8 @@ checkMessage(messageEvent.getPath(), messageEvent.getData());
 
 
     }
+
+
 
 
     private void actionNoti(String data) {
@@ -182,6 +211,11 @@ private void arrivedAction(String title, String content){
 
     }
 
+    private void requestLocationMode(int mode){
+        global.log(mode + "locationmode");
+        sendMessage("LocationMode//" + mode, null);
+    }
+
     private void StationsDataDBInput(String data){
          ArrayList<InfoClass> infoArraylist = new ArrayList<InfoClass>();
         infoArraylist = global.getJSONArrayListByInfoClass(data);
@@ -230,6 +264,7 @@ private void arrivedAction(String title, String content){
         mDbOpenHelper.close();
     }
 
+
     private void showToast(String message)  {
         //Toast.makeText(this, message, Toast.LENGTH_LONG).show();
 
@@ -254,4 +289,7 @@ private void arrivedAction(String title, String content){
     public void onConnectionFailed(ConnectionResult connectionResult) {
 
     }
+
+
+
 }

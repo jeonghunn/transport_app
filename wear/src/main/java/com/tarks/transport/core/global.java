@@ -120,6 +120,12 @@ public final class global {
         PendingIntent pendingRouteIntent = PendingIntent.getActivity(cx, 0, routeIntent, 0);
 
 
+        //Delete
+        Intent deleteIntent = new Intent(cx, ActionActivity.class);
+        deleteIntent.putExtra("action_kind", "delete_noti");
+        PendingIntent pendingDeleteIntent = PendingIntent.getActivity(cx, 0, deleteIntent, 0);
+
+
         // Create a big text style for the second page
         NotificationCompat.BigTextStyle secondPageStyle = new NotificationCompat.BigTextStyle();
         secondPageStyle.setBigContentTitle("백석농공단지 방면")
@@ -149,6 +155,7 @@ public final class global {
                         .setSmallIcon(icon)
                         .setContentTitle(title)
                         .setContentText(content)
+                        .setDeleteIntent(pendingDeleteIntent)
                         .setLargeIcon(BitmapFactory.decodeResource(
                                 cx.getResources(), largeicon))
                         .extend(wearableExtender)
@@ -156,9 +163,9 @@ public final class global {
                                 cx.getString(R.string.stations), pendingStationIntent)
                         .addAction(R.drawable.ic_directions_white,
                                 cx.getString(R.string.way), pendingWayIntent)
-                        .addAction(R.drawable.ic_directions_white,
+                        .addAction(R.drawable.ic_route_white,
                                 cx.getString(R.string.route), pendingRouteIntent)
-                        .addAction(R.drawable.ic_directions_bus_white,
+                        .addAction(R.drawable.ic_ride_bus_white,
                                 cx.getString(R.string.riding), viewPendingIntent)
                         .setContentIntent(viewPendingIntent);
 

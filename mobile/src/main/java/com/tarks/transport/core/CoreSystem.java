@@ -848,6 +848,9 @@ public class CoreSystem extends Service implements GoogleApiClient.ConnectionCal
                     global.log(msg.obj.toString());
                     break;
 
+                case 2:
+if(msg.obj != null)     setActionLocationMode(CoreSystem.this,Integer.parseInt( msg.obj.toString()));
+                    break;
                 default:
                     super.handleMessage(msg);
             }

@@ -26,6 +26,7 @@ public class ListenerService extends WearableListenerService {
     boolean mIsBound;
     final Messenger mMessenger = new Messenger(new IncomingHandler());
 String send_data;
+    int handlernumber;
 
     @Override
     public void onCreate() {
@@ -52,13 +53,21 @@ String send_data;
             String action_kind = array[0];
             String data = array[1];
             if (action_kind.matches("request_stations_data")) requsetStationsData(data);
+            if (action_kind.matches("LocationMode")) setLocationMode(data);
         } catch (Exception e) {
         }
 
 
     }
 
+    private void setLocationMode(String data){
+        handlernumber = 2 ;
+        send_data = data;
+        doBindService();
+    }
+
     private void requsetStationsData(String data) {
+        handlernumber = 1 ;
         send_data = data;
         doBindService();
 
@@ -87,7 +96,7 @@ String send_data;
         public void onServiceConnected(ComponentName className, IBinder service) {
             mService = new Messenger(service);
             try {
-                Message msg = Message.obtain(null, 1);
+                Message msg = Message.obtain(null, handlernumber);
                 msg.replyTo = mMessenger;
                 msg.obj = send_data;
                 mService.send(msg);
