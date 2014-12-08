@@ -28,7 +28,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -350,6 +352,12 @@ return yourArray;
         return list;
     }
 
+    public static boolean getNight(){
+        String time = new SimpleDateFormat("HH").format(new Date(System.currentTimeMillis()));
+        int hour = Integer.parseInt(time);
+        if((hour <= 6 && 0 <= hour) || (19 <= hour &&  hour <= 23)) return true;
+        return false;
+    }
 
     public static void Vibrate(Context cx, int time) {
         Vibrator v = (Vibrator) cx.getSystemService(Context.VIBRATOR_SERVICE);
