@@ -201,8 +201,8 @@ public class DbOpenHelper {
         return false;
     }
 
-    public void DeleteFlowRow( int id){
-        mDB.execSQL("DELETE FROM flow WHERE id_srl >=" + id + " AND id_srl <  3 + " + id);
+    public void DropStationsTable(){
+        mDB.execSQL("DROP TABLE IF EXISTS "+DataBases.CreateDB._TABLENAME , null);
     }
 
 //    public Cursor getNowStation(Double latitude, Double longitude){

@@ -136,7 +136,6 @@ public class CoreSystem extends Service implements GoogleApiClient.ConnectionCal
             ic = getNearStations(cx, lc, i);
             if (ic.size() > 0) {
                 near_level = i;
-                global.log("fggg" + i);
                 break;
             }
 
@@ -154,6 +153,8 @@ public class CoreSystem extends Service implements GoogleApiClient.ConnectionCal
                     if (goal_id == get.id)
                         arrivedAction(cx, getString(R.string.destinaton_arrived), get.station_name);
                 }
+            }else{
+
             }
 
             mDbOpenHelper.close();
@@ -630,6 +631,12 @@ public class CoreSystem extends Service implements GoogleApiClient.ConnectionCal
                 });
     }
 
+    public void sendMessageDefault(final String msg, String data) {
+sendMessage(msg, data.getBytes());
+
+    }
+
+
     public void sendMessage(final String msg, final byte[] data) {
         if (nodeId != null) {
             new Thread(new Runnable() {
@@ -672,7 +679,7 @@ public class CoreSystem extends Service implements GoogleApiClient.ConnectionCal
         Gson gson = new GsonBuilder().create();
         JsonArray noti_json_result = gson.toJsonTree(notiarray).getAsJsonArray();
         global.log(noti_json_result.toString());
-        sendMessage("notification//" + noti_json_result.toString(), null);
+        sendMessageDefault("notification" , noti_json_result.toString());
 
     }
 
@@ -685,7 +692,7 @@ public class CoreSystem extends Service implements GoogleApiClient.ConnectionCal
         Gson gson = new GsonBuilder().create();
         JsonArray noti_json_result = gson.toJsonTree(notiarray).getAsJsonArray();
         global.log(noti_json_result.toString());
-        sendMessage("notification//" + noti_json_result.toString(), null);
+        sendMessageDefault("notification" , noti_json_result.toString());
 
     }
 
@@ -702,7 +709,7 @@ public class CoreSystem extends Service implements GoogleApiClient.ConnectionCal
         Gson gson = new GsonBuilder().create();
         JsonArray json_result = gson.toJsonTree(stations).getAsJsonArray();
         global.log(json_result.toString());
-        sendMessage("stations_data//" + json_result.toString(), null);
+        sendMessageDefault("stations_data", json_result.toString());
     }
 
     public void jsonSendStationData(String data){

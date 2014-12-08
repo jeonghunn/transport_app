@@ -26,6 +26,7 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -260,6 +261,14 @@ public final class global {
         editor.commit();
     }
 
+    public static String getStringbyBytes(byte[] bytes){
+        try {
+            return new String(bytes, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     public static boolean getNight(){
        String time = new SimpleDateFormat("HH").format(new Date(System.currentTimeMillis()));

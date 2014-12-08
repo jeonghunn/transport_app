@@ -58,7 +58,7 @@ public class ActionActivity extends Activity implements GoogleApiClient.Connecti
         if(action_kind.matches("delete_noti")){
           //  requsetToMain("delete_noti//1");
           //  global.log("dfsafdsafsdfsd");
-            new SendMessage("requestLocationMode//3", null).start();
+            new SendMessage("requestLocationMode", "3").start();
         }
 
 

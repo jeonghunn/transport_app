@@ -74,13 +74,13 @@ checkMessage(messageEvent.getPath(), messageEvent.getData());
     }
     private void checkMessage(String message, byte[] bytes){
         try {
-            String[] array = message.split("//");
-            String action_kind = array[0];
-            String data = array[1];
+          //  String[] array = message.split("//");
+         //   String action_kind = array[0];
+         //   String data = array[1];
 
-            if(action_kind.matches("notification")) actionNoti(data);
-            if(action_kind.matches("stations_data")) StationsDataDBInput(data);
-            if(action_kind.matches("requestLocationMode")) requestLocationMode(Integer.parseInt(data));
+            if(message.matches("notification")) actionNoti(global.getStringbyBytes(bytes));
+            if(message.matches("stations_data")) StationsDataDBInput(global.getStringbyBytes(bytes));
+            if(message.matches("requestLocationMode")) requestLocationMode(global.getStringbyBytes(bytes));
 
         } catch (Exception e){
 
@@ -212,9 +212,17 @@ private void arrivedAction(String title, String content){
 
     }
 
-    private void requestLocationMode(int mode){
+
+    public void sendMessageDefault(final String msg, String data) {
+        sendMessage(msg, data.getBytes());
+
+    }
+
+
+
+    private void requestLocationMode(String mode){
         global.log(mode + "locationmode");
-        sendMessage("LocationMode//" + mode, null);
+        sendMessageDefault("LocationMode" , mode);
     }
 
     private void StationsDataDBInput(String data){
@@ -253,7 +261,7 @@ private void arrivedAction(String title, String content){
            Gson gson = new GsonBuilder().create();
            JsonArray noti_json_result = gson.toJsonTree(notiarray).getAsJsonArray();
          //  global.log(noti_json_result.toString());
-           sendMessage("request_stations_data//" + noti_json_result.toString(), null);
+           sendMessageDefault("request_stations_data", noti_json_result.toString());
 
        }
 

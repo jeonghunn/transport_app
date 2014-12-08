@@ -49,11 +49,8 @@ String send_data;
 
     private void checkMessage(String message, byte[] bytes) {
         try {
-            String[] array = message.split("//");
-            String action_kind = array[0];
-            String data = array[1];
-            if (action_kind.matches("request_stations_data")) requsetStationsData(data);
-            if (action_kind.matches("LocationMode")) setLocationMode(data);
+            if (message.matches("request_stations_data")) requsetStationsData(global.getStringbyBytes(bytes));
+            if (message.matches("LocationMode")) setLocationMode(global.getStringbyBytes(bytes));
         } catch (Exception e) {
         }
 
