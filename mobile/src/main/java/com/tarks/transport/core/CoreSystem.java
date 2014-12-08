@@ -52,7 +52,9 @@ public class CoreSystem extends Service implements GoogleApiClient.ConnectionCal
     private int same_place_count = 0;
     private int same_place_id = 0;
 
-    private int last_station_id = 0;
+   private int last_station_id = 0;
+    private int last_nearby_sration_id = 0;
+   private boolean same_place = false;
 
     SensorListener sl;
     private Intent intent;
@@ -183,15 +185,32 @@ public class CoreSystem extends Service implements GoogleApiClient.ConnectionCal
 //            plm = location_mode;
 //            same_place_count = 0;
 //        }
+
+
+            //Check nearest station
+            if(ic.size() > 0 && last_nearby_sration_id != ic.get(0).id){
+                last_nearby_sration_id = ic.get(0).id;
+                same_place =false;
+            }else{
+                same_place = true;
+            }
+
             global.log("same_place : " + same_place_count);
             //   global.log("id : " + dbid);
             global.log("getlolevel : " + near_level);
             //  global.log(global.getNight() + "asdf");
             //  sendNoti(1,1,ic.get(0).station_name,String.valueOf(location_mode));
 
+            //Check same place from previous history
+
+
+
             if ((mflow.size() > 0 && stations.size() > 0) && (last_station_id != flowget.id_srl)) {
 
+
+
                  last_station_id = flowget.id_srl;
+
               //  global.log(mflow.get(0).station_srl + "/" + stations.size());
 
 
@@ -263,16 +282,13 @@ public class CoreSystem extends Service implements GoogleApiClient.ConnectionCal
 
             if (location_mode == globalv.STANBY_MODE) {
                 // globalv.moving_now =globalv.STOP_STATE;
-                gyroSensorStart();
-                if ((near_level <= 3 && same_place_count == 0 && action_count > 1) || (globalv.moving_now == globalv.ACTIVE_STATE)) {
+              //  global.log(same_place +  "adf");
+                if (!same_place) {
                     if (near_level == 1) setActionLocationMode(cx, globalv.ACTIVE_MODE);
                     if (near_level == 2) setActionLocationMode(cx, globalv.ACTIVE_STANBY_MODE);
 
-                } else {
-                    sl.uregSensor();
                 }
-
-                if (((same_place_count > 3 && action_count > 1 && near_level >= 3)) || (same_place_count > 3 && action_count > 1 && (global.getNight() || near_level >= 5)))
+                if (!same_place && action_count > 3)
                     setActionLocationMode(cx, globalv.POWER_SAVED_MODE);
 
                 //disconnect
@@ -280,7 +296,7 @@ public class CoreSystem extends Service implements GoogleApiClient.ConnectionCal
             }
 
             if (location_mode == globalv.POWER_SAVED_MODE) {
-                if ((near_level <= 5 && same_place_count == 0 && action_count > 1) || (globalv.moving_now == globalv.ACTIVE_STATE)) {
+                if (!same_place) {
                     setActionLocationMode(cx, globalv.ACTIVE_STANBY_MODE);
                 }
 
@@ -819,7 +835,7 @@ sendMessage(msg, data.getBytes());
         if (level == globalv.STANBY_MODE) {
             setLocationMode(cx, globalv.STANBY_MODE);
             global.CountSrlUpdate(cx);
-
+            sl.uregSensor();
         }
 
 
