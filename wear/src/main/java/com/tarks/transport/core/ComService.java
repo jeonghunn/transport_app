@@ -112,7 +112,7 @@ checkMessage(messageEvent.getPath(), messageEvent.getData());
         if (kind == 1) {
 
             Intent viewIntent = new Intent(ComService.this, StationList.class);
-            global.BusNoti(ComService.this, noti_id, viewIntent, title, content, R.drawable.ic_launcher, global.getNight()? R.drawable.ride_bus_background : R.drawable.ride_bus_background_night);
+            global.BusNoti(ComService.this, noti_id, viewIntent, title, content, R.drawable.ic_launcher, global.getNight()? R.drawable.ride_bus_background_night : R.drawable.ride_bus_background);
             int country_srl = Integer.parseInt(String.valueOf(resultmap.get("country_srl")));
             int route_srl = Integer.parseInt(String.valueOf(resultmap.get("route_srl")));
             int way_srl = Integer.parseInt(String.valueOf(resultmap.get("way_srl")));

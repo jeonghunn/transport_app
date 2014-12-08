@@ -4,7 +4,7 @@
     <string name="app_name">WhereBus</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="ver">0.1.47.1.84</string>
+    <string name="ver">0.1.47.1.85</string>
     <string name="terminal">종착 정류장</string>
     <string name="destinaton_arrived">목적지 도착</string>
     <string name="_stations_left">개 정거장 남음</string>
