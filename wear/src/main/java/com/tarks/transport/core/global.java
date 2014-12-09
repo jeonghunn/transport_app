@@ -106,7 +106,7 @@ public final class global {
 
 
     //Temp function
-    public static void BusNoti(Context cx, int notificationId, Intent viewIntent, String title, String content, String direction_name, int route_srl,  String station_summary, int icon, int largeicon){
+    public static void BusNoti(Context cx, int notificationId, Intent viewIntent, String title, String content, String direction_name,  int country_srl, int route_srl, int way_srl, int station_srl ,  String station_summary, int icon, int largeicon){
 
 
 
@@ -114,12 +114,19 @@ public final class global {
 
 
         Intent stationIntent = new Intent(cx, StationList.class);
-        PendingIntent pendingStationIntent = PendingIntent.getActivity(cx, 0, stationIntent, 0);
+        stationIntent.putExtra("country_srl" , country_srl);
+        stationIntent.putExtra("route_srl" , route_srl);
+        stationIntent.putExtra("way_srl" , way_srl);
+        stationIntent.putExtra("station_srl" , station_srl);
+
+        PendingIntent pendingStationIntent = PendingIntent.getActivity(cx, 0, stationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         Intent wayIntent = new Intent(cx, WayList.class);
+        wayIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         PendingIntent pendingWayIntent = PendingIntent.getActivity(cx, 0, wayIntent, 0);
 
         Intent routeIntent = new Intent(cx, RouteList.class);
+        routeIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         PendingIntent pendingRouteIntent = PendingIntent.getActivity(cx, 0, routeIntent, 0);
 
 

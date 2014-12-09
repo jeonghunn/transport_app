@@ -228,11 +228,11 @@ public class CoreSystem extends Service implements GoogleApiClient.ConnectionCal
 
 
                     if (mflow.size() > 0 && next_name != null)
-                        sendBusNoti(1, 1, stations.get(flowget.station_srl - 1).station_name, next_name, direction_name, stationListString,  flowget.country_srl, flowget.route_srl, flowget.way_srl, flowget.station_srl);
+                        sendBusNoti(1, 1, stations.get(flowget.station_srl - 1).station_name, next_name, direction_name, stationListString,  flowget.country_srl, flowget.route_srl, flowget.way_srl, flowget.station_srl -1);
                 } else {
 
                     if (mflow.size() > 0 && next_name != null)
-                        sendBusNoti(1, 1, station_left + getString(R.string._stations_left), stations.get(flowget.station_srl - 1).station_name + "\n" + next_name, direction_name, stationListString, flowget.country_srl, flowget.route_srl, flowget.way_srl, flowget.station_srl);
+                        sendBusNoti(1, 1, station_left + getString(R.string._stations_left), stations.get(flowget.station_srl - 1).station_name + "\n" + next_name, direction_name, stationListString, flowget.country_srl, flowget.route_srl, flowget.way_srl, flowget.station_srl -1);
                 }
 
             }

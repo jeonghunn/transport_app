@@ -3,6 +3,7 @@ package com.tarks.transport.ui;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -19,14 +20,18 @@ import com.google.android.gms.wearable.MessageApi;
 import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.Wearable;
 import com.tarks.transport.R;
+import com.tarks.transport.core.global;
+import com.tarks.transport.db.DbOpenHelper;
+import com.tarks.transport.db.InfoClass;
 
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 public class StationList extends Activity
         implements WearableListView.ClickListener {
 
     // Sample dataset for the list
-    String[][] elements = {{"4545","44545"},{""}};
+   // String[][] elements = {{"4545","44545"},{""}};
     private MyAsyncTask myAsyncTask;
     Context ct;
     WearableListView listView;
@@ -92,6 +97,41 @@ public class StationList extends Activity
         }
     }
 
+    public ArrayList<InfoClass> getStations(int country_srl, int route_srl, int way_srl) {
+        // InfoClass mInfoClass;
+        ArrayList<InfoClass> mInfoArray = new ArrayList<InfoClass>();
+
+
+        DbOpenHelper mDbOpenHelper = new DbOpenHelper(this);
+        mDbOpenHelper.open();
+        Cursor csr = mDbOpenHelper.getStations(country_srl, route_srl, way_srl);
+
+
+        while (csr.moveToNext()) {
+
+            // global.log(csr.getString(csr.getColumnIndex("station_name")));
+
+            InfoClass mInfoClass = new InfoClass(
+                    csr.getInt(csr.getColumnIndex("_id")),
+                    csr.getInt(csr.getColumnIndex("country_srl")),
+                    csr.getInt(csr.getColumnIndex("route_srl")),
+                    csr.getInt(csr.getColumnIndex("way_srl")),
+                    csr.getInt(csr.getColumnIndex("station_srl")),
+                    csr.getString(csr.getColumnIndex("station_name")),
+                    csr.getDouble(csr.getColumnIndex("station_latitude")),
+                    csr.getDouble(csr.getColumnIndex("station_longitude"))
+            );
+
+            mInfoArray.add(mInfoClass);
+
+        }
+
+
+        csr.close();
+        mDbOpenHelper.close();
+        return mInfoArray;
+    }
+
     protected Handler mHandler = new Handler() {
         public void handleMessage(Message msg) {
          //   hideProgressBar();
@@ -119,30 +159,43 @@ public class StationList extends Activity
         setContentView(R.layout.list);
         ct = this;
 
+        Intent intent = getIntent(); // 인텐트 받아오고
+
+        int country_srl = intent.getIntExtra("country_srl", 0);
+        int route_srl = intent.getIntExtra("route_srl", 0); // 인텐트로 부터 데이터 가져오고
+        int way_srl = intent.getIntExtra("way_srl", 0); // 인텐트로 부터 데이터 가져오고
+        int station_srl = intent.getIntExtra("station_srl", 0); // 인텐트로 부터 데이터 가져오고
+     //   String kind = intent.getStringExtra("kind");
+
+     // if(intent != null)  global.log("stationlist" + kind +  country_srl + " : " + route_srl + ":" + way_srl);
+
+        //Set now station
+now_station = station_srl;
+
         // Get the list component from the layout of the activity
         listView =
                 (WearableListView) findViewById(R.id.wearable_list);
 
         // Assign an adapter to the list
-     //   listView.setAdapter(new ListAdapter(this, elements));
+        listView.setAdapter(new ListAdapter(this, getStations(country_srl,route_srl,way_srl)));
         // Set a click listener
         listView.setClickListener(this);
 //        MyAsyncTask t = new MyAsyncTask();
 //        t.execute();
-
+        listView.smoothScrollToPosition(station_srl);
 
 
     }
 
 
     public final class ListAdapter extends WearableListView.Adapter {
-        private String[] mDataset;
+        private  ArrayList<InfoClass> mDataset;
         private final Context mContext;
         private final LayoutInflater mInflater;
         private int selected_pos;
 
         // Provide a suitable constructor (depends on the kind of dataset)
-        public ListAdapter(Context context, String[] dataset) {
+        public ListAdapter(Context context, ArrayList<InfoClass> dataset) {
             mContext = context;
             mInflater = LayoutInflater.from(context);
             mDataset = dataset;
@@ -183,7 +236,7 @@ public class StationList extends Activity
             ItemViewHolder itemHolder = (ItemViewHolder) holder;
             TextView view = itemHolder.textView;
             // replace text contents
-            view.setText(mDataset[position]);
+            view.setText(mDataset.get(position).station_name);
 
            if(position == now_station) {
                view.setTextSize(21);
@@ -203,7 +256,7 @@ public class StationList extends Activity
         // (invoked by the WearableListView's layout manager)
         @Override
         public int getItemCount() {
-            return mDataset.length;
+            return mDataset.size();
         }
 //
 //    @Override

@@ -110,17 +110,16 @@ checkMessage(messageEvent.getPath(), messageEvent.getData());
         String direction_name = String.valueOf(resultmap.get("direction_name"));
         String station_summary = String.valueOf(resultmap.get("station_summary"));
         int route_srl = Integer.parseInt(String.valueOf(resultmap.get("route_srl")));
-
+        int country_srl = Integer.parseInt(String.valueOf(resultmap.get("country_srl")));
+        int way_srl = Integer.parseInt(String.valueOf(resultmap.get("way_srl")));
+        int station_srl = Integer.parseInt(String.valueOf(resultmap.get("station_srl")));
         //Normal noti
         if (kind == 1) {
 
-            int country_srl = Integer.parseInt(String.valueOf(resultmap.get("country_srl")));
 
-            int way_srl = Integer.parseInt(String.valueOf(resultmap.get("way_srl")));
-            int station_srl = Integer.parseInt(String.valueOf(resultmap.get("station_srl")));
 
             Intent viewIntent = new Intent(ComService.this, StationList.class);
-            global.BusNoti(ComService.this, noti_id, viewIntent, title, content, direction_name , route_srl, station_summary, R.drawable.ic_launcher, global.getNight()? R.drawable.ride_bus_background_night : R.drawable.ride_bus_background);
+            global.BusNoti(ComService.this, noti_id, viewIntent, title, content, direction_name ,country_srl,route_srl, way_srl, station_srl, station_summary, R.drawable.ic_launcher, global.getNight()? R.drawable.ride_bus_background_night : R.drawable.ride_bus_background);
 
             checkDataDB(country_srl, route_srl, way_srl, station_srl);
         }
@@ -130,7 +129,7 @@ checkMessage(messageEvent.getPath(), messageEvent.getData());
 
             global.Vibrate(this, 2000);
             Intent viewIntent = new Intent(ComService.this, StationList.class);
-            global.BusNoti(ComService.this, noti_id, viewIntent, title, content, direction_name, route_srl, station_summary, R.drawable.ic_launcher, R.drawable.flag);
+            global.BusNoti(ComService.this, noti_id, viewIntent, title, content, direction_name, country_srl,route_srl, way_srl, station_srl, station_summary, R.drawable.ic_launcher, R.drawable.flag);
 //
 //            Intent i = new Intent(ListenerService.this, BusArrive.class);
 //            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

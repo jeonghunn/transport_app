@@ -21,6 +21,7 @@ public class WayList extends Activity
 
        // if(viewHolder.getItemId() == 0){
             Intent i = new Intent(WayList.this, StationList.class);
+        i.putExtra("kind", "adsfafdsfa");
             startActivity(i);
      //   }
     }
