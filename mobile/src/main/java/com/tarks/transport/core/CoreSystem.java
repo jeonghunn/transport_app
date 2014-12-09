@@ -167,13 +167,19 @@ public class CoreSystem extends Service implements GoogleApiClient.ConnectionCal
             ArrayList<InfoClass> stations = null;
             //   if(mflow.size() > 0){
             int station_left = 0;
+            String stationListString = null;
 
             if (mflow.size() > 0)
                 stations = getStations(flowget.country_srl, flowget.route_srl, flowget.way_srl);
-            if (mflow.size() > 0 && stations.size() > 0 && goal_id != 0) {
+            if (mflow.size() > 0 && stations.size() > 0 ) {
                 for (int i = 0; i < stations.size(); i++) {
-                    if (stations.get(i).id == goal_id)
+                    //Calculate stations left
+                    if (stations.get(i).id == goal_id && goal_id != 0)
                         station_left = stations.get(i).station_srl - flowget.station_srl;
+
+                    // Make Stations List to show wear
+                 if(flowget.station_srl <= stations.get(i).station_srl)    stationListString = stationListString == null ?  getString(R.string.currunt) + "  : "  + stations.get(i).station_name  : stationListString + "\n\n" + stations.get(i).station_name;
+
                 }
             }
             //Check same place
@@ -216,16 +222,17 @@ public class CoreSystem extends Service implements GoogleApiClient.ConnectionCal
 
                 //Next Station noti
                 String next_name = mflow.get(0).station_srl < stations.size() ? "▶ " + stations.get(mflow.get(0).station_srl).station_name : " : " + getString(R.string.terminal);
+                String direction_name = stations.get(stations.size() - 1).station_name;
 
                 if (global.getGoalID(cx) == 0) {
 
 
                     if (mflow.size() > 0 && next_name != null)
-                        sendBusNoti(1, 1, stations.get(flowget.station_srl - 1).station_name, next_name, flowget.country_srl, flowget.route_srl, flowget.way_srl, flowget.station_srl);
+                        sendBusNoti(1, 1, stations.get(flowget.station_srl - 1).station_name, next_name, direction_name, stationListString,  flowget.country_srl, flowget.route_srl, flowget.way_srl, flowget.station_srl);
                 } else {
 
                     if (mflow.size() > 0 && next_name != null)
-                        sendBusNoti(1, 1, station_left + getString(R.string._stations_left), stations.get(flowget.station_srl - 1).station_name + "\n" + next_name, flowget.country_srl, flowget.route_srl, flowget.way_srl, flowget.station_srl);
+                        sendBusNoti(1, 1, station_left + getString(R.string._stations_left), stations.get(flowget.station_srl - 1).station_name + "\n" + next_name, direction_name, stationListString, flowget.country_srl, flowget.route_srl, flowget.way_srl, flowget.station_srl);
                 }
 
             }
@@ -700,9 +707,9 @@ sendMessage(msg, data.getBytes());
     }
 
 
-    public void sendBusNoti(int kind, int noti_id, String title, String content, int country_srl, int route_srl, int way_srl, int station_srl) {
+    public void sendBusNoti(int kind, int noti_id, String title, String content, String direction_name, String station_summary,  int country_srl, int route_srl, int way_srl, int station_srl) {
         ArrayList<BusNotiClass> notiarray = new ArrayList<BusNotiClass>();
-        BusNotiClass mnoticalss = new BusNotiClass(kind, noti_id, title, content, country_srl, route_srl, way_srl, station_srl);
+        BusNotiClass mnoticalss = new BusNotiClass(kind, noti_id, title, content, direction_name, station_summary,   country_srl, route_srl, way_srl, station_srl);
 
         notiarray.add(mnoticalss);
         Gson gson = new GsonBuilder().create();

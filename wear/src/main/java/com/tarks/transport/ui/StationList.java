@@ -26,7 +26,7 @@ public class StationList extends Activity
         implements WearableListView.ClickListener {
 
     // Sample dataset for the list
-    String[] elements = {"부평구청역", "삭은다리", "대우자동차(동문)", "갈산역", "갈산시장", "삼산사거리"};
+    String[][] elements = {{"4545","44545"},{""}};
     private MyAsyncTask myAsyncTask;
     Context ct;
     WearableListView listView;
@@ -47,7 +47,8 @@ public class StationList extends Activity
 
     public class MyAsyncTask extends AsyncTask<String, String, String> {
 
-    //    String[] elements2 = {"부평구청역", "삭은다리", "대우자동차(동문)", "갈산역", "갈산시장", "삼산사거리"};
+        String[] elements;
+        String[] elements_id;
 
         @Override
         protected void onPreExecute() {
@@ -123,7 +124,7 @@ public class StationList extends Activity
                 (WearableListView) findViewById(R.id.wearable_list);
 
         // Assign an adapter to the list
-        listView.setAdapter(new ListAdapter(this, elements));
+     //   listView.setAdapter(new ListAdapter(this, elements));
         // Set a click listener
         listView.setClickListener(this);
 //        MyAsyncTask t = new MyAsyncTask();
