@@ -8,18 +8,21 @@
         android:layout_width="match_parent"
         android:layout_height="30.0sp"
         android:layout_gravity="center_horizontal" />
+
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/txt"
-        android:text="Test"/>
-    <SeekBar
-        android:layout_marginLeft="10.0sp"
-        android:layout_marginRight="10.0sp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:max="17"
-        android:progress="0"
-        android:id="@+id/seekBar"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="WBUS On Android Wear"
+        android:id="@+id/textView"
         android:layout_gravity="center_horizontal" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="16px"
+        android:paddingLeft="2px"
+        android:paddingRight="2px"
+        android:text="안드로이드 웨어와 연결하시면 사용이 가능합니다. 아직 휴대폰은 지원 하지 않습니다."
+        android:id="@+id/content_textView" />
 </LinearLayout>
