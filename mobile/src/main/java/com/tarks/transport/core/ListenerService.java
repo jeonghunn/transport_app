@@ -48,9 +48,10 @@ String send_data;
 
     private void checkMessage(String message, byte[] bytes) {
         try {
-            if (message.matches("request_stations_data")) requsetStationsData(global.getStringbyBytes(bytes));
-            if (message.matches("LocationMode")) setLocationMode(global.getStringbyBytes(bytes));
-            if(message.matches("setDestination")) setDestination(global.getStringbyBytes(bytes));
+            if (message.matches("Main_request_stations_data")) requsetStationsData(global.getStringbyBytes(bytes));
+            if (message.matches("Main_LocationMode")) setLocationMode(global.getStringbyBytes(bytes));
+            if(message.matches("Main_setDestination")) setDestination(global.getStringbyBytes(bytes));
+            if(message.matches("Main_startBusMode")) startBusMode(global.getStringbyBytes(bytes));
         } catch (Exception e) {
         }
 
@@ -72,6 +73,18 @@ String send_data;
 
     }
 
+    private void startBusMode(String value) {
+        boolean mode = Boolean.valueOf(value);
+
+        if (mode) {
+            handlernumber = 3 ;
+            send_data = value;
+            doBindService();
+        } else {
+            setLocationMode("3");
+
+        }
+    }
     private void setDestination(String value){
         global.setGoalID(this, Integer.parseInt(value));
     }

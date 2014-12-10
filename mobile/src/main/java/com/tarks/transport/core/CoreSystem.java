@@ -882,13 +882,22 @@ sendMessage(msg, data.getBytes());
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 1:
+                    //Stations
                     jsonSendStationData(msg.obj.toString());
                     global.log(msg.obj.toString());
                     break;
 
                 case 2:
+                    //Set location mode
 if(msg.obj != null)     setActionLocationMode(CoreSystem.this,Integer.parseInt( msg.obj.toString()));
                     break;
+
+                case 3:
+                        //Start bus mode
+                        global.setGoalID(CoreSystem.this, 0);
+                        global.CountSrlUpdate(cx);
+                        setActionLocationMode(CoreSystem.this, 6);
+
                 default:
                     super.handleMessage(msg);
             }

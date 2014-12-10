@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.tarks.transport.core.CoreSystem;
+import com.tarks.transport.core.ListenerService;
 import com.tarks.transport.core.global;
 import com.tarks.transport.db.DbOpenHelper;
 
@@ -145,6 +146,7 @@ startApp();
             public void run() {
                 startActivity(new Intent(MainActivity.this,main.class));
                 startService(new Intent(MainActivity.this, CoreSystem.class));
+                startService(new Intent(MainActivity.this, ListenerService.class));
                 finish();
             }
         }, (long) (900));

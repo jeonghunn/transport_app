@@ -84,6 +84,7 @@ checkMessage(messageEvent.getPath(), messageEvent.getData());
             //To Phone
             if(message.matches("requestLocationMode")) requestLocationMode(global.getStringbyBytes(bytes));
             if(message.matches("setDestination")) setDestination(global.getStringbyBytes(bytes));
+            if(message.matches("startBusMode")) startBusMode(global.getStringbyBytes(bytes));
 
         } catch (Exception e){
 
@@ -155,7 +156,11 @@ checkMessage(messageEvent.getPath(), messageEvent.getData());
     }
 
     private void setDestination(String data){
-        sendMessage("setDestination", data.getBytes());
+        sendMessage("Main_setDestination", data.getBytes());
+    }
+
+    private void startBusMode(String data){
+        sendMessage("Main_startBusMode", data.getBytes());
     }
 
 
@@ -232,7 +237,7 @@ private void arrivedAction(String title, String content){
 
     private void requestLocationMode(String mode){
         global.log(mode + "locationmode");
-        sendMessageDefault("LocationMode" , mode);
+        sendMessageDefault("Main_LocationMode" , mode);
     }
 
     private void StationsDataDBInput(String data){
@@ -271,7 +276,7 @@ private void arrivedAction(String title, String content){
            Gson gson = new GsonBuilder().create();
            JsonArray noti_json_result = gson.toJsonTree(notiarray).getAsJsonArray();
          //  global.log(noti_json_result.toString());
-           sendMessageDefault("request_stations_data", noti_json_result.toString());
+           sendMessageDefault("Main_request_stations_data", noti_json_result.toString());
 
        }
 
