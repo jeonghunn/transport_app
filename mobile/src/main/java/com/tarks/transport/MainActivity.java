@@ -25,8 +25,9 @@ public class MainActivity extends ActionBarActivity {
         // 자신의 신분 설정값을 불러옵니다.
         SharedPreferences prefs = getSharedPreferences("setting", MODE_PRIVATE);
         String frist_use = prefs.getString("first_use_app", "true");
+        String db_ver = prefs.getString("db_ver", "0");
 
-      if(frist_use.matches("true")){
+      if( !db_ver.matches(String.valueOf(DbOpenHelper.DATABASE_VERSION))){
 
 DBInsert();
 
@@ -174,7 +175,8 @@ startApp();
 
     private void finishedfirstTask(){
 
-        global.SaveSetting(this, "first_use_app", "false");
+      //  global.SaveSetting(this, "first_use_app", "false");
+        global.SaveSetting(this, "db_ver", String.valueOf(DbOpenHelper.DATABASE_VERSION));
 
     }
 
