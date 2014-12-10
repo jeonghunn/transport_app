@@ -133,6 +133,28 @@ startApp();
 
 
 
+        //인천
+
+        mDbOpenHelper.insertColumn(2,30,1,1, "갈현동", 37.58193037571998, 126.72713326553604);
+        mDbOpenHelper.insertColumn(2,30,2,1, "신동아APT", 37.57947388147346, 126.73227401220723);
+        mDbOpenHelper.insertColumn(2,30,3,1, "장기동", 37.57861445704755, 126.73472238436146);
+        mDbOpenHelper.insertColumn(2,30,4,1, "장기119", 37.57602494890269, 126.73329727391061);
+        mDbOpenHelper.insertColumn(2,30,5,1, "다남식당", 37.57063407560347, 126.73002249410013);
+        mDbOpenHelper.insertColumn(2,30,6,1, "계양역", 37.57057585505509, 126.73615226375787);
+        mDbOpenHelper.insertColumn(2,30,7,1, "계양중", 37.570066127347495, 126.73991214146753);
+        mDbOpenHelper.insertColumn(2,30,8,1, "귤현역", 37.56612933859696, 126.74221791128059);
+
+
+        //반대
+        mDbOpenHelper.insertColumn(2,30,1,2, "귤현역", 37.566179485712446, 126.74248939278544);
+        mDbOpenHelper.insertColumn(2,30,2,2, "계양중", 37.57034127713906, 126.74006965850128);
+        mDbOpenHelper.insertColumn(2,30,3,2, "계양역", 37.570908561651414, 126.73585677933298);
+        mDbOpenHelper.insertColumn(2,30,4,2, "다남식당", 37.570687875805255, 126.72990910381135);
+        mDbOpenHelper.insertColumn(2,30,5,2, "장기119", 37.57595774577468, 126.73346165950142);
+        mDbOpenHelper.insertColumn(2,30,6,2, "장기동", 37.5779260824122, 126.73531689945989);
+        mDbOpenHelper.insertColumn(2,30,7,2, "신동아APT", 37.579639542778246, 126.73202209361193);
+        mDbOpenHelper.insertColumn(2,30,8,2, "갈현동", 37.581713642281, 126.72691895228147);
+
         mDbOpenHelper.close();
         finishedfirstTask();
     startApp();

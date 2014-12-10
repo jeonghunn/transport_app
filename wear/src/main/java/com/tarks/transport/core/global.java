@@ -274,6 +274,25 @@ return yourArray;
     }
 
 
+    public static ArrayList<String> getJSONArrayListByString(String content) {
+        ArrayList<String> list = new ArrayList<String>();
+        JSONArray jsonArray = null;
+        try {
+            jsonArray = new JSONArray(content);
+            if (jsonArray != null) {
+                int len = jsonArray.length();
+                for (int i=0;i<len;i++){
+                    list.add(jsonArray.get(i).toString());
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        return list;
+    }
+
     public static Map getJSONArray(String content) {
         // JSONArray array = Global.jsonParserList(content);
 

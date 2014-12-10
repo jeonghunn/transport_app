@@ -37,6 +37,8 @@ public class RouteList extends Activity
     // Sample dataset for the list
     String[] elements = { "34" , "721", "555" };
     GoogleApiClient mGoogleApiClient;
+    ArrayList<String> routes = new ArrayList<String>();
+    ProgressBar ps;
 
     @Override
     public void onClick(WearableListView.ViewHolder viewHolder) {
@@ -60,7 +62,7 @@ protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.list);
     getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-    ProgressBar ps = (ProgressBar) findViewById(R.id.progressBar);
+    ps = (ProgressBar) findViewById(R.id.progressBar);
 
     if(null == mGoogleApiClient) {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -84,15 +86,7 @@ protected void onCreate(Bundle savedInstanceState) {
     LocalBroadcastManager.getInstance(this).registerReceiver(messageReceiver, messageFilter);
 
 
-        // Get the list component from the layout of the activity
-        WearableListView listView =
-        (WearableListView) findViewById(R.id.wearable_list);
 
-        // Assign an adapter to the list
-        listView.setAdapter(new ListAdapter(this, elements));
-
-        // Set a click listener
-        listView.setClickListener(this);
         }
 
     @Override
@@ -143,19 +137,34 @@ protected void onCreate(Bundle savedInstanceState) {
         @Override
         public void onReceive(Context context, Intent intent) {
             String message = intent.getStringExtra("message");
-            global.log("LEEJUNGHOONM!" + message);
+            global.log( message);
+
+    routes = global.getJSONArrayListByString(message);
+
+            // Get the list component from the layout of the activity
+            WearableListView listView =
+                    (WearableListView) findViewById(R.id.wearable_list);
+
+            // Assign an adapter to the list
+            listView.setAdapter(new ListAdapter(RouteList.this, routes));
+
+            // Set a click listener
+            listView.setClickListener(RouteList.this);
+
+            ps.setVisibility(View.INVISIBLE);
+
         }
     }
 
 
     public final class ListAdapter extends WearableListView.Adapter {
-        private String[] mDataset;
+        private ArrayList<String> mDataset;
         private final Context mContext;
         private final LayoutInflater mInflater;
         private int selected_pos;
 
         // Provide a suitable constructor (depends on the kind of dataset)
-        public ListAdapter(Context context, String[] dataset) {
+        public ListAdapter(Context context, ArrayList<String> dataset) {
             mContext = context;
             mInflater = LayoutInflater.from(context);
             mDataset = dataset;
@@ -201,7 +210,7 @@ protected void onCreate(Bundle savedInstanceState) {
             TextView view = itemHolder.textView;
             ImageView img = itemHolder.img;
             // replace text contents
-            view.setText(mDataset[position]);
+            view.setText(mDataset.get(position));
 img.setImageResource(R.drawable.busgreen);
 
             view.setTextSize(21);
@@ -215,7 +224,7 @@ img.setImageResource(R.drawable.busgreen);
         // (invoked by the WearableListView's layout manager)
         @Override
         public int getItemCount() {
-            return mDataset.length;
+            return mDataset.size();
         }
 //
 //    @Override
