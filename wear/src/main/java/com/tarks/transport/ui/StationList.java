@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -173,7 +174,9 @@ public class StationList extends Activity
         setContentView(R.layout.list);
         ct = this;
 
-        if(null == mGoogleApiClient) {
+        ProgressBar ps = (ProgressBar) findViewById(R.id.progressBar);
+
+       if(null == mGoogleApiClient) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)
                     .addApi(Wearable.API)
                     .addConnectionCallbacks(this)
@@ -216,6 +219,7 @@ now_station = station_srl;
         listView.smoothScrollToPosition(station_srl);
 
 
+ps.setVisibility(View.INVISIBLE);
 
 
     }
