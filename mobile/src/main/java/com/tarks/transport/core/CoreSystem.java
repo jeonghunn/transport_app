@@ -20,9 +20,11 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.Wearable;
+import com.google.android.gms.wearable.WearableListenerService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -41,7 +43,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by JHRunning on 11/20/14.
  */
-public class CoreSystem extends Service implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
+public class CoreSystem extends WearableListenerService implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
     private GoogleApiClient mGoogleApiClient;
     private String nodeId;
@@ -299,7 +301,7 @@ public class CoreSystem extends Service implements GoogleApiClient.ConnectionCal
                     if (near_level == 2) setActionLocationMode(cx, globalv.ACTIVE_STANBY_MODE);
 
                 }
-                if (!same_place && action_count > 3)
+                if (same_place && action_count > 3)
                     setActionLocationMode(cx, globalv.POWER_SAVED_MODE);
 
                 //disconnect
@@ -752,6 +754,19 @@ sendMessage(msg, data.getBytes());
 
     }
 
+    public void initInfo(){
+        global.CountSrlUpdate(cx);
+        global.setGoalID(cx, 0);
+    }
+
+
+    public void initSamePlaceCount(){
+        same_place_count = 0;
+    }
+
+    public void initLastStationId(){
+        last_station_id = 0;
+    }
 
 //    private void sendstations(Context cx, Location location){
 //        ArrayList<InfoClass> result_array = getNearStations(cx, location.getLatitude(), location.getLongitude());
@@ -809,6 +824,56 @@ sendMessage(msg, data.getBytes());
 
     }
 
+
+    @Override
+    public void onMessageReceived(MessageEvent messageEvent) {
+        //   showToast(messageEvent.getPath());
+        global.log(messageEvent.getPath());
+        checkMessage(messageEvent.getPath(), messageEvent.getData());
+
+
+    }
+
+
+    private void checkMessage(String message, byte[] bytes) {
+        try {
+            if (message.matches("Main_request_stations_data")) requsetStationsData(global.getStringbyBytes(bytes));
+            if (message.matches("Main_LocationMode")) setRequestLocationMode(global.getStringbyBytes(bytes));
+            if(message.matches("Main_setDestination")) setDestination(global.getStringbyBytes(bytes));
+            if(message.matches("Main_startBusMode")) startBusMode(global.getStringbyBytes(bytes));
+        } catch (Exception e) {
+        }
+
+
+    }
+
+    public void requsetStationsData(String data){
+        jsonSendStationData(data);
+        global.log(data);
+     }
+
+    public void setRequestLocationMode(String data){
+        setActionLocationMode(CoreSystem.this,Integer.parseInt(data));
+    }
+
+    public void setDestination(String data){
+        global.setGoalID(this, Integer.parseInt(data));
+    }
+
+    public void startBusMode(String data){
+        boolean mode = Boolean.valueOf(data);
+
+        if (mode) {
+            //Start bus mode
+            initLastStationId();
+            initInfo();
+            setActionLocationMode(this, 6);
+        } else {
+            setActionLocationMode(this, 3);
+
+        }
+    }
+
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
         global.log("onConnectionFailed");
@@ -845,23 +910,20 @@ sendMessage(msg, data.getBytes());
 
         if (level == globalv.STANBY_MODE) {
             setLocationMode(cx, globalv.STANBY_MODE);
-            global.CountSrlUpdate(cx);
-            global.setGoalID(cx, 0);
+            initInfo();
             sl.uregSensor();
         }
 
 
         if (level == globalv.POWER_SAVED_MODE) {
             setLocationMode(cx, globalv.POWER_SAVED_MODE);
-            global.CountSrlUpdate(cx);
-            global.setGoalID(cx, 0);
+           initInfo();
             sl.uregSensor();
         }
 
         if (level == globalv.HIBERNATION_MODE) {
             setLocationMode(cx, globalv.HIBERNATION_MODE);
-            global.CountSrlUpdate(cx);
-            global.setGoalID(cx, 0);
+          initInfo();
             sl.uregSensor();
 
         }
@@ -871,10 +933,10 @@ sendMessage(msg, data.getBytes());
     }
 
 
-    @Override
-    public IBinder onBind(Intent intent) {
-        return mMessenger.getBinder();
-    }
+//    @Override
+//    public IBinder onBind(Intent intent) {
+//        return mMessenger.getBinder();
+//    }
 
     class IncomingHandler extends Handler { // Handler of incoming messages from clients.
 

@@ -217,7 +217,7 @@ private void arrivedAction(String title, String content){
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    //    mGoogleApiClient.blockingConnect(10000, TimeUnit.MILLISECONDS);
+                        mGoogleApiClient.blockingConnect(10000, TimeUnit.MILLISECONDS);
                     Wearable.MessageApi.sendMessage(mGoogleApiClient, nodeId, msg, data);
                 }
             }).start();

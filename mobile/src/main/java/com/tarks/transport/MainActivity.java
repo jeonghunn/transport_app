@@ -146,7 +146,6 @@ startApp();
             public void run() {
                 startActivity(new Intent(MainActivity.this,main.class));
                 startService(new Intent(MainActivity.this, CoreSystem.class));
-                startService(new Intent(MainActivity.this, ListenerService.class));
                 finish();
             }
         }, (long) (900));
