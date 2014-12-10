@@ -4,12 +4,12 @@
     <string name="app_name">WhereBus</string>
     <string name="hello_round">Hello Round World!</string>
     <string name="hello_square">Hello Square World!</string>
-    <string name="ver">0.1.50.0.89</string>
+    <string name="ver">0.1.51.0.90</string>
     <string name="stations">정류장</string>
     <string name="way">방향</string>
     <string name="route">노선</string>
     <string name="riding">승차</string>
     <string name="get_off">하차</string>
     <string name="direction">방면</string>
-
+    <string name="set_to_destination">목적지로 설정됨</string>
 </resources>

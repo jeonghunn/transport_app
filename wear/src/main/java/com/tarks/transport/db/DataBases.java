@@ -10,6 +10,7 @@ public class DataBases {
 
     public static final class CreateDB implements BaseColumns {
         public static final String _TABLENAME = "stations";
+        public static final String ID_SRL = "id_srl";
         public static final String COUNTRY_SRL = "country_srl";
         public static final String ROUTE_SRL = "route_srl";
         public static final String STATION_SRL = "station_srl";
@@ -20,6 +21,7 @@ public class DataBases {
         public static final String _CREATE =
                 "create table "+_TABLENAME+"("
                         +_ID+" integer primary key autoincrement, "
+                        +ID_SRL+" int not null , "
                         +COUNTRY_SRL+" int not null , "
                         +ROUTE_SRL+" int not null , "
                         +STATION_SRL+" int not null , "

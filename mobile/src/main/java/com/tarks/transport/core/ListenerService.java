@@ -50,6 +50,7 @@ String send_data;
         try {
             if (message.matches("request_stations_data")) requsetStationsData(global.getStringbyBytes(bytes));
             if (message.matches("LocationMode")) setLocationMode(global.getStringbyBytes(bytes));
+            if(message.matches("setDestination")) setDestination(global.getStringbyBytes(bytes));
         } catch (Exception e) {
         }
 
@@ -69,6 +70,10 @@ String send_data;
 
 
 
+    }
+
+    private void setDestination(String value){
+        global.setGoalID(this, Integer.parseInt(value));
     }
 
     void doBindService() {

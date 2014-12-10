@@ -9,15 +9,20 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.wearable.activity.ConfirmationActivity;
 import android.support.wearable.view.WearableListView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.MessageApi;
 import com.google.android.gms.wearable.MessageEvent;
+import com.google.android.gms.wearable.Node;
+import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.Wearable;
 import com.tarks.transport.R;
 import com.tarks.transport.core.global;
@@ -28,20 +33,34 @@ import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 public class StationList extends Activity
-        implements WearableListView.ClickListener {
+        implements WearableListView.ClickListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     // Sample dataset for the list
    // String[][] elements = {{"4545","44545"},{""}};
-    private MyAsyncTask myAsyncTask;
+   // private MyAsyncTask myAsyncTask;
     Context ct;
     WearableListView listView;
     private int now_station = 0;
-
+    GoogleApiClient mGoogleApiClient;
+    private String nodeId;
+    private ArrayList<InfoClass> stations;
 
     @Override
     public void onClick(WearableListView.ViewHolder viewHolder) {
-        Intent i = new Intent(StationList.this, BusArrive.class);
-        startActivity(i);
+//        Intent i = new Intent(StationList.this, BusArrive.class);
+//        startActivity(i);
+        new SendMessage("setDestination", String.valueOf(stations.get(viewHolder.getPosition()).id_srl                          )).start();
+        global.cancelNoti(this, 1);
+        finish();
+        Intent intent = new Intent(this, ConfirmationActivity.class);
+        intent.putExtra(ConfirmationActivity.EXTRA_ANIMATION_TYPE,
+                ConfirmationActivity.SUCCESS_ANIMATION);
+        intent.putExtra(ConfirmationActivity.EXTRA_MESSAGE,
+                getString(R.string.set_to_destination));
+        startActivity(intent);
+
+
+      //  global.log(viewHolder.getPosition() + "asdfaf");
     }
 
     @Override
@@ -49,53 +68,48 @@ public class StationList extends Activity
 
     }
 
+    @Override
+    public void onConnected(Bundle bundle) {
 
-    public class MyAsyncTask extends AsyncTask<String, String, String> {
+    }
 
-        String[] elements;
-        String[] elements_id;
+    @Override
+    public void onConnectionSuspended(int i) {
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+
+    }
+
+
+    class SendMessage extends Thread {
+        String path;
+        String message;
+
+        // Constructor to send a message to the data layer
+        SendMessage(String p, String msg) {
+            path = p;
+            message = msg;
         }
 
-        @Override
-        protected String doInBackground(String... params) {
-            GoogleApiClient client = new GoogleApiClient.Builder(ct)
-                    .addApi(Wearable.API)
-                    .build();
-            client.blockingConnect(10000, TimeUnit.MILLISECONDS);
-            Wearable.MessageApi.addListener(client, new MessageApi.MessageListener() {
-                @Override
-                public void onMessageReceived(MessageEvent messageEvent) {
-//                   Toast.makeText(ct, elements2[Integer.parseInt(messageEvent.getPath().substring(0,1))], Toast.LENGTH_SHORT).show();
-                    Message msg = mHandler.obtainMessage();
-                    msg.what = 1;
-                    msg.obj = messageEvent.getPath();
-                    // msg.arg1 = DataContent;
-                    mHandler.sendMessage(msg);
-
-                }
-            });
-            client.disconnect();
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-           // Log.i("called", "asdf");
-
-            if (result != null) {
-
-
-
+        public void run() {
+            NodeApi.GetLocalNodeResult nodes = Wearable.NodeApi.getLocalNode(mGoogleApiClient).await();
+            Node node = nodes.getNode();
+            Log.v("actiona", "Activity Node is : " + node.getId() + " - " + node.getDisplayName());
+            MessageApi.SendMessageResult result = Wearable.MessageApi.sendMessage(mGoogleApiClient, node.getId(), path, message.getBytes()).await();
+            if (result.getStatus().isSuccess()) {
+                Log.v("actiona", "Activity Message: {" + message + "} sent to: " + node.getDisplayName());
+            } else {
+                // Log an error
+                Log.v("actiona", "ERROR: failed to send Activity Message");
             }
 
-
         }
+
     }
+
 
     public ArrayList<InfoClass> getStations(int country_srl, int route_srl, int way_srl) {
         // InfoClass mInfoClass;
@@ -113,6 +127,7 @@ public class StationList extends Activity
 
             InfoClass mInfoClass = new InfoClass(
                     csr.getInt(csr.getColumnIndex("_id")),
+                    csr.getInt(csr.getColumnIndex("id_srl")),
                     csr.getInt(csr.getColumnIndex("country_srl")),
                     csr.getInt(csr.getColumnIndex("route_srl")),
                     csr.getInt(csr.getColumnIndex("way_srl")),
@@ -159,6 +174,22 @@ public class StationList extends Activity
         setContentView(R.layout.list);
         ct = this;
 
+        if(null == mGoogleApiClient) {
+            mGoogleApiClient = new GoogleApiClient.Builder(this)
+                    .addApi(Wearable.API)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .build();
+        }
+
+
+        if(!mGoogleApiClient.isConnected()){
+            mGoogleApiClient.connect();
+            //  Log.v(TAG, "Connecting to GoogleApiClient..");
+        }
+
+
+
         Intent intent = getIntent(); // 인텐트 받아오고
 
         int country_srl = intent.getIntExtra("country_srl", 0);
@@ -176,13 +207,16 @@ now_station = station_srl;
         listView =
                 (WearableListView) findViewById(R.id.wearable_list);
 
+
+         stations = getStations(country_srl,route_srl,way_srl);
         // Assign an adapter to the list
-        listView.setAdapter(new ListAdapter(this, getStations(country_srl,route_srl,way_srl)));
+        listView.setAdapter(new ListAdapter(this,stations));
         // Set a click listener
         listView.setClickListener(this);
-//        MyAsyncTask t = new MyAsyncTask();
-//        t.execute();
+
         listView.smoothScrollToPosition(station_srl);
+
+
 
 
     }

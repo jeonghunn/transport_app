@@ -80,7 +80,10 @@ checkMessage(messageEvent.getPath(), messageEvent.getData());
 
             if(message.matches("notification")) actionNoti(global.getStringbyBytes(bytes));
             if(message.matches("stations_data")) StationsDataDBInput(global.getStringbyBytes(bytes));
+
+            //To Phone
             if(message.matches("requestLocationMode")) requestLocationMode(global.getStringbyBytes(bytes));
+            if(message.matches("setDestination")) setDestination(global.getStringbyBytes(bytes));
 
         } catch (Exception e){
 
@@ -151,6 +154,9 @@ checkMessage(messageEvent.getPath(), messageEvent.getData());
 
     }
 
+    private void setDestination(String data){
+        sendMessage("setDestination", data.getBytes());
+    }
 
 
 private void arrivedAction(String title, String content){
@@ -241,7 +247,7 @@ private void arrivedAction(String title, String content){
         for (int i = 0; i < infoArraylist.size(); i++) {
            // global.log(infoArraylist.get(i).station_name);
             InfoClass get = infoArraylist.get(i);
-            mDbOpenHelper.insertColumn(get.country_srl,get.route_srl,get.station_srl,get.way_srl, get.station_name, get.station_latitude,  get.station_longitude);
+            mDbOpenHelper.insertColumn(get.id, get.country_srl,get.route_srl,get.station_srl,get.way_srl, get.station_name, get.station_latitude,  get.station_longitude);
         }
 
         mDbOpenHelper.close();
