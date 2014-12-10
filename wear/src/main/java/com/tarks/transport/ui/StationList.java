@@ -50,7 +50,6 @@ public class StationList extends Activity
 //        Intent i = new Intent(StationList.this, BusArrive.class);
 //        startActivity(i);
         new SendMessage("setDestination", String.valueOf(stations.get(viewHolder.getPosition()).id_srl                          )).start();
-        global.cancelNoti(this, 1);
         finish();
         Intent intent = new Intent(this, ConfirmationActivity.class);
         intent.putExtra(ConfirmationActivity.EXTRA_ANIMATION_TYPE,

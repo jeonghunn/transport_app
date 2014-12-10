@@ -846,6 +846,7 @@ sendMessage(msg, data.getBytes());
         if (level == globalv.STANBY_MODE) {
             setLocationMode(cx, globalv.STANBY_MODE);
             global.CountSrlUpdate(cx);
+            global.setGoalID(cx, 0);
             sl.uregSensor();
         }
 
@@ -853,12 +854,14 @@ sendMessage(msg, data.getBytes());
         if (level == globalv.POWER_SAVED_MODE) {
             setLocationMode(cx, globalv.POWER_SAVED_MODE);
             global.CountSrlUpdate(cx);
+            global.setGoalID(cx, 0);
             sl.uregSensor();
         }
 
         if (level == globalv.HIBERNATION_MODE) {
             setLocationMode(cx, globalv.HIBERNATION_MODE);
             global.CountSrlUpdate(cx);
+            global.setGoalID(cx, 0);
             sl.uregSensor();
 
         }
