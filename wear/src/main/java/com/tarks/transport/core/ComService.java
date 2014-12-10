@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
+import android.support.v4.content.LocalBroadcastManager;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -80,11 +81,13 @@ checkMessage(messageEvent.getPath(), messageEvent.getData());
 
             if(message.matches("notification")) actionNoti(global.getStringbyBytes(bytes));
             if(message.matches("stations_data")) StationsDataDBInput(global.getStringbyBytes(bytes));
+            if(message.matches("NearByRoute")) NearByRoute(global.getStringbyBytes(bytes));
 
             //To Phone
             if(message.matches("requestLocationMode")) requestLocationMode(global.getStringbyBytes(bytes));
             if(message.matches("setDestination")) setDestination(global.getStringbyBytes(bytes));
             if(message.matches("startBusMode")) startBusMode(global.getStringbyBytes(bytes));
+            if(message.matches("getRouteNumbers")) getRouteNumbers(global.getStringbyBytes(bytes));
 
         } catch (Exception e){
 
@@ -155,6 +158,14 @@ checkMessage(messageEvent.getPath(), messageEvent.getData());
 
     }
 
+    private void NearByRoute(String data){
+        Intent messageIntent = new Intent();
+        messageIntent.setAction("message-forwarded-from-data-layer");
+        messageIntent.putExtra("message", data);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(messageIntent);
+
+    }
+
     private void setDestination(String data){
         sendMessage("Main_setDestination", data.getBytes());
     }
@@ -188,6 +199,11 @@ private void arrivedAction(String title, String content){
 
         mGoogleApiClient.connect();
         retrieveDeviceNode();
+    }
+
+
+    private void getRouteNumbers(String data){
+        sendMessage("Main_getNearByRoutes", data.getBytes());
     }
 
 

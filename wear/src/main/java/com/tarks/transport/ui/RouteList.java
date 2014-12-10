@@ -1,29 +1,42 @@
 package com.tarks.transport.ui;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Typeface;
 import android.media.Image;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.wearable.view.WearableListView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.wearable.MessageApi;
+import com.google.android.gms.wearable.Node;
+import com.google.android.gms.wearable.NodeApi;
+import com.google.android.gms.wearable.Wearable;
 import com.tarks.transport.R;
+import com.tarks.transport.core.global;
 import com.tarks.transport.db.InfoClass;
 
 import java.util.ArrayList;
 
 public class RouteList extends Activity
-        implements WearableListView.ClickListener {
+        implements WearableListView.ClickListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     // Sample dataset for the list
     String[] elements = { "34" , "721", "555" };
+    GoogleApiClient mGoogleApiClient;
 
     @Override
     public void onClick(WearableListView.ViewHolder viewHolder) {
@@ -45,8 +58,31 @@ public class RouteList extends Activity
 protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list);
+    getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
     ProgressBar ps = (ProgressBar) findViewById(R.id.progressBar);
+
+    if(null == mGoogleApiClient) {
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(Wearable.API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
+    }
+
+
+    if(!mGoogleApiClient.isConnected()){
+        mGoogleApiClient.connect();
+        //  Log.v(TAG, "Connecting to GoogleApiClient..");
+    }
+
+    new SendMessage("getRouteNumbers","true").start();
+
+    // Register a local broadcast receiver, defined is Step 3.
+    IntentFilter messageFilter = new IntentFilter("message-forwarded-from-data-layer");
+    MessageReceiver messageReceiver= new MessageReceiver();
+    LocalBroadcastManager.getInstance(this).registerReceiver(messageReceiver, messageFilter);
+
 
         // Get the list component from the layout of the activity
         WearableListView listView =
@@ -58,6 +94,59 @@ protected void onCreate(Bundle savedInstanceState) {
         // Set a click listener
         listView.setClickListener(this);
         }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+
+
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+
+    }
+
+    class SendMessage extends Thread {
+        String path;
+        String message;
+
+        // Constructor to send a message to the data layer
+        SendMessage(String p, String msg) {
+            path = p;
+            message = msg;
+        }
+
+        public void run() {
+            NodeApi.GetLocalNodeResult nodes = Wearable.NodeApi.getLocalNode(mGoogleApiClient).await();
+            Node node = nodes.getNode();
+            Log.v("actiona", "Activity Node is : " + node.getId() + " - " + node.getDisplayName());
+            MessageApi.SendMessageResult result = Wearable.MessageApi.sendMessage(mGoogleApiClient, node.getId(), path, message.getBytes()).await();
+            if (result.getStatus().isSuccess()) {
+                Log.v("actiona", "Activity Message: {" + message + "} sent to: " + node.getDisplayName());
+            } else {
+                // Log an error
+                Log.v("actiona", "ERROR: failed to send Activity Message");
+            }
+
+        }
+
+    }
+
+    public class MessageReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String message = intent.getStringExtra("message");
+            global.log("LEEJUNGHOONM!" + message);
+        }
+    }
+
 
     public final class ListAdapter extends WearableListView.Adapter {
         private String[] mDataset;
@@ -98,6 +187,8 @@ protected void onCreate(Bundle savedInstanceState) {
             // Inflate our custom layout for list items
             return new ItemViewHolder(mInflater.inflate(R.layout.list_item, null));
         }
+
+
 
         // Replace the contents of a list item
         // Instead of creating new views, the list tries to recycle existing ones

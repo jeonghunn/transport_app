@@ -57,6 +57,7 @@ public class CoreSystem extends WearableListenerService implements GoogleApiClie
    private int last_station_id = 0;
     private int last_nearby_sration_id = 0;
    private boolean same_place = false;
+    private ArrayList<String> routes =new ArrayList<String>();;
 
     SensorListener sl;
     private Intent intent;
@@ -135,7 +136,6 @@ public class CoreSystem extends WearableListenerService implements GoogleApiClie
         final int goal_id = global.getGoalID(cx);
 
         ArrayList<InfoClass> ic = null;
-
         for (int i = 1; i <= 6; i++) {
             ic = getNearStations(cx, lc, i);
             if (ic.size() > 0) {
@@ -144,6 +144,11 @@ public class CoreSystem extends WearableListenerService implements GoogleApiClie
             }
 
             if (i == 6) near_level = 7;
+        }
+
+        //Make Array of  near routes
+        for(int i = 1; i <= ic.size(); i++) {
+ if(!routes.contains(String.valueOf(ic.get(i - 1).route_srl))) routes.add(String.valueOf(ic.get(i - 1).route_srl));
         }
         try {
             DbOpenHelper mDbOpenHelper = new DbOpenHelper(this);
@@ -234,7 +239,14 @@ public class CoreSystem extends WearableListenerService implements GoogleApiClie
                 } else {
 
                     if (mflow.size() > 0 && next_name != null && global.getGoalID(cx) < flowget.id_srl - 1){
-                        sendBusNoti(1, 1, station_left + getString(R.string._stations_left), stations.get(flowget.station_srl - 1).station_name + "\n" + next_name, direction_name, stationListString, flowget.country_srl, flowget.route_srl, flowget.way_srl, flowget.station_srl -1);
+
+                        //Check destination
+                        if(station_left <= 0){
+                            global.setGoalID(cx, 0);
+                        }else{
+                            sendBusNoti(1, 1, station_left + getString(R.string._stations_left), stations.get(flowget.station_srl - 1).station_name + "\n" + next_name, direction_name, stationListString, flowget.country_srl, flowget.route_srl, flowget.way_srl, flowget.station_srl -1);
+                        }
+
                     }else{
                         sendBusNoti(2, 1, getString(R.string.almost_arrived),  station_left + getString(R.string._stations_left) + "\n\n" +stations.get(flowget.station_srl - 1).station_name + "\n" + next_name, direction_name, stationListString, flowget.country_srl, flowget.route_srl, flowget.way_srl, flowget.station_srl -1);
                     }
@@ -841,10 +853,20 @@ sendMessage(msg, data.getBytes());
             if (message.matches("Main_LocationMode")) setRequestLocationMode(global.getStringbyBytes(bytes));
             if(message.matches("Main_setDestination")) setDestination(global.getStringbyBytes(bytes));
             if(message.matches("Main_startBusMode")) startBusMode(global.getStringbyBytes(bytes));
+            if(message.matches("Main_getNearByRoutes")) getNearByRoutesToSend();
         } catch (Exception e) {
         }
 
 
+    }
+
+
+    public void getNearByRoutesToSend(){
+
+        Gson gson = new GsonBuilder().create();
+        JsonArray json_result = gson.toJsonTree(routes).getAsJsonArray();
+        global.log(json_result.toString());
+        sendMessageDefault("NearByRoute" ,json_result.toString());
     }
 
     public void requsetStationsData(String data){
@@ -858,6 +880,7 @@ sendMessage(msg, data.getBytes());
 
     public void setDestination(String data){
         global.setGoalID(this, Integer.parseInt(data));
+        initLastStationId();
     }
 
     public void startBusMode(String data){

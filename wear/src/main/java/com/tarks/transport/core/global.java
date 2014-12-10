@@ -126,7 +126,6 @@ public final class global {
         PendingIntent pendingWayIntent = PendingIntent.getActivity(cx, 0, wayIntent, 0);
 
         Intent routeIntent = new Intent(cx, RouteList.class);
-        routeIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         PendingIntent pendingRouteIntent = PendingIntent.getActivity(cx, 0, routeIntent, 0);
 
 
