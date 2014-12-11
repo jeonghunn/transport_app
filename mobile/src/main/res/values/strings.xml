@@ -6,10 +6,11 @@
     <string name="action_settings">Settings</string>
     <string name="verkind">Alpha Version</string>
     <string name="copyright">Copyrightⓒ 2014 WBus Team.</string>
-    <string name="ver">0.1.60.0.103</string>
+    <string name="ver">0.1.60.1.104</string>
     <string name="terminal">종착 정류장</string>
     <string name="destinaton_arrived">목적지 도착</string>
     <string name="_stations_left">개 정거장 남음</string>
     <string name="currunt">현재</string>
     <string name="almost_arrived">목적지 거의 도착</string>
+    <string name="calculating_station_left">남은 정류장 찾는 중..</string>
 </resources>

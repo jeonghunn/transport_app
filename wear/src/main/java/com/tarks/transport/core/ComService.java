@@ -115,16 +115,16 @@ checkMessage(messageEvent.getPath(), messageEvent.getData());
         int noti_id = Integer.parseInt(String.valueOf(resultmap.get("noti_id")));
         String title = String.valueOf(resultmap.get("title"));
         String content = String.valueOf(resultmap.get("content"));
-        String direction_name = String.valueOf(resultmap.get("direction_name"));
-        String station_summary = String.valueOf(resultmap.get("station_summary"));
-        int route_srl = Integer.parseInt(String.valueOf(resultmap.get("route_srl")));
-        int country_srl = Integer.parseInt(String.valueOf(resultmap.get("country_srl")));
-        int way_srl = Integer.parseInt(String.valueOf(resultmap.get("way_srl")));
-        int station_srl = Integer.parseInt(String.valueOf(resultmap.get("station_srl")));
+
         //Normal noti
         if (kind == 1) {
 
-
+            String direction_name = String.valueOf(resultmap.get("direction_name"));
+            String station_summary = String.valueOf(resultmap.get("station_summary"));
+            int route_srl = Integer.parseInt(String.valueOf(resultmap.get("route_srl")));
+            int country_srl = Integer.parseInt(String.valueOf(resultmap.get("country_srl")));
+            int way_srl = Integer.parseInt(String.valueOf(resultmap.get("way_srl")));
+            int station_srl = Integer.parseInt(String.valueOf(resultmap.get("station_srl")));
 
             Intent viewIntent = new Intent(ComService.this, StationList.class);
             global.BusNoti(ComService.this, noti_id, viewIntent, title, content, direction_name ,country_srl,route_srl, way_srl, station_srl, station_summary, R.drawable.ic_launcher, global.getNight()? R.drawable.ride_bus_background_night : R.drawable.ride_bus_background);
@@ -134,6 +134,13 @@ checkMessage(messageEvent.getPath(), messageEvent.getData());
 
         //Bus almost arrived
         if (kind == 2) {
+
+            String direction_name = String.valueOf(resultmap.get("direction_name"));
+            String station_summary = String.valueOf(resultmap.get("station_summary"));
+            int route_srl = Integer.parseInt(String.valueOf(resultmap.get("route_srl")));
+            int country_srl = Integer.parseInt(String.valueOf(resultmap.get("country_srl")));
+            int way_srl = Integer.parseInt(String.valueOf(resultmap.get("way_srl")));
+            int station_srl = Integer.parseInt(String.valueOf(resultmap.get("station_srl")));
 
             global.Vibrate(this, 2000);
             Intent viewIntent = new Intent(ComService.this, StationList.class);
@@ -183,18 +190,14 @@ checkMessage(messageEvent.getPath(), messageEvent.getData());
 
 private void arrivedAction(String title, String content){
    // WakeLock.acquireCpuWakeLock(ListenerService.this);
-
-
-
-                Intent i = new Intent(this, BusArrive.class);
-            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            i.putExtra("title", title);
-            i.putExtra("content", content);
-            startActivity(i);
-    global.Vibrate(this, 4000);
-   // WakeLock.releaseCpuLock();
     Intent viewIntent = new Intent(this, StationList.class);
     global.setActiveNoti(this, 1, viewIntent, title, content, R.drawable.ic_launcher, R.drawable.flag);
+
+
+    global.Vibrate(this, 4000);
+   // WakeLock.releaseCpuLock();
+
+
 }
     private void setGoogleApiClient(Context cx){
         mGoogleApiClient = new GoogleApiClient.Builder(cx)
