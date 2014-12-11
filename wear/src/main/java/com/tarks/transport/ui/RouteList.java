@@ -44,8 +44,11 @@ public class RouteList extends Activity
     public void onClick(WearableListView.ViewHolder viewHolder) {
 
    //     if(viewHolder.getItemId() == 0){
+        finish();
             Intent i = new Intent(RouteList.this, WayList.class);
+        i.putExtra("route_srl" , routes.get(viewHolder.getPosition()));
             startActivity(i);
+
      //   }
     }
 

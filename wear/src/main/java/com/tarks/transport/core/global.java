@@ -15,6 +15,7 @@ import android.os.Vibrator;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -44,15 +45,14 @@ public final class global {
 
     static boolean debug_mode = true;
 
-    public static void toast(String str, boolean length) {
+    public static void toast(Context cx, String str, boolean length) {
         // Log.i("ACCESS", "I can access to toast");
-//        Toast.makeText(mod, str,
-//                (length ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT)).show
+       Toast.makeText(cx, str, (length ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT)).show();
     }
 
 
-    public static void toast(String str) {
-        toast(str, false);
+    public static void toast(Context cx, String str) {
+        toast(cx, str, false);
     }
 
 

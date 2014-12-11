@@ -50,16 +50,20 @@ public class StationList extends Activity
     public void onClick(WearableListView.ViewHolder viewHolder) {
 //        Intent i = new Intent(StationList.this, BusArrive.class);
 //        startActivity(i);
-        new SendMessage("setDestination", String.valueOf(stations.get(viewHolder.getPosition()).id_srl                          )).start();
-        finish();
-        global.cancelNoti(this,1);
-        Intent intent = new Intent(this, ConfirmationActivity.class);
-        intent.putExtra(ConfirmationActivity.EXTRA_ANIMATION_TYPE,
-                ConfirmationActivity.SUCCESS_ANIMATION);
-        intent.putExtra(ConfirmationActivity.EXTRA_MESSAGE,
-                getString(R.string.set_to_destination));
-        startActivity(intent);
 
+        if(viewHolder.getPosition() >=  now_station ) {
+            new SendMessage("setDestination", String.valueOf(stations.get(viewHolder.getPosition()).id_srl)).start();
+            finish();
+            global.cancelNoti(this, 1);
+            Intent intent = new Intent(this, ConfirmationActivity.class);
+            intent.putExtra(ConfirmationActivity.EXTRA_ANIMATION_TYPE,
+                    ConfirmationActivity.SUCCESS_ANIMATION);
+            intent.putExtra(ConfirmationActivity.EXTRA_MESSAGE,
+                    getString(R.string.set_to_destination));
+            startActivity(intent);
+        }else{
+            global.toast(this, getString(R.string.pass_destination));
+        }
 
       //  global.log(viewHolder.getPosition() + "asdfaf");
     }
