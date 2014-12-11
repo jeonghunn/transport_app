@@ -35,7 +35,7 @@ public class RouteList extends Activity
         implements WearableListView.ClickListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     // Sample dataset for the list
-    String[] elements = { "34" , "721", "555" };
+   // String[] elements = { "34" , "721", "555" };
     GoogleApiClient mGoogleApiClient;
     ArrayList<String> routes = new ArrayList<String>();
     ProgressBar ps;

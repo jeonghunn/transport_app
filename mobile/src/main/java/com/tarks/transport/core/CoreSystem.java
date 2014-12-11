@@ -588,6 +588,36 @@ public class CoreSystem extends WearableListenerService implements GoogleApiClie
     }
 
 
+    public ArrayList<WayClass> getWaysByRoute(Context cx, int country_srl, int route_srl) {
+        // InfoClass mInfoClass;
+        ArrayList<WayClass> mInfoArray = new ArrayList<WayClass>();
+
+
+        DbOpenHelper mDbOpenHelper = new DbOpenHelper(cx);
+        mDbOpenHelper.open();
+        Cursor csr = mDbOpenHelper.getWays(country_srl, route_srl);
+
+
+        while (csr.moveToNext()) {
+
+            global.log(csr.getString(csr.getColumnIndex("station_name")));
+
+            WayClass mWayClass = new WayClass(
+                    csr.getInt(csr.getColumnIndex("way_srl")),
+                    csr.getString(csr.getColumnIndex("station_name"))
+            );
+
+            mInfoArray.add(mWayClass);
+
+        }
+
+
+        csr.close();
+        mDbOpenHelper.close();
+        return mInfoArray;
+    }
+
+
     public ArrayList<InfoClass> getStations(int country_srl, int route_srl, int way_srl) {
         // InfoClass mInfoClass;
         ArrayList<InfoClass> mInfoArray = new ArrayList<InfoClass>();
@@ -854,12 +884,16 @@ sendMessage(msg, data.getBytes());
             if(message.matches("Main_setDestination")) setDestination(global.getStringbyBytes(bytes));
             if(message.matches("Main_startBusMode")) startBusMode(global.getStringbyBytes(bytes));
             if(message.matches("Main_getNearByRoutes")) getNearByRoutesToSend();
+            if(message.matches("Main_getWays")) getWaysToSend(global.getStringbyBytes(bytes));
         } catch (Exception e) {
         }
 
 
     }
 
+    public void getWaysToSend(String data){
+
+    }
 
     public void getNearByRoutesToSend(){
 

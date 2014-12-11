@@ -88,6 +88,7 @@ checkMessage(messageEvent.getPath(), messageEvent.getData());
             if(message.matches("setDestination")) setDestination(global.getStringbyBytes(bytes));
             if(message.matches("startBusMode")) startBusMode(global.getStringbyBytes(bytes));
             if(message.matches("getRouteNumbers")) getRouteNumbers(global.getStringbyBytes(bytes));
+            if(message.matches("getWays")) getWays(global.getStringbyBytes(bytes));
 
         } catch (Exception e){
 
@@ -156,6 +157,11 @@ checkMessage(messageEvent.getPath(), messageEvent.getData());
             arrivedAction(title, content);
         }
 
+    }
+
+    //To Phone
+    private void getWays(String data){
+        sendMessage("Main_getWays", data.getBytes());
     }
 
     private void NearByRoute(String data){

@@ -231,6 +231,13 @@ public class DbOpenHelper {
         return c;
     }
 
+    public Cursor getWays(int country_srl, int route_srl){
+
+        Cursor c = mDB.rawQuery( "select distinct way_srl from stations where country_srl='" + country_srl + "' AND route_srl= '" + route_srl + "' ORDER BY `station_srl` DESC" , null);
+        return c;
+    }
+
+
     public void DeleteFlowRow( int id){
         mDB.execSQL("DELETE FROM flow WHERE id_srl >=" + id + " AND id_srl <  3 + " + id);
     }
