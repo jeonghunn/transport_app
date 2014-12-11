@@ -170,13 +170,9 @@ public final class global {
                         .extend(wearableExtender)
                         .addAction(R.drawable.ic_directions_bus_white,
                                 cx.getString(R.string.stations), pendingStationIntent)
-                        .addAction(R.drawable.ic_directions_white,
-                                cx.getString(R.string.way), pendingWayIntent)
-                        .addAction(R.drawable.ic_route_white,
-                                cx.getString(R.string.route), pendingRouteIntent)
-                        .addAction(R.drawable.ic_ride_bus_white,
-                                cx.getString(R.string.riding), viewPendingIntent)
-                        .setContentIntent(viewPendingIntent);
+                        .addAction(R.drawable.ic_place_white,
+                                cx.getString(R.string.destination_setting), pendingRouteIntent);
+
 
 
 
