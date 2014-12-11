@@ -881,6 +881,7 @@ sendMessage(msg, data.getBytes());
     public void setDestination(String data){
         global.setGoalID(this, Integer.parseInt(data));
         initLastStationId();
+        setActionLocationMode(cx, globalv.LIVE_ACTIVE_MODE);
     }
 
     public void startBusMode(String data){

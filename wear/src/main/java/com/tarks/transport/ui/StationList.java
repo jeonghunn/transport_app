@@ -52,6 +52,7 @@ public class StationList extends Activity
 //        startActivity(i);
         new SendMessage("setDestination", String.valueOf(stations.get(viewHolder.getPosition()).id_srl                          )).start();
         finish();
+        global.cancelNoti(this,1);
         Intent intent = new Intent(this, ConfirmationActivity.class);
         intent.putExtra(ConfirmationActivity.EXTRA_ANIMATION_TYPE,
                 ConfirmationActivity.SUCCESS_ANIMATION);
