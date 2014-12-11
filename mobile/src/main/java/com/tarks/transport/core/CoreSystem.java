@@ -268,7 +268,7 @@ public class CoreSystem extends WearableListenerService implements GoogleApiClie
             //  sendNoti(globalv.ALMOST_NOTI,1,"목적지 거의 도착","3 정거장 남음");
             if (location_mode == globalv.LIVE_ACTIVE_MODE) {
 
-                if (same_place_count > 7 && action_count > 1 || same_place_count > 4 && action_count > 1 && near_level >= 3)
+                if (same_place_count > 7 && action_count > 0 || same_place_count > 4 && action_count > 0 && near_level >= 3)
                     setActionLocationMode(cx, globalv.ACTIVE_MODE);
 
             }
@@ -302,13 +302,13 @@ public class CoreSystem extends WearableListenerService implements GoogleApiClie
                 if (same_place_count > 1) { //introduce guide}
                 }
 
-                if (near_level <= 4 && same_place_count == 0 && action_count > 1) {
+                if (near_level <= 4 && same_place_count == 0 && action_count > 0) {
                     setActionLocationMode(cx, globalv.ACTIVE_MODE);
 
                 }
 
                 //Stanby mode
-                if (same_place_count > 2 && action_count > 1)
+                if (same_place_count > 2 && action_count > 0)
                     setActionLocationMode(cx, globalv.STANBY_MODE);
 
             }
