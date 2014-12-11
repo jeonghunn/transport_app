@@ -40,14 +40,21 @@ public class RouteList extends Activity
     ArrayList<String> routes = new ArrayList<String>();
     ProgressBar ps;
 
+    private int country_srl;
+
+    private int number;
+    MessageReceiver messageReceiver;
+
     @Override
     public void onClick(WearableListView.ViewHolder viewHolder) {
 
    //     if(viewHolder.getItemId() == 0){
-        finish();
+
             Intent i = new Intent(RouteList.this, WayList.class);
-        i.putExtra("route_srl" , routes.get(viewHolder.getPosition()));
+        i.putExtra("country_srl" , country_srl);
+        i.putExtra("route_srl" , Integer.parseInt(routes.get(viewHolder.getPosition())));
             startActivity(i);
+        finish();
 
      //   }
     }
@@ -65,6 +72,11 @@ protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.list);
     getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
+    Intent intent = getIntent(); // 인텐트 받아오고
+
+    // int country_srl = intent.getIntExtra("country_srl", 0);
+    country_srl = intent.getIntExtra("country_srl", 0); // 인텐트로 부터 데이터 가져오고
+
     ps = (ProgressBar) findViewById(R.id.progressBar);
 
     if(null == mGoogleApiClient) {
@@ -81,11 +93,15 @@ protected void onCreate(Bundle savedInstanceState) {
         //  Log.v(TAG, "Connecting to GoogleApiClient..");
     }
 
+
+
+    global.log("RouteSRL" + country_srl);
+
     new SendMessage("getRouteNumbers","true").start();
 
     // Register a local broadcast receiver, defined is Step 3.
-    IntentFilter messageFilter = new IntentFilter("message-forwarded-from-data-layer");
-    MessageReceiver messageReceiver= new MessageReceiver();
+    IntentFilter messageFilter = new IntentFilter("get-route-numbers");
+  messageReceiver= new MessageReceiver();
     LocalBroadcastManager.getInstance(this).registerReceiver(messageReceiver, messageFilter);
 
 
@@ -139,25 +155,44 @@ protected void onCreate(Bundle savedInstanceState) {
     public class MessageReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
+
+
             String message = intent.getStringExtra("message");
+
             global.log( message);
 
-    routes = global.getJSONArrayListByString(message);
+         //   if(routes == null) {
 
-            // Get the list component from the layout of the activity
-            WearableListView listView =
-                    (WearableListView) findViewById(R.id.wearable_list);
+                routes = global.getJSONArrayListByString(message);
 
-            // Assign an adapter to the list
-            listView.setAdapter(new ListAdapter(RouteList.this, routes));
+                // Get the list component from the layout of the activity
+                WearableListView listView =
+                        (WearableListView) findViewById(R.id.wearable_list);
 
-            // Set a click listener
-            listView.setClickListener(RouteList.this);
+                // Assign an adapter to the list
+                listView.setAdapter(new ListAdapter(RouteList.this, routes));
 
-            ps.setVisibility(View.INVISIBLE);
+                // Set a click listener
+                listView.setClickListener(RouteList.this);
+
+                ps.setVisibility(View.INVISIBLE);
+
+
+
+          //  }
 
         }
     }
+
+
+    @Override
+    protected void onDestroy() {
+        // TODO Auto-generated method stub
+        super.onDestroy();
+        //unregister our receiver
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(messageReceiver);
+    }
+
 
 
     public final class ListAdapter extends WearableListView.Adapter {

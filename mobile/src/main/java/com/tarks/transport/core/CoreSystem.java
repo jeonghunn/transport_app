@@ -608,7 +608,7 @@ public class CoreSystem extends WearableListenerService implements GoogleApiClie
 
         while (csr.moveToNext()) {
 
-            global.log(csr.getString(csr.getColumnIndex("station_name")));
+
 
             WayClass mWayClass = new WayClass(
                     csr.getInt(csr.getColumnIndex("way_srl")),
@@ -619,7 +619,7 @@ public class CoreSystem extends WearableListenerService implements GoogleApiClie
 
         }
 
-
+        global.log(csr.getCount() +"WAYSCOuNT");
         csr.close();
         mDbOpenHelper.close();
         return mInfoArray;
@@ -901,10 +901,16 @@ global.log("ARRIVED!");
     }
 
     public void getWaysToSend(String data){
-         ArrayList<WayClass> routes =new ArrayList<WayClass>();;
+
+        Map<String, String> resultmap = null;
+        resultmap = global.getJSONArray(data);
+        int country_srl = Integer.parseInt(String.valueOf(resultmap.get("country_srl")));
+        int route_srl = Integer.parseInt(String.valueOf(resultmap.get("route_srl")));
+
+         ArrayList<WayClass> ways = getWaysByRoute(cx, country_srl, route_srl);
         Gson gson = new GsonBuilder().create();
-        JsonArray json_result = gson.toJsonTree(routes).getAsJsonArray();
-        global.log(json_result.toString());
+        JsonArray json_result = gson.toJsonTree(ways).getAsJsonArray();
+        global.log("WAYS" + json_result.toString());
         sendMessageDefault("NearByRoute" ,json_result.toString());
     }
 

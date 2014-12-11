@@ -233,7 +233,7 @@ public class DbOpenHelper {
 
     public Cursor getWays(int country_srl, int route_srl){
 
-        Cursor c = mDB.rawQuery( "select distinct way_srl from stations where country_srl='" + country_srl + "' AND route_srl= '" + route_srl + "' ORDER BY `station_srl` DESC" , null);
+        Cursor c = mDB.rawQuery( "select * from stations where country_srl='" + country_srl + "' AND route_srl= '" + route_srl + "' AND station_srl in (SELECT DISTINCT way_srl FROM stations) ORDER BY `way_srl` ASC" , null);
         return c;
     }
 

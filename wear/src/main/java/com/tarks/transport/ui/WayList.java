@@ -15,6 +15,10 @@ import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.Wearable;
 import com.tarks.transport.R;
+import com.tarks.transport.core.global;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class WayList extends Activity
         implements WearableListView.ClickListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
@@ -110,9 +114,22 @@ protected void onCreate(Bundle savedInstanceState) {
 
    // int country_srl = intent.getIntExtra("country_srl", 0);
     int route_srl = intent.getIntExtra("route_srl", 0); // 인텐트로 부터 데이터 가져오고
+    int country_srl = intent.getIntExtra("country_srl", 0); // 인텐트로 부터 데이터 가져오고
 
+    JSONArray jsonArrayList = new JSONArray();   // JSONArray 생성
+    JSONObject obj = new JSONObject();
+    try {
 
-    new SendMessage("getWays",String.valueOf(route_srl)).start();
+        obj.put("country_srl", country_srl);
+        obj.put("route_srl", route_srl);
+    }catch (Exception e){
+        e.printStackTrace();
+    }
+
+    jsonArrayList.put(obj);
+
+    global.log(jsonArrayList.toString());
+    new SendMessage("getWays", jsonArrayList.toString() ).start();
 
         // Get the list component from the layout of the activity
         WearableListView listView =

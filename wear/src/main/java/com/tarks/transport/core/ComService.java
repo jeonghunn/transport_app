@@ -1,7 +1,9 @@
 package com.tarks.transport.core;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
@@ -37,6 +39,7 @@ public class ComService extends WearableListenerService implements GoogleApiClie
     private String nodeId;
     final Messenger mMessenger = new Messenger(new IncomingHandler());
     private Intent intent;
+
 
     @Override
     public void onCreate() {
@@ -126,6 +129,7 @@ checkMessage(messageEvent.getPath(), messageEvent.getData());
             int way_srl = Integer.parseInt(String.valueOf(resultmap.get("way_srl")));
             int station_srl = Integer.parseInt(String.valueOf(resultmap.get("station_srl")));
 
+
             Intent viewIntent = new Intent(ComService.this, StationList.class);
             global.BusNoti(ComService.this, noti_id, viewIntent, title, content, direction_name ,country_srl,route_srl, way_srl, station_srl, station_summary, R.drawable.ic_launcher, global.getNight()? R.drawable.ride_bus_background_night : R.drawable.ride_bus_background);
 
@@ -172,11 +176,14 @@ checkMessage(messageEvent.getPath(), messageEvent.getData());
     }
 
     private void NearByRoute(String data){
+        //global.log("NearByRoute Calling");
+
+
+
         Intent messageIntent = new Intent();
-        messageIntent.setAction("message-forwarded-from-data-layer");
+        messageIntent.setAction("get-route-numbers");
         messageIntent.putExtra("message", data);
         LocalBroadcastManager.getInstance(this).sendBroadcast(messageIntent);
-
     }
 
     private void setDestination(String data){

@@ -126,7 +126,8 @@ public final class global {
         PendingIntent pendingWayIntent = PendingIntent.getActivity(cx, 0, wayIntent, 0);
 
         Intent routeIntent = new Intent(cx, RouteList.class);
-        PendingIntent pendingRouteIntent = PendingIntent.getActivity(cx, 0, routeIntent, 0);
+        routeIntent.putExtra("country_srl" , country_srl);
+        PendingIntent pendingRouteIntent = PendingIntent.getActivity(cx, 0, routeIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
 
         //Delete
