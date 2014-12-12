@@ -30,6 +30,8 @@ import com.tarks.transport.core.global;
 import com.tarks.transport.db.InfoClass;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class RouteList extends Activity
         implements WearableListView.ClickListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
@@ -39,6 +41,7 @@ public class RouteList extends Activity
     GoogleApiClient mGoogleApiClient;
     ArrayList<String> routes = new ArrayList<String>();
     ProgressBar ps;
+    Timer ltimeout;
 
     private int country_srl;
 
@@ -64,7 +67,22 @@ public class RouteList extends Activity
 
     }
 
+    public void loadingTimeout(){
+         ltimeout = new Timer();
 
+        ltimeout.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                finish();
+                Intent i = new Intent(RouteList.this, RouteList.class);
+                i.putExtra("country_srl" , country_srl);
+                startActivity(i);
+
+
+
+            }
+        }, (long) (10000));
+    }
 
 @Override
 protected void onCreate(Bundle savedInstanceState) {
@@ -96,7 +114,8 @@ protected void onCreate(Bundle savedInstanceState) {
 
 
     global.log("RouteSRL" + country_srl);
-
+    //Settimer
+    loadingTimeout();
     new SendMessage("getRouteNumbers","true").start();
 
     // Register a local broadcast receiver, defined is Step 3.
@@ -160,6 +179,8 @@ protected void onCreate(Bundle savedInstanceState) {
             String message = intent.getStringExtra("message");
 
             global.log( message);
+
+            ltimeout.cancel();
 
          //   if(routes == null) {
 

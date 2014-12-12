@@ -250,11 +250,15 @@ public class CoreSystem extends WearableListenerService implements GoogleApiClie
                         //Check destination
                         if(station_left < 0) {
 
-                            sendBusNoti(1, 1, getString(R.string.calculating_station_left), stations.get(flowget.station_srl - 1).station_name + "\n" + next_name, direction_name, stationListString, flowget.country_srl, flowget.route_srl, flowget.way_srl, flowget.station_srl - 1);
+                            sendBusNoti(1, 1, getString(R.string.passed_station), stations.get(flowget.station_srl - 1).station_name + "\n" + next_name, direction_name, stationListString, flowget.country_srl, flowget.route_srl, flowget.way_srl, flowget.station_srl - 1);
 
                         }else{
                             if(station_left != 0) sendBusNoti(2, 1, getString(R.string.almost_arrived),  station_left + getString(R.string._stations_left) + "\n\n" +stations.get(flowget.station_srl - 1).station_name + "\n" + next_name, direction_name, stationListString, flowget.country_srl, flowget.route_srl, flowget.way_srl, flowget.station_srl -1);
-                            if(station_left == 0 && global.getGoalID(cx) == flowget.id_srl )    arrivedAction(cx, getString(R.string.destinaton_arrived),  stations.get(flowget.station_srl - 1).station_name);
+                            if(station_left == 0 && global.getGoalID(cx) == flowget.id_srl )  {
+                                arrivedAction(cx, getString(R.string.destinaton_arrived),  stations.get(flowget.station_srl - 1).station_name);
+                            }else if(station_left == 0){
+                                sendBusNoti(1, 1, stations.get(flowget.station_srl - 1).station_name, next_name + "\n\n" + getString(R.string.calculating_station_left), direction_name, stationListString, flowget.country_srl, flowget.route_srl, flowget.way_srl, flowget.station_srl - 1);
+                            }
                         }
 
                     }
