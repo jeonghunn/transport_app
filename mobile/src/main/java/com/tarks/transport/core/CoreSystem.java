@@ -302,7 +302,7 @@ public class CoreSystem extends WearableListenerService implements GoogleApiClie
 //            }
 
                 //ACTIVE STANBY
-                if (same_place_count > 7) setActionLocationMode(cx, globalv.ACTIVE_STANBY_MODE);
+                if ((same_place_count > 7 && goal_id == 0) || (same_place_count > 21 && goal_id != 0)) setActionLocationMode(cx, globalv.ACTIVE_STANBY_MODE);
                 //Stanby mode
 
 
