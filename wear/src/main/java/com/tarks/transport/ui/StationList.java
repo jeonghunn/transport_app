@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -250,6 +251,7 @@ ps.setVisibility(View.INVISIBLE);
                 super(itemView);
                 // find the text view within the custom item's layout
                 textView = (TextView) itemView.findViewById(R.id.name);
+
             }
 
             public void Sizebig(){

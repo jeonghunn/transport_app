@@ -105,6 +105,8 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
     public void onConnectionFailed(ConnectionResult connectionResult) {
 
     }
+
+
     // });
 
 

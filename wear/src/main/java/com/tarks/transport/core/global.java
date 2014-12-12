@@ -270,6 +270,18 @@ public final class global {
 return yourArray;
     }
 
+    public static ArrayList<WayClass> getJSONArrayListByWayClass(String content) {
+        ArrayList<WayClass> yourArray = null;
+        try {
+            JSONArray array = new JSONArray(content);
+            yourArray   = new Gson().fromJson(array.toString(), new TypeToken<List<WayClass>>(){}.getType());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return yourArray;
+    }
+
 
     public static ArrayList<String> getJSONArrayListByString(String content) {
         ArrayList<String> list = new ArrayList<String>();

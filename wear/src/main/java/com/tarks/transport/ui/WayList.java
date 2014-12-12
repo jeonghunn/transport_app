@@ -1,12 +1,22 @@
 package com.tarks.transport.ui;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.wearable.view.WearableListView;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -15,10 +25,13 @@ import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.Wearable;
 import com.tarks.transport.R;
+import com.tarks.transport.core.WayClass;
 import com.tarks.transport.core.global;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 public class WayList extends Activity
         implements WearableListView.ClickListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
@@ -28,6 +41,9 @@ public class WayList extends Activity
 
     GoogleApiClient mGoogleApiClient;
     ProgressBar ps;
+    MessageReceiver messageReceiver;
+
+    ArrayList<WayClass> wayarray = new ArrayList<WayClass>();
 
     @Override
     public void onClick(WearableListView.ViewHolder viewHolder) {
@@ -61,6 +77,14 @@ public class WayList extends Activity
     public void onConnectionFailed(ConnectionResult connectionResult) {
 
     }
+    @Override
+    protected void onDestroy() {
+        // TODO Auto-generated method stub
+        super.onDestroy();
+        //unregister our receiver
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(messageReceiver);
+    }
+
 
 
     class SendMessage extends Thread {
@@ -131,15 +155,127 @@ protected void onCreate(Bundle savedInstanceState) {
     global.log(jsonArrayList.toString());
     new SendMessage("getWays", jsonArrayList.toString() ).start();
 
-        // Get the list component from the layout of the activity
-        WearableListView listView =
-        (WearableListView) findViewById(R.id.wearable_list);
 
-        // Assign an adapter to the list
-        listView.setAdapter(new ListAdapter(this, elements));
+    // Register a local broadcast receiver, defined is Step 3.
+    IntentFilter messageFilter = new IntentFilter("get-ways-by-route");
+    messageReceiver = new MessageReceiver();
+    LocalBroadcastManager.getInstance(this).registerReceiver(messageReceiver, messageFilter);
 
-        // Set a click listener
-        listView.setClickListener(this);
+
+    // Get the list component from the layout of the activity
+
         }
 
-};
+    public class MessageReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+
+            String message = intent.getStringExtra("message");
+
+            global.log( message);
+
+            //   if(routes == null) {
+
+            wayarray = global.getJSONArrayListByWayClass(message);
+
+            // Get the list component from the layout of the activity
+            WearableListView listView =
+                    (WearableListView) findViewById(R.id.wearable_list);
+
+            // Assign an adapter to the list
+            listView.setAdapter(new ListAdapter(WayList.this, wayarray));
+
+            // Set a click listener
+            listView.setClickListener(WayList.this);
+
+            ps.setVisibility(View.INVISIBLE);
+
+
+
+            //  }
+
+        }
+    }
+
+
+    public final class ListAdapter extends WearableListView.Adapter {
+        private ArrayList<WayClass> mDataset;
+        private final Context mContext;
+        private final LayoutInflater mInflater;
+        private int selected_pos;
+
+        // Provide a suitable constructor (depends on the kind of dataset)
+        public ListAdapter(Context context, ArrayList<WayClass> dataset) {
+            mContext = context;
+            mInflater = LayoutInflater.from(context);
+            mDataset = dataset;
+        }
+
+        // Provide a reference to the type of views you're using
+        public class ItemViewHolder extends WearableListView.ViewHolder {
+            private TextView textView;
+            private ImageView img;
+
+            public ItemViewHolder(View itemView) {
+                super(itemView);
+                // find the text view within the custom item's layout
+                textView = (TextView) itemView.findViewById(R.id.name);
+                img = (ImageView) itemView.findViewById(R.id.circle);
+
+            }
+
+            public void Sizebig() {
+                textView.setTextSize(21);
+            }
+        }
+
+
+        // Create new views for list items
+        // (invoked by the WearableListView's layout manager)
+        @Override
+        public WearableListView.ViewHolder onCreateViewHolder(ViewGroup parent,
+                                                              int viewType) {
+            // Inflate our custom layout for list items
+            return new ItemViewHolder(mInflater.inflate(R.layout.list_item, null));
+        }
+
+        // Replace the contents of a list item
+        // Instead of creating new views, the list tries to recycle existing ones
+        // (invoked by the WearableListView's layout manager)
+        @Override
+        public void onBindViewHolder(WearableListView.ViewHolder holder,
+                                     int position) {
+            // retrieve the text view
+            ItemViewHolder itemHolder = (ItemViewHolder) holder;
+            TextView view = itemHolder.textView;
+            ImageView img = itemHolder.img;
+            // replace text contents
+            view.setText(mDataset.get(position).station_name + " " + getString(R.string.direction));
+            img.setImageResource(R.drawable.arrow_right_red);
+
+            view.setTextSize(17);
+//            if (position == now_station) {
+//                view.setTextSize(21);
+//                view.setTypeface(null, Typeface.BOLD);
+//            } else {
+//
+//                view.setTypeface(null, Typeface.NORMAL);
+//            }
+
+//       if(int) view.setTextSize(21);
+            //view.isFocusable()
+            // replace list item's metadata
+            holder.itemView.setTag(position);
+        }
+
+        @Override
+        public int getItemCount() {
+            return mDataset.size();
+        }
+
+    }
+
+
+
+    };
