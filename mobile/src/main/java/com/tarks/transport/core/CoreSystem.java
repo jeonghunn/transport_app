@@ -911,7 +911,7 @@ global.log("ARRIVED!");
         Gson gson = new GsonBuilder().create();
         JsonArray json_result = gson.toJsonTree(ways).getAsJsonArray();
         global.log("WAYS" + json_result.toString());
-        sendMessageDefault("NearByRoute" ,json_result.toString());
+        sendMessageDefault("WaysByRoute" ,json_result.toString());
     }
 
     public void getNearByRoutesToSend(){

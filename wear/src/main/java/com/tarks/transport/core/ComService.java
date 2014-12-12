@@ -85,6 +85,7 @@ checkMessage(messageEvent.getPath(), messageEvent.getData());
             if(message.matches("notification")) actionNoti(global.getStringbyBytes(bytes));
             if(message.matches("stations_data")) StationsDataDBInput(global.getStringbyBytes(bytes));
             if(message.matches("NearByRoute")) NearByRoute(global.getStringbyBytes(bytes));
+            if(message.matches("WaysByRoute")) WaysByRoute(global.getStringbyBytes(bytes));
 
             //To Phone
             if(message.matches("requestLocationMode")) requestLocationMode(global.getStringbyBytes(bytes));
@@ -174,6 +175,19 @@ checkMessage(messageEvent.getPath(), messageEvent.getData());
     private void getWays(String data){
         sendMessage("Main_getWays", data.getBytes());
     }
+
+
+    private void WaysByRoute(String data){
+        //global.log("NearByRoute Calling");
+
+
+
+        Intent messageIntent = new Intent();
+        messageIntent.setAction("get-ways-by-route");
+        messageIntent.putExtra("message", data);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(messageIntent);
+    }
+
 
     private void NearByRoute(String data){
         //global.log("NearByRoute Calling");
