@@ -1,8 +1,12 @@
 package com.tarks.transport;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -16,6 +20,7 @@ import com.google.gson.JsonArray;
 import com.tarks.transport.core.CoreSystem;
 import com.tarks.transport.core.global;
 import com.tarks.transport.core.noticlass;
+import com.tarks.transport.ui.info;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,15 +31,9 @@ import java.util.concurrent.TimeUnit;
  */
 public class main extends ActionBarActivity{
 
-    private CoreSystem cs;
-
-    private int progress = 0;
-    private SeekBar pb;
-    private TextView tv;
-    private Context ct;
 
 
-    private GoogleApiClient mGoogleApiClient;
+
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,10 +61,40 @@ public class main extends ActionBarActivity{
 
 
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        MenuItem item;
 
 
 
+        MenuItemCompat.setShowAsAction(	menu.add(0, 1, 0, getString(R.string.app_info)), MenuItemCompat.SHOW_AS_ACTION_NEVER);
 
+
+
+        // item = menu.add(0, 1, 0, R.string.Main_MenuAddBookmark);
+        // item.setIcon(R.drawable.ic_menu_add_bookmark);
+
+        return true;
+    }
+
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+
+
+        if (item.getItemId() == 1) {
+            Intent intent1 = new Intent(main.this, info.class);
+        startActivity(intent1);
+            return true;
+
+        }
+
+
+        return super.onOptionsItemSelected(item);
+    }
 
 
 

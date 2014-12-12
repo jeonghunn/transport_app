@@ -58,6 +58,9 @@ public class CoreSystem extends WearableListenerService implements GoogleApiClie
    private int last_station_id = 0;
     private int last_nearby_sration_id = 0;
    private boolean same_place = false;
+
+
+
     private ArrayList<String> routes =new ArrayList<String>();;
 
     SensorListener sl;
@@ -157,10 +160,13 @@ public class CoreSystem extends WearableListenerService implements GoogleApiClie
 
             if (near_level < 3) {
                 for (int i = 0; i < ic.size(); i++) {
-                    global.log("ok" + ic.size());
-                    InfoClass get = ic.get(i);
-                    mDbOpenHelper.insertFdColumn(count_srl, action_count, get.id, get.country_srl, get.route_srl, get.station_srl, get.way_srl, lc.getLatitude(), lc.getLongitude(), get.station_latitude, get.station_longitude, global.getCurrentTimeStamp(), location_mode, near_level);
-               //     if (goal_id == get.id)
+                    //Check it has a destination
+
+                        //No Destination
+                        global.log("ok" + ic.size());
+                        InfoClass get = ic.get(i);
+                        mDbOpenHelper.insertFdColumn(count_srl, action_count, get.id, get.country_srl, get.route_srl, get.station_srl, get.way_srl, lc.getLatitude(), lc.getLongitude(), get.station_latitude, get.station_longitude, global.getCurrentTimeStamp(), location_mode, near_level);
+                        //     if (goal_id == get.id)
 
                 }
             }else{
