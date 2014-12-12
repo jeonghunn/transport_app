@@ -93,9 +93,22 @@ public final class global {
         notificationManager.notify(notificationId, notificationBuilder.build());
     }
 
+    public static String arraylistStringtoString(ArrayList<String> data){
+        String listString = "";
+
+        for (int i = 0; i < data.size(); i++)
+        {
+            listString += data.get(i) ;
+            if(i < data.size() - 1) listString += ", ";
+        }
+        return listString;
+    }
+
     public static byte[] objectToBytArray( Object ob ){
         return ((ob.toString()).getBytes());
     }
+
+
 
 
     public static Map getJSONArray(String content) {

@@ -105,7 +105,7 @@ public final class global {
     }
 
 
-    //Temp function
+      //Temp function
     public static void BusNoti(Context cx, int notificationId, Intent viewIntent, String title, String content, String direction_name,  int country_srl, int route_srl, int way_srl, int station_srl ,  String station_summary, int icon, int largeicon){
 
 
@@ -153,8 +153,8 @@ public final class global {
 
         NotificationCompat.WearableExtender wearableExtender =
                 new NotificationCompat.WearableExtender()
-                           .setHintHideIcon(true)
-                        //.setDisplayIntent(pendingdetailintent)
+                        .setHintHideIcon(true)
+                                //.setDisplayIntent(pendingdetailintent)
                         .addPage(secondPageNotification)
                         .setBackground(BitmapFactory.decodeResource(
                                 cx.getResources(), largeicon));
@@ -187,6 +187,63 @@ public final class global {
 // Build the notification and issues it with notification manager.
         notificationManager.notify(notificationId, notificationBuilder.build());
     }
+
+
+    //Temp function
+    public static void WaitingBusNoti(Context cx, int notificationId, String title, String content, int icon, int largeicon){
+
+
+
+
+
+        Intent rideintent = new Intent(cx, RouteList.class);
+        PendingIntent ridePendingIntent = PendingIntent.getActivity(cx, 0, rideintent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+
+        //Delete
+        Intent deleteIntent = new Intent(cx, ActionActivity.class);
+        deleteIntent.putExtra("action_kind", "delete_noti");
+        PendingIntent pendingDeleteIntent = PendingIntent.getActivity(cx, 0, deleteIntent, 0);
+
+
+
+
+
+        NotificationCompat.WearableExtender wearableExtender =
+                new NotificationCompat.WearableExtender()
+                        .setHintHideIcon(true)
+                                //.setDisplayIntent(pendingdetailintent)
+                        .setBackground(BitmapFactory.decodeResource(
+                                cx.getResources(), largeicon));
+
+
+        NotificationCompat.Builder notificationBuilder =
+                new NotificationCompat.Builder(cx)
+                        .setSmallIcon(icon)
+                        .setContentTitle(title)
+                        .setContentText(content)
+                        .setDeleteIntent(pendingDeleteIntent)
+                        .setLargeIcon(BitmapFactory.decodeResource(
+                                cx.getResources(), largeicon))
+                        .extend(wearableExtender)
+                        .addAction(R.drawable.ic_ride_bus_white,
+                                cx.getString(R.string.riding), ridePendingIntent);
+
+
+
+
+
+
+// Get an instance of the NotificationManager service
+        NotificationManagerCompat notificationManager =
+                NotificationManagerCompat.from(cx);
+
+
+
+// Build the notification and issues it with notification manager.
+        notificationManager.notify(notificationId, notificationBuilder.build());
+    }
+
 
 
     public static String getStringbyBytes(byte[] bytes){

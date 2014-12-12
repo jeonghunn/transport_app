@@ -170,6 +170,11 @@ checkMessage(messageEvent.getPath(), messageEvent.getData());
             arrivedAction(title, content);
         }
 
+        //waiting bus
+        if(kind == 4){
+            WaitingBusNoti(title, content);
+        }
+
     }
 
     //To Phone
@@ -221,6 +226,19 @@ private void arrivedAction(String title, String content){
 
 
 }
+
+    private void WaitingBusNoti(String title, String content){
+        // WakeLock.acquireCpuWakeLock(ListenerService.this);
+      //  Intent viewIntent = new Intent(this, StationList.class);
+        global.WaitingBusNoti(this, 1, title, content, R.drawable.ic_launcher, global.getNight()? R.drawable.bus_background_night : R.drawable.bus_background);
+
+
+     //   global.Vibrate(this, 4000);
+        // WakeLock.releaseCpuLock();
+
+
+    }
+
     private void setGoogleApiClient(Context cx){
         mGoogleApiClient = new GoogleApiClient.Builder(cx)
                 .addApi(Wearable.API)  // used for data layer API
