@@ -41,7 +41,7 @@ import java.util.Map;
  */
 public final class global {
 
-    public static boolean debug_mode = true;
+    public static boolean debug_mode = false;
 
     public static void toast(String str, boolean length) {
         // Log.i("ACCESS", "I can access to toast");

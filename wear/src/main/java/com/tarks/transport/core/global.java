@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.tarks.transport.MainActivity;
 import com.tarks.transport.R;
 import com.tarks.transport.db.InfoClass;
 import com.tarks.transport.ui.RouteList;
@@ -43,7 +44,7 @@ import java.util.Map;
  */
 public final class global {
 
-    static boolean debug_mode = true;
+    static boolean debug_mode = false;
 
     public static void toast(Context cx, String str, boolean length) {
         // Log.i("ACCESS", "I can access to toast");
@@ -196,17 +197,17 @@ public final class global {
 
 
 
-        Intent rideintent = new Intent(cx, RouteList.class);
-        PendingIntent ridePendingIntent = PendingIntent.getActivity(cx, 0, rideintent, PendingIntent.FLAG_UPDATE_CURRENT);
-
 
         //Delete
         Intent deleteIntent = new Intent(cx, ActionActivity.class);
         deleteIntent.putExtra("action_kind", "delete_noti");
-        PendingIntent pendingDeleteIntent = PendingIntent.getActivity(cx, 0, deleteIntent, 0);
+        PendingIntent pendingDeleteIntent = PendingIntent.getActivity(cx, 0, deleteIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
 
 
+
+        Intent rideintent = new Intent(cx, MainActivity.class);
+        PendingIntent ridePendingIntent = PendingIntent.getActivity(cx, 0, rideintent, PendingIntent.FLAG_UPDATE_CURRENT);
 
 
         NotificationCompat.WearableExtender wearableExtender =
