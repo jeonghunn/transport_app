@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">WhereBus</string>
+    <string name="app_name">WBUS</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="verkind">Beta Version</string>
     <string name="copyright">Copyrightⓒ 2014 WBus Team.</string>
-    <string name="ver">0.2.1.1.114</string>
+    <string name="ver">0.2.1.2.115</string>
     <string name="terminal">종착 정류장</string>
     <string name="destinaton_arrived">목적지 도착</string>
     <string name="_stations_left">개 정거장 남음</string>
