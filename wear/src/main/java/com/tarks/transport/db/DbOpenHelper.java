@@ -195,7 +195,7 @@ public class DbOpenHelper {
 
     public boolean  checkStations(int country_srl, int route_srl, int way_srl){
 
-        Cursor c = mDB.rawQuery( "select * from stations where country_srl='" + country_srl + "' AND route_srl= '" + route_srl + "' AND way_srl= '"+ way_srl +"' ORDER BY `station_srl` ASC" , null);
+        Cursor c = mDB.rawQuery( "select * from stations where country_srl='" + country_srl + "' AND route_srl= '" + route_srl + "' AND way_srl= '"+ way_srl +"' ORDER BY `station_srl` ASC LIMIT 1" , null);
 
         if(c.getCount() > 0) return true;
 

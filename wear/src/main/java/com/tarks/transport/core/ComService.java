@@ -86,6 +86,7 @@ checkMessage(messageEvent.getPath(), messageEvent.getData());
             if(message.matches("stations_data")) StationsDataDBInput(global.getStringbyBytes(bytes));
             if(message.matches("NearByRoute")) NearByRoute(global.getStringbyBytes(bytes));
             if(message.matches("WaysByRoute")) WaysByRoute(global.getStringbyBytes(bytes));
+            if(message.matches("checkDataBase")) doCheckDB(global.getStringbyBytes(bytes));
 
             //To Phone
             if(message.matches("requestLocationMode")) requestLocationMode(global.getStringbyBytes(bytes));
@@ -280,6 +281,18 @@ private void arrivedAction(String title, String content){
     }
 
 
+    private void doCheckDB(String data){
+        Map<String, String> resultmap = null;
+        resultmap = global.getJSONArray(data);
+
+        int country_srl = Integer.parseInt(String.valueOf(resultmap.get("country_srl")));
+        int route_srl = Integer.parseInt(String.valueOf(resultmap.get("route_srl")));
+        int way_srl = Integer.parseInt(String.valueOf(resultmap.get("way_srl")));
+        int station_srl = 1;
+
+        checkDataDB(country_srl, route_srl, way_srl, station_srl);
+    }
+
 
     private void requestLocationMode(String mode){
         global.log(mode + "locationmode");
@@ -302,16 +315,27 @@ private void arrivedAction(String title, String content){
         }
 
         mDbOpenHelper.close();
+        broadcastCheckDataDB(true);
     }
 
+
+    private void broadcastCheckDataDB(boolean result){
+
+        Intent messageIntent = new Intent();
+        messageIntent.setAction("Check-Data-Base");
+        messageIntent.putExtra("message", result);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(messageIntent);
+    }
 
     private void checkDataDB(int country_srl, int route_srl, int way_srl, int station_srl){
         DbOpenHelper mDbOpenHelper = new DbOpenHelper(this);
         mDbOpenHelper.open();
 
 
-       if(mDbOpenHelper.checkStations(country_srl, route_srl, way_srl)){
 
+
+       if(mDbOpenHelper.checkStations(country_srl, route_srl, way_srl)){
+           broadcastCheckDataDB(true);
 
        }else{
 

@@ -1,14 +1,17 @@
 package com.tarks.transport.ui;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.wearable.activity.ConfirmationActivity;
 import android.support.wearable.view.WearableListView;
 import android.util.Log;
@@ -31,6 +34,9 @@ import com.tarks.transport.core.global;
 import com.tarks.transport.db.DbOpenHelper;
 import com.tarks.transport.db.InfoClass;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
@@ -41,18 +47,24 @@ public class StationList extends Activity
    // String[][] elements = {{"4545","44545"},{""}};
    // private MyAsyncTask myAsyncTask;
     Context ct;
-    WearableListView listView;
-    private int now_station = 0;
+  //  WearableListView listView;
+    private int country_srl = 0;
+    private int route_srl = 0;
+    private int way_srl = 0;
+    private int station_srl = 0;
     GoogleApiClient mGoogleApiClient;
     private String nodeId;
     private ArrayList<InfoClass> stations;
+    MessageReceiver messageReceiver;
+    ProgressBar ps;
+
 
     @Override
     public void onClick(WearableListView.ViewHolder viewHolder) {
 //        Intent i = new Intent(StationList.this, BusArrive.class);
 //        startActivity(i);
 
-        if(viewHolder.getPosition() >=  now_station ) {
+        if(viewHolder.getPosition() >=  station_srl ) {
             new SendMessage("setDestination", String.valueOf(stations.get(viewHolder.getPosition()).id_srl)).start();
             finish();
             global.cancelNoti(this, 1);
@@ -153,26 +165,45 @@ public class StationList extends Activity
         return mInfoArray;
     }
 
-    protected Handler mHandler = new Handler() {
-        public void handleMessage(Message msg) {
-         //   hideProgressBar();
-            // IF Sucessfull no timeout
-
-            if (msg.what == -1) {
-         //       Global.ConnectionError(PageActivity.this);
-            }
-
-            if (msg.what == 1) {
-            listView.smoothScrollToPosition(Integer.parseInt(msg.obj.toString()));
-                now_station = Integer.parseInt(msg.obj.toString());
-             listView.getAdapter().notifyDataSetChanged();
+    public class MessageReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
 
 
-            }
+            boolean message = intent.getBooleanExtra("message", false);
 
+            global.log("PAYBACK");
+
+            //   if(routes == null) {
+            // Get the list component from the layout of the activity
+            WearableListView listView =
+                    (WearableListView) findViewById(R.id.wearable_list);
+
+
+
+
+
+            stations = getStations(country_srl,route_srl,way_srl);
+            // Assign an adapter to the list
+            listView.setAdapter(new ListAdapter(StationList.this,stations));
+
+            // Set a click listener
+            listView.setClickListener(StationList.this);
+
+
+
+
+            ps.setVisibility(View.INVISIBLE);
+
+            global.log(station_srl + "station srl number");
+            listView.scrollToPosition(station_srl);
+
+            //  }
 
         }
-    };
+    }
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -180,7 +211,7 @@ public class StationList extends Activity
         setContentView(R.layout.list);
         ct = this;
 
-        ProgressBar ps = (ProgressBar) findViewById(R.id.progressBar);
+         ps = (ProgressBar) findViewById(R.id.progressBar);
 
        if(null == mGoogleApiClient) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -200,32 +231,41 @@ public class StationList extends Activity
 
         Intent intent = getIntent(); // 인텐트 받아오고
 
-        int country_srl = intent.getIntExtra("country_srl", 0);
-        int route_srl = intent.getIntExtra("route_srl", 0); // 인텐트로 부터 데이터 가져오고
-        int way_srl = intent.getIntExtra("way_srl", 0); // 인텐트로 부터 데이터 가져오고
-        int station_srl = intent.getIntExtra("station_srl", 0); // 인텐트로 부터 데이터 가져오고
+         country_srl = intent.getIntExtra("country_srl", 0);
+         route_srl = intent.getIntExtra("route_srl", 0); // 인텐트로 부터 데이터 가져오고
+         way_srl = intent.getIntExtra("way_srl", 0); // 인텐트로 부터 데이터 가져오고
+         station_srl = intent.getIntExtra("station_srl", 0); // 인텐트로 부터 데이터 가져오고
+
+        global.log(station_srl + "s srl number");
+        JSONArray jsonArrayList = new JSONArray();   // JSONArray 생성
+        JSONObject obj = new JSONObject();
+        try {
+
+            obj.put("country_srl", country_srl);
+            obj.put("route_srl", route_srl);
+            obj.put("way_srl", way_srl);
+            obj.put("station_srl", station_srl);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        jsonArrayList.put(obj);
+        new SendMessage("checkDataBase",jsonArrayList.toString()).start();
+
+
+
+        // Register a local broadcast receiver, defined is Step 3.
+        IntentFilter messageFilter = new IntentFilter("Check-Data-Base");
+        messageReceiver= new MessageReceiver();
+        LocalBroadcastManager.getInstance(this).registerReceiver(messageReceiver, messageFilter);
+
      //   String kind = intent.getStringExtra("kind");
 
      // if(intent != null)  global.log("stationlist" + kind +  country_srl + " : " + route_srl + ":" + way_srl);
 
         //Set now station
-now_station = station_srl;
-
-        // Get the list component from the layout of the activity
-        listView =
-                (WearableListView) findViewById(R.id.wearable_list);
 
 
-         stations = getStations(country_srl,route_srl,way_srl);
-        // Assign an adapter to the list
-        listView.setAdapter(new ListAdapter(this,stations));
-        // Set a click listener
-        listView.setClickListener(this);
-
-        listView.smoothScrollToPosition(station_srl);
-
-
-ps.setVisibility(View.INVISIBLE);
 
 
     }
@@ -282,7 +322,7 @@ ps.setVisibility(View.INVISIBLE);
             // replace text contents
             view.setText(mDataset.get(position).station_name);
 
-           if(position == now_station) {
+           if(position == station_srl) {
                view.setTextSize(21);
                view.setTypeface(null,Typeface.BOLD);
            }else{
@@ -334,7 +374,13 @@ ps.setVisibility(View.INVISIBLE);
 //    }
     }
 
-
+    @Override
+    protected void onDestroy() {
+        // TODO Auto-generated method stub
+        super.onDestroy();
+        //unregister our receiver
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(messageReceiver);
+    }
 
 }
 
