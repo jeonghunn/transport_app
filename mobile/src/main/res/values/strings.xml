@@ -17,5 +17,5 @@
     <string name="nearby_bus_routes">주변 버스 노선</string>
     <string name="app_info">앱 정보</string>
     <string name="developers">개발자</string>
-    <string name="dev_info">Junghoon Lee(JHRunning)\nDeveloper\nhttp://jhrun.tistory.com\n\nSeunghyun Yu\nDesigner\n\nDongHyun Lee\nDeveloper</string>
+    <string name="dev_info">Junghoon Lee(JHRunning)\nDeveloper\nhttp://jhrun.tistory.com\n\nSeunghyun Yu\nDesigner</string>
 </resources>

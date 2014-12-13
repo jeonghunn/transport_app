@@ -49,5 +49,9 @@ public final class globalv {
     public static final int STOP_STATE = 1;
     public static final int ACTIVE_STATE = 2;
 
+    //dev
+    public static final String DEV_FOREGROUND = "foreground_s";
+    public static final String DEV_START_F = "start_fr";
+
     }
 

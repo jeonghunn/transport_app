@@ -1,11 +1,15 @@
 package com.tarks.transport;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.tarks.transport.core.CoreSystem;
 import com.tarks.transport.core.global;
@@ -17,15 +21,21 @@ import java.util.TimerTask;
 
 public class MainActivity extends ActionBarActivity {
 
+    protected int i;
+    private SharedPreferences prefs;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash);
 
         // 자신의 신분 설정값을 불러옵니다.
-        SharedPreferences prefs = getSharedPreferences("setting", MODE_PRIVATE);
+        prefs = getSharedPreferences("setting", MODE_PRIVATE);
         String frist_use = prefs.getString("first_use_app", "true");
         String db_ver = prefs.getString("db_ver", "0");
+
+        //Dev
+       hiddenMenu();
 
       if( !db_ver.matches(String.valueOf(DbOpenHelper.DATABASE_VERSION))){
 
@@ -38,6 +48,27 @@ startApp();
 
 
     }
+
+
+    private void hiddenMenu(){
+        ImageView hello = (ImageView)findViewById(R.id.busload);
+        i=0;
+        hello.setOnClickListener(new ImageView.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                global.log("adsfasfadsfkas;fjklasdjflksdjfkladsjklf");
+                i += 1;
+                if (i >= 7) {
+                    global.setBooleanDev(MainActivity.this,"enabled",true);
+                }
+            }
+        });
+        if(!global.debug_mode){
+            global.debug_mode = global.getBooleanDev(this,"enabled");
+        }
+
+    }
+
 
     public void DBInsert(){
         DbOpenHelper mDbOpenHelper = new DbOpenHelper(this);
@@ -207,4 +238,5 @@ startApp();
     protected void onStop(){
         super.onStop();
     }
+
 }

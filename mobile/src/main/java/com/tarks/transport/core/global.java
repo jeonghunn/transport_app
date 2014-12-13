@@ -43,10 +43,26 @@ public final class global {
 
     public static boolean debug_mode = false;
 
+
+    public static SharedPreferences sp_dev;
+
     public static void toast(String str, boolean length) {
         // Log.i("ACCESS", "I can access to toast");
 //        Toast.makeText(mod, str,
 //                (length ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT)).show
+    }
+    public static boolean getBooleanDev(Context ct,String str){
+        if(sp_dev == null){
+            sp_dev = getSP(ct,"dev");
+        }
+        return sp_dev.getBoolean(str,false);
+    }
+    public static void setBooleanDev(Context ct,String str,boolean bl){
+        if(sp_dev == null){
+            sp_dev = getSP(ct,"dev");
+        }
+        sp_dev.edit().putBoolean(str,bl).commit();
+        sp_dev = getSP(ct,"dev");
     }
 
 
@@ -214,6 +230,11 @@ public final class global {
         SharedPreferences prefs = cx.getSharedPreferences("setting",
                 cx.MODE_PRIVATE);
         return prefs.getString(setting, default_value);
+    }
+    public static SharedPreferences getSP(Context cx, String name) {
+        SharedPreferences prefs = cx.getSharedPreferences("setting",
+                cx.MODE_PRIVATE);
+        return prefs;
     }
 
     public static void CountSrlUpdate(Context cx) {

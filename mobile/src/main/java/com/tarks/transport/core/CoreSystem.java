@@ -1,15 +1,19 @@
 package com.tarks.transport.core;
 
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -59,6 +63,10 @@ public class CoreSystem extends WearableListenerService implements GoogleApiClie
     private int last_nearby_sration_id = 0;
    private boolean same_place = false;
 
+    //dev
+    private boolean useFg = false;
+    private boolean runningFg;
+
 
 
     private ArrayList<String> routes =new ArrayList<String>();;
@@ -76,6 +84,12 @@ public class CoreSystem extends WearableListenerService implements GoogleApiClie
         global.log("HI service start!");
         cx = CoreSystem.this;
         initCore(CoreSystem.this);
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        hiddenDev();
+        return super.onStartCommand(intent, flags, startId);
     }
 
     public void initCore(Context cx) {
@@ -769,7 +783,6 @@ sendMessage(msg, data.getBytes());
 
     }
 
-
     public void sendNoti(int kind, int noti_id, String title, String content) {
         ArrayList<noticlass> notiarray = new ArrayList<noticlass>();
         noticlass mnoticalss = new noticlass(kind, noti_id, title, content);
@@ -779,6 +792,10 @@ sendMessage(msg, data.getBytes());
         JsonArray noti_json_result = gson.toJsonTree(notiarray).getAsJsonArray();
         global.log(noti_json_result.toString());
         sendMessageDefault("notification" , noti_json_result.toString());
+
+        if(useFg){
+            doDev_Noti(kind,content + ";" + title);
+        }
 
     }
 
@@ -792,6 +809,10 @@ sendMessage(msg, data.getBytes());
         JsonArray noti_json_result = gson.toJsonTree(notiarray).getAsJsonArray();
         global.log(noti_json_result.toString());
         sendMessageDefault("notification" , noti_json_result.toString());
+
+        if(useFg){
+            doDev_Noti(kind,content + ";" + title);
+        }
 
     }
 
@@ -972,6 +993,14 @@ global.log("ARRIVED!");
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if(useFg){
+            stopForeground(true);
+        }
+    }
+
+    @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
         global.log("onConnectionFailed");
     }
@@ -1066,6 +1095,49 @@ if(msg.obj != null)     setActionLocationMode(CoreSystem.this,Integer.parseInt( 
 
     private void almost_arrived(String this_station, String next_station) {
         sendNoti(2, 1, this_station, next_station);
+    }
+
+    private void hiddenDev(){
+        useFg = global.getBooleanDev(this,globalv.DEV_FOREGROUND);
+        if(global.getBooleanDev(this,globalv.DEV_START_F)){
+            doDev_Noti(32767,"sc");
+        }
+    }
+    private void doDev_Noti(int i,String s){
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(cx).setSmallIcon(R.drawable.ic_launcher)
+                .setContentTitle("WBUS")
+                .setLargeIcon(BitmapFactory.decodeResource(
+                        cx.getResources(), R.drawable.ic_launcher))
+                .setContentText("Running")
+                .setPriority(NotificationCompat.PRIORITY_MIN)
+                .setOngoing(true);
+        if(s != null){
+            if(s.equalsIgnoreCase("sc")){
+                runningFg = true;
+                startForeground(9997, notificationBuilder.build());
+                return;
+            }
+        }
+        if(i == globalv.WAITING_BUS_NOTI){
+            if(!runningFg){
+                runningFg = true;
+                startForeground(9997, notificationBuilder.build());
+                return;
+            }
+        }
+        if(i == globalv.DEFUALT_NOTI){
+            notificationBuilder.setPriority(NotificationCompat.PRIORITY_DEFAULT);
+        }
+        if(i == globalv.ALMOST_NOTI){
+            notificationBuilder.setPriority(NotificationCompat.PRIORITY_MAX);
+        }
+        if(runningFg){
+            String[] sp = s.split(";");
+            notificationBuilder.setContentTitle(sp[0]);
+            notificationBuilder.setContentText(sp[1]);
+            NotificationManager mNotifyMgr =  (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            mNotifyMgr.notify(9997, notificationBuilder.build());
+        }
     }
 
 }

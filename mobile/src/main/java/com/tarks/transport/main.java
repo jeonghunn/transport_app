@@ -2,6 +2,7 @@ package com.tarks.transport;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarActivity;
@@ -9,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.Node;
@@ -108,12 +110,6 @@ public class main extends ActionBarActivity{
 //        }
 //        mGoogleApiClient.disconnect();
     }
-
-
-
-
-
-
 
 
 }
