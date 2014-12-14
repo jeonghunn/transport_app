@@ -348,7 +348,7 @@ public class CoreSystem extends WearableListenerService implements GoogleApiClie
             if (location_mode == globalv.STANBY_MODE) {
                 // globalv.moving_now =globalv.STOP_STATE;
               //  global.log(same_place +  "adf");
-                if (!same_place) {
+                if (!same_place && action_count > 0) {
                     if (near_level == 1) setActionLocationMode(cx, globalv.ACTIVE_MODE);
                     if (near_level == 2) setActionLocationMode(cx, globalv.ACTIVE_STANBY_MODE);
 
@@ -361,7 +361,7 @@ public class CoreSystem extends WearableListenerService implements GoogleApiClie
             }
 
             if (location_mode == globalv.POWER_SAVED_MODE) {
-                if (!same_place) {
+                if (!same_place && action_count > 0) {
                     setActionLocationMode(cx, globalv.ACTIVE_STANBY_MODE);
                 }
 
