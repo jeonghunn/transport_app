@@ -56,7 +56,7 @@ startApp();
         hello.setOnClickListener(new ImageView.OnClickListener() {
             @Override
             public void onClick(View v) {
-                global.log("adsfasfadsfkas;fjklasdjflksdjfkladsjklf");
+             //   global.log("adsfasfadsfkas;fjklasdjflksdjfkladsjklf");
                 i += 1;
                 if (i >= 7) {
                     global.setBooleanDev(MainActivity.this,"enabled",true);
