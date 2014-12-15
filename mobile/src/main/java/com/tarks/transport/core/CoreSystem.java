@@ -114,7 +114,7 @@ public class CoreSystem extends WearableListenerService implements GoogleApiClie
 //global.setGoalID(cx, 18);
 
 
-        if (global.getLocationMode(cx) > globalv.POWER_SAVED_MODE) {
+        if (global.getLocationMode(cx) > globalv.HIBERNATION_MODE) {
             setActionLocationMode(cx, global.getLocationMode(cx));
         } else {
 
@@ -300,7 +300,7 @@ public class CoreSystem extends WearableListenerService implements GoogleApiClie
             //  sendNoti(globalv.ALMOST_NOTI,1,"목적지 거의 도착","3 정거장 남음");
             if (location_mode == globalv.LIVE_ACTIVE_MODE) {
 
-                if (same_place_count > 7 && action_count > 0 || same_place_count > 4 && action_count > 0 && near_level >= 3)
+                if ((same_place_count > 3 && action_count > 0 && goal_id == 0 )||(same_place_count > 14 && action_count > 0 && goal_id !=0) )
                     setActionLocationMode(cx, globalv.ACTIVE_MODE);
 
             }
@@ -322,7 +322,7 @@ public class CoreSystem extends WearableListenerService implements GoogleApiClie
 //            }
 
                 //ACTIVE STANBY
-                if ((same_place_count > 7 && goal_id == 0) || (same_place_count > 21 && goal_id != 0)) setActionLocationMode(cx, globalv.ACTIVE_STANBY_MODE);
+                if ((same_place_count > 5 && goal_id == 0) || (same_place_count > 21 && goal_id != 0)) setActionLocationMode(cx, globalv.ACTIVE_STANBY_MODE);
                 //Stanby mode
 
 

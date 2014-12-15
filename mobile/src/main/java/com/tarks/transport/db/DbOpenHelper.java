@@ -15,7 +15,7 @@ import android.util.Log;
 public class DbOpenHelper {
 
     private static final String DATABASE_NAME = "transport.db";
-    public static final int DATABASE_VERSION = 2;
+    public static final int DATABASE_VERSION = 3;
     public static SQLiteDatabase mDB;
     private DatabaseHelper mDBHelper;
     private Context mCtx;
