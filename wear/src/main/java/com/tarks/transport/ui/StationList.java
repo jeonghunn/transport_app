@@ -380,6 +380,7 @@ public class StationList extends Activity
         super.onDestroy();
         //unregister our receiver
         LocalBroadcastManager.getInstance(this).unregisterReceiver(messageReceiver);
+
     }
 
 }

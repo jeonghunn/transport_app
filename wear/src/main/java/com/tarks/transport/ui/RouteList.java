@@ -212,6 +212,7 @@ protected void onCreate(Bundle savedInstanceState) {
         super.onDestroy();
         //unregister our receiver
         LocalBroadcastManager.getInstance(this).unregisterReceiver(messageReceiver);
+        ltimeout.cancel();
     }
 
 

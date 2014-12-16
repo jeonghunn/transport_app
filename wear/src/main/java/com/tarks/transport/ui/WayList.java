@@ -37,7 +37,7 @@ public class WayList extends Activity
         implements WearableListView.ClickListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     // Sample dataset for the list
-    String[] elements = { "동춘동종점 방향" , "무지개아파트 방향"};
+   // String[] elements = { "동춘동종점 방향" , "무지개아파트 방향"};
 
     GoogleApiClient mGoogleApiClient;
     ProgressBar ps;
