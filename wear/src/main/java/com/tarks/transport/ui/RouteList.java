@@ -9,6 +9,7 @@ import android.graphics.Typeface;
 import android.media.Image;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.wearable.view.WatchViewStub;
 import android.support.wearable.view.WearableListView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -47,6 +48,7 @@ public class RouteList extends Activity
 
     private int number;
     MessageReceiver messageReceiver;
+    WearableListView listView;
 
     @Override
     public void onClick(WearableListView.ViewHolder viewHolder) {
@@ -87,7 +89,7 @@ public class RouteList extends Activity
 @Override
 protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.list);
+        setContentView(R.layout.listhub);
     getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
     Intent intent = getIntent(); // 인텐트 받아오고
@@ -95,7 +97,7 @@ protected void onCreate(Bundle savedInstanceState) {
     // int country_srl = intent.getIntExtra("country_srl", 0);
     country_srl = intent.getIntExtra("country_srl", 0); // 인텐트로 부터 데이터 가져오고
 
-    ps = (ProgressBar) findViewById(R.id.progressBar);
+
 
     if(null == mGoogleApiClient) {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -111,7 +113,22 @@ protected void onCreate(Bundle savedInstanceState) {
         //  Log.v(TAG, "Connecting to GoogleApiClient..");
     }
 
+    WatchViewStub stub = (WatchViewStub) findViewById(R.id.watch_view_stub);
+    stub.setOnLayoutInflatedListener(new WatchViewStub.OnLayoutInflatedListener() {
+        @Override public void onLayoutInflated(WatchViewStub stub) {
+            // Now you can access your views
+            // Get the list component from the layout of the activity
 
+            ps = (ProgressBar) findViewById(R.id.progressBar);
+
+
+             listView =
+                    (WearableListView) findViewById(R.id.wearable_list);
+
+
+
+        }
+    });
 
     global.log("RouteSRL" + country_srl);
     //Settimer
@@ -186,9 +203,6 @@ protected void onCreate(Bundle savedInstanceState) {
 
                 routes = global.getJSONArrayListByString(message);
 
-                // Get the list component from the layout of the activity
-                WearableListView listView =
-                        (WearableListView) findViewById(R.id.wearable_list);
 
                 // Assign an adapter to the list
                 listView.setAdapter(new ListAdapter(RouteList.this, routes));
@@ -196,7 +210,7 @@ protected void onCreate(Bundle savedInstanceState) {
                 // Set a click listener
                 listView.setClickListener(RouteList.this);
 
-                ps.setVisibility(View.INVISIBLE);
+               ps.setVisibility(View.INVISIBLE);
 
 
 

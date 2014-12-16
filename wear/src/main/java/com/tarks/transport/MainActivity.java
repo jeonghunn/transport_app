@@ -18,7 +18,6 @@ import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.Wearable;
 import com.tarks.transport.core.global;
-import com.tarks.transport.ui.List;
 import com.tarks.transport.ui.RouteList;
 
 public class MainActivity extends Activity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener{
@@ -56,8 +55,7 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
                 getString(R.string.bus_mode_started));
         startActivity(intent);
 
-        Intent intent2 = new Intent(this, List.class);
-        startActivity(intent2);
+
 
 
 

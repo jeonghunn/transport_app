@@ -13,6 +13,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.wearable.activity.ConfirmationActivity;
+import android.support.wearable.view.WatchViewStub;
 import android.support.wearable.view.WearableListView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -57,7 +58,7 @@ public class StationList extends Activity
     private ArrayList<InfoClass> stations;
     MessageReceiver messageReceiver;
     ProgressBar ps;
-
+    WearableListView listView;
 
     @Override
     public void onClick(WearableListView.ViewHolder viewHolder) {
@@ -173,12 +174,8 @@ public class StationList extends Activity
             boolean message = intent.getBooleanExtra("message", false);
 
             global.log("PAYBACK");
-
             //   if(routes == null) {
             // Get the list component from the layout of the activity
-            WearableListView listView =
-                    (WearableListView) findViewById(R.id.wearable_list);
-
 
 
 
@@ -208,10 +205,10 @@ public class StationList extends Activity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.list);
+        setContentView(R.layout.listhub);
         ct = this;
 
-         ps = (ProgressBar) findViewById(R.id.progressBar);
+
 
        if(null == mGoogleApiClient) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -227,7 +224,22 @@ public class StationList extends Activity
             //  Log.v(TAG, "Connecting to GoogleApiClient..");
         }
 
+        WatchViewStub stub = (WatchViewStub) findViewById(R.id.watch_view_stub);
+        stub.setOnLayoutInflatedListener(new WatchViewStub.OnLayoutInflatedListener() {
+            @Override public void onLayoutInflated(WatchViewStub stub) {
+                // Now you can access your views
+                // Get the list component from the layout of the activity
 
+                ps = (ProgressBar) findViewById(R.id.progressBar);
+
+
+                listView =
+                        (WearableListView) findViewById(R.id.wearable_list);
+
+
+
+            }
+        });
 
         Intent intent = getIntent(); // 인텐트 받아오고
 
