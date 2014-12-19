@@ -13,6 +13,7 @@
     android:id="@+id/frame_layout"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
+    app:layout_box="left|right"
     tools:deviceIds="wear_round">
 
     <android.support.wearable.view.WearableListView

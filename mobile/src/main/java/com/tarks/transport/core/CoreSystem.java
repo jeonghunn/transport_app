@@ -322,7 +322,7 @@ public class CoreSystem extends WearableListenerService implements GoogleApiClie
 //            }
 
                 //ACTIVE STANBY
-                if ((same_place_count > 5 && goal_id == 0) || (same_place_count > 21 && goal_id != 0)) setActionLocationMode(cx, globalv.ACTIVE_STANBY_MODE);
+                if ((same_place_count > 10 && goal_id == 0) || (same_place_count > 21 && goal_id != 0)) setActionLocationMode(cx, globalv.ACTIVE_STANBY_MODE);
                 //Stanby mode
 
 
@@ -331,13 +331,7 @@ public class CoreSystem extends WearableListenerService implements GoogleApiClie
 
             if (location_mode == globalv.ACTIVE_STANBY_MODE) {
 
-                if (same_place_count > 1) { //introduce guide}
-                }
 
-                if (near_level <= 4 && same_place_count == 0 && action_count > 0) {
-                    setActionLocationMode(cx, globalv.ACTIVE_MODE);
-
-                }
 
                 //Stanby mode
                 if (same_place_count > 2 && action_count > 0)
@@ -349,7 +343,6 @@ public class CoreSystem extends WearableListenerService implements GoogleApiClie
                 // globalv.moving_now =globalv.STOP_STATE;
               //  global.log(same_place +  "adf");
                 if (!same_place && action_count > 0) {
-                    if (near_level == 1) setActionLocationMode(cx, globalv.ACTIVE_MODE);
                     if (near_level == 2) setActionLocationMode(cx, globalv.ACTIVE_STANBY_MODE);
 
                 }
@@ -362,7 +355,7 @@ public class CoreSystem extends WearableListenerService implements GoogleApiClie
 
             if (location_mode == globalv.POWER_SAVED_MODE) {
                 if (!same_place && action_count > 0) {
-                    setActionLocationMode(cx, globalv.ACTIVE_STANBY_MODE);
+                    setActionLocationMode(cx, globalv.STANBY_MODE);
                 }
 
                 //Delete Noti
@@ -941,6 +934,10 @@ global.log("ARRIVED!");
 
     }
 
+    private void sendOKMessage(String data){
+        sendMessageDefault("okMessage" , data);
+    }
+
     public void getWaysToSend(String data){
 
         Map<String, String> resultmap = null;
@@ -970,12 +967,14 @@ global.log("ARRIVED!");
 
     public void setRequestLocationMode(String data){
         setActionLocationMode(CoreSystem.this,Integer.parseInt(data));
+       sendOKMessage("requestLocationMode");
     }
 
     public void setDestination(String data){
         global.setGoalID(this, Integer.parseInt(data));
         initLastStationId();
         setActionLocationMode(cx, globalv.LIVE_ACTIVE_MODE);
+        sendOKMessage("setDestination");
     }
 
     public void startBusMode(String data){
@@ -990,6 +989,7 @@ global.log("ARRIVED!");
             setActionLocationMode(this, 3);
 
         }
+        sendOKMessage("startBusMode");
     }
 
     @Override

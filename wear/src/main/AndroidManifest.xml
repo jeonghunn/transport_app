@@ -60,9 +60,6 @@
             android:label="@string/app_name" />
 
 
-        <activity
-            android:name=".ui.BusArrive"
-            android:label="@string/app_name" />
 
 
 

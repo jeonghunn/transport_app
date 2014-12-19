@@ -23,7 +23,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.tarks.transport.db.*;
-import com.tarks.transport.ui.BusArrive;
 import com.tarks.transport.R;
 import com.tarks.transport.ui.StationList;
 
@@ -39,7 +38,7 @@ public class ComService extends WearableListenerService implements GoogleApiClie
     private String nodeId;
     final Messenger mMessenger = new Messenger(new IncomingHandler());
     private Intent intent;
-
+    private boolean waitingreceive = false;
 
     @Override
     public void onCreate() {
@@ -87,6 +86,7 @@ checkMessage(messageEvent.getPath(), messageEvent.getData());
             if(message.matches("NearByRoute")) NearByRoute(global.getStringbyBytes(bytes));
             if(message.matches("WaysByRoute")) WaysByRoute(global.getStringbyBytes(bytes));
             if(message.matches("checkDataBase")) doCheckDB(global.getStringbyBytes(bytes));
+            if(message.matches("okMessage")) okMessage();
 
             //To Phone
             if(message.matches("requestLocationMode")) requestLocationMode(global.getStringbyBytes(bytes));
@@ -177,6 +177,10 @@ checkMessage(messageEvent.getPath(), messageEvent.getData());
 
     }
 
+    private void okMessage(){
+        //I GOT OK SIGN!
+        waitingreceive = false;
+    }
     //To Phone
     private void getWays(String data){
         sendMessage("Main_getWays", data.getBytes());
@@ -197,7 +201,6 @@ checkMessage(messageEvent.getPath(), messageEvent.getData());
 
     private void NearByRoute(String data){
         //global.log("NearByRoute Calling");
-
 
 
         Intent messageIntent = new Intent();
@@ -276,21 +279,33 @@ private void arrivedAction(String title, String content){
 
 
     }
-
     public void sendMessage(final String msg, final byte[] data) {
-       // if (nodeId != null) {
+
+waitingreceive = true;
+        //if (nodeId != null) {
+            global.log("SEND MEssageMethod");
             new Thread(new Runnable() {
                 @Override
                 public void run() {
+                    while(waitingreceive){
+                        global.log("SEND MEssage");
                         mGoogleApiClient.blockingConnect(10000, TimeUnit.MILLISECONDS);
-                    Wearable.MessageApi.sendMessage(mGoogleApiClient, nodeId, msg, data);
-                }
-            }).start();
-     //   }
+                        Wearable.MessageApi.sendMessage(mGoogleApiClient, nodeId, msg, data);
+                        if(!msg.matches("Main_LocationMode") && !msg.matches("Main_setDestination") && !msg.matches("Main_startBusMode")) break;
+                        try {
+                            Thread.sleep(5000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    }
 
+            }).start();
+      //  }
 
 
     }
+
 
 
     public void sendMessageDefault(final String msg, String data) {
@@ -401,7 +416,5 @@ private void arrivedAction(String title, String content){
     public void onConnectionFailed(ConnectionResult connectionResult) {
 
     }
-
-
 
 }
