@@ -487,7 +487,7 @@ public class CoreSystem extends WearableListenerService implements GoogleApiClie
             while (csrc.moveToNext()) {
                 global.log("station_srl :" + csrc.getInt(csrc.getColumnIndex("station_srl")) + "station_srl_sub_temp :" + station_srl_sub_temp + "station_srl_temp" + station_srl_temp);
                 //time prevent strange number or prevant strange number if more bigger than last number
-                if ((csr.getInt(csr.getColumnIndex("station_srl")) >= station_srl_temp + 3 && station_srl_temp != 0) || (timestamp_best > csr.getInt(csr.getColumnIndex("time")) + 120) && csr.getCount() > 3)
+                if ((csr.getInt(csr.getColumnIndex("station_srl")) >= station_srl_temp + 3 && station_srl_temp != 0) || (timestamp_best > csr.getInt(csr.getColumnIndex("time")) + 220) && csr.getCount() > 3)
                     break;
                 if ((csrc.getInt(csrc.getColumnIndex("station_srl")) > station_srl_sub_temp) && (csrc.getInt(csrc.getColumnIndex("station_srl")) <= station_srl_sub_temp + 3 || station_srl_sub_temp == 0)) {
 
