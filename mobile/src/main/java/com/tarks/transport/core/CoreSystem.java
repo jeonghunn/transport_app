@@ -256,7 +256,7 @@ public class CoreSystem extends WearableListenerService implements GoogleApiClie
 
 
                     //Checking waiting bus
-                    if(waitingbus && action_count < 5 && same_place_count != 0){
+                    if(waitingbus && ((action_count < 5 && same_place_count != 0) || (action_count <= 1 && same_place_count == 0))){
                         sendNoti(globalv.WAITING_BUS_NOTI,1,getString(R.string.nearby_bus_routes), global.arraylistStringtoString(routes));
                     }else{
                         if (mflow.size() > 0 && next_name != null)
