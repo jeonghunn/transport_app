@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <string name="stations">정류장</string>
+    <string name="way">방향</string>
+    <string name="route">노선</string>
+    <string name="riding">승차</string>
+    <string name="get_off">하차</string>
+    <string name="direction">방면</string>
+    <string name="set_to_destination">목적지로 설정됨</string>
+    <string name="missed_the_stop">지나친 정류장</string>
+    <string name="bus_mode_started">버스 모드 활성화됨</string>
+    <string name="destination_setting">목적지 설정</string>
+    <string name="developers">개발자</string>
+    <string name="bus">버스</string>
+</resources>

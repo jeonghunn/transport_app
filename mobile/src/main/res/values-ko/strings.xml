@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <string name="terminal">종착 정류장</string>
+    <string name="destinaton_arrived">목적지 도착</string>
+    <string name="_stations_left">개 정거장 남음</string>
+    <string name="currunt">현재</string>
+    <string name="almost_arrived">목적지 거의 도착</string>
+    <string name="calculating_station_left">남은 정류장 찾는 중..</string>
+    <string name="missed_the_stop">정류장 지나침</string>
+    <string name="nearby_bus_routes">주변 버스 노선</string>
+    <string name="app_info">앱 정보</string>
+    <string name="developers">개발자</string>
+    <string name="dev_info">Junghoon Lee(JHRunning)\nDeveloper\nhttp://jhrun.tistory.com\n\nSeunghyun Yu\nDesigner</string>
+</resources>

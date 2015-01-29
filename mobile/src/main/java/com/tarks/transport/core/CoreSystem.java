@@ -278,7 +278,7 @@ public class CoreSystem extends WearableListenerService implements GoogleApiClie
                         //Check destination
                         if(station_left < 0) {
 
-                            sendBusNoti(1, 1, getString(R.string.passed_station), stations.get(flowget.station_srl - 1).station_name + "\n" + next_name, direction_name, stationListString, flowget.country_srl, flowget.route_srl, flowget.way_srl, flowget.station_srl - 1);
+                            sendBusNoti(1, 1, getString(R.string.missed_the_stop), stations.get(flowget.station_srl - 1).station_name + "\n" + next_name, direction_name, stationListString, flowget.country_srl, flowget.route_srl, flowget.way_srl, flowget.station_srl - 1);
 
                         }else{
                             if(station_left != 0) sendBusNoti(2, 1, getString(R.string.almost_arrived),  station_left + getString(R.string._stations_left) + "\n\n" +stations.get(flowget.station_srl - 1).station_name + "\n" + next_name, direction_name, stationListString, flowget.country_srl, flowget.route_srl, flowget.way_srl, flowget.station_srl -1);

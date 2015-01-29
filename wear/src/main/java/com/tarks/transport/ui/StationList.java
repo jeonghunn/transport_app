@@ -76,7 +76,7 @@ public class StationList extends Activity
                     getString(R.string.set_to_destination));
             startActivity(intent);
         }else{
-            global.toast(this, getString(R.string.pass_destination));
+            global.toast(this, getString(R.string.missed_the_stop));
         }
 
       //  global.log(viewHolder.getPosition() + "asdfaf");
