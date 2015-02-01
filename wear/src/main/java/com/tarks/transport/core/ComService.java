@@ -282,12 +282,15 @@ private void arrivedAction(String title, String content){
     public void sendMessage(final String msg, final byte[] data) {
 
 waitingreceive = true;
+
         //if (nodeId != null) {
             global.log("SEND MEssageMethod");
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    while(waitingreceive){
+                    int tried = 0;
+                    while(waitingreceive && tried < 3){
+                        tried++;
                         global.log("SEND MEssage");
                         mGoogleApiClient.blockingConnect(10000, TimeUnit.MILLISECONDS);
                         Wearable.MessageApi.sendMessage(mGoogleApiClient, nodeId, msg, data);

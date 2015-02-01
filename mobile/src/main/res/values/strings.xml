@@ -6,7 +6,7 @@
     <string name="action_settings">Settings</string>
     <string name="verkind">Beta Version</string>
     <string name="copyright">Copyrightⓒ 2014 WBus Team.</string>
-    <string name="ver">0.2.4.0.127</string>
+    <string name="ver">0.2.4.1.128</string>
     <string name="terminal">Terminal</string>
     <string name="destinaton_arrived">Destination Arrived</string>
     <string name="_stations_left">Stations left</string>
@@ -16,6 +16,6 @@
     <string name="missed_the_stop">Missed the Stop</string>
     <string name="nearby_bus_routes">주변 버스 노선</string>
     <string name="app_info">앱 정보</string>
-    <string name="developers">개발자</string>
+    <string name="developers">Developers</string>
     <string name="dev_info">Junghoon Lee(JHRunning)\nDeveloper\nhttp://jhrun.tistory.com\n\nSeunghyun Yu\nDesigner</string>
 </resources>
