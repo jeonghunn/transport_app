@@ -14,8 +14,8 @@
     <string name="almost_arrived">Almost arrived</string>
     <string name="calculating_station_left">Calculating Stations..</string>
     <string name="missed_the_stop">Missed the Stop</string>
-    <string name="nearby_bus_routes">주변 버스 노선</string>
-    <string name="app_info">앱 정보</string>
+    <string name="nearby_bus_routes">Nearby bus routes</string>
+    <string name="app_info">App info</string>
     <string name="developers">Developers</string>
     <string name="dev_info">Junghoon Lee(JHRunning)\nDeveloper\nhttp://jhrun.tistory.com\n\nSeunghyun Yu\nDesigner</string>
 </resources>
