@@ -81,9 +81,16 @@ public class CoreSystem extends WearableListenerService implements GoogleApiClie
     public void onCreate() {
         super.onCreate();
 
+
         global.log("HI service start!");
         cx = CoreSystem.this;
         initCore(CoreSystem.this);
+//
+//        ArrayList<InfoClass> stations = getStations(1, 1, 1);
+//        Gson gson = new GsonBuilder().create();
+//        JsonArray json_result = gson.toJsonTree(stations).getAsJsonArray();
+//        global.log(json_result.toString());
+
     }
 
     @Override
@@ -256,7 +263,7 @@ public class CoreSystem extends WearableListenerService implements GoogleApiClie
 
 
                     //Checking waiting bus
-                    if(waitingbus && ((action_count < 2 && location_mode < globalv.ACTIVE_MODE) || (action_count <= 1 && same_place_count == 0))){
+                    if(waitingbus && (action_count < 2 || location_mode < globalv.ACTIVE_MODE)){
                         sendNoti(globalv.WAITING_BUS_NOTI,1,getString(R.string.nearby_bus_routes), global.arraylistStringtoString(routes));
                     }else{
                         if (mflow.size() > 0 && next_name != null)
@@ -266,7 +273,7 @@ public class CoreSystem extends WearableListenerService implements GoogleApiClie
 
                 } else {
 
-                    if (mflow.size() > 0 && next_name != null && station_left > 1){
+                    if (mflow.size() > 0 && next_name != null && station_left > 2){
 
 
                              sendBusNoti(globalv.DEFUALT_NOTI, 1, station_left + getString(R.string._stations_left), stations.get(flowget.station_srl - 1).station_name + "\n" + next_name, direction_name, stationListString, flowget.country_srl, flowget.route_srl, flowget.way_srl, flowget.station_srl -1);
