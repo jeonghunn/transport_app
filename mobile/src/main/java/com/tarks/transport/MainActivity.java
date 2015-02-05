@@ -1,20 +1,24 @@
 package com.tarks.transport;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.tarks.transport.core.CoreSystem;
-import com.tarks.transport.core.global;
-import com.tarks.transport.db.DbOpenHelper;
+import com.tarks.transport.core.connect.AsyncHttpTask;
+import com.tarks.transport.core.global.global;
+import com.tarks.transport.core.db.DbOpenHelper;
 
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -47,6 +51,8 @@ startApp();
       }
 
 
+       // InfoDown();
+
     }
 
 
@@ -68,6 +74,54 @@ startApp();
         }
 
     }
+
+    public void InfoDown() {
+
+        // get user_srl
+        // 설정 값 불러오기
+        // SharedPreferences prefs = getSharedPreferences("setting",
+        // MODE_PRIVATE);
+
+
+      //  ArrayList<String> Paramname = new ArrayList<String>();
+
+
+     //   ArrayList<String> Paramvalue = new ArrayList<String>();
+
+
+        new AsyncHttpTask(this, getString(R.string.server_info_url),
+                mHandler, null, null, null, 1,0);
+
+    }
+
+    protected Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            // IF Sucessfull no timeout
+
+
+
+//			if (msg.what != 0) {
+//				BreakTimeout();
+//			}
+
+            if (msg.what == -1) {
+                //	BreakTimeout();
+              global.ConnectionError(MainActivity.this);
+            }
+
+
+            if (msg.what == 1) {
+                try{
+                   String infoResult = msg.obj.toString();
+                    global.log(infoResult);
+                } catch (Exception e){}
+
+            }
+
+
+
+        }
+    };
 
 
     public void DBInsert(){

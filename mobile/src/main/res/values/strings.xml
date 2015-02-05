@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!--INFO-->
     <string name="app_name" translatable="false" >WBUS</string>
     <string name="hello_world" translatable="false" >Hello world!</string>
     <string name="verkind" translatable="false">Beta Version</string>
     <string name="action_settings" translatable="false">Settings</string>
     <string name="copyright" translatable="false" >Copyrightⓒ 2015 WBus Team.</string>
-    <string name="ver" translatable="false" >0.2.4.4.131</string>
+    <string name="ver" translatable="false" >0.2.5.0.132</string>
+
+    <!--Server url-->
+    <string name="server_info_url" translatable="false" >http://jeonghunn.github.io/wbus_db/index.html</string>
+    <string name="server_db_url" translatable="false" >http://jeonghunn.github.io/wbus_db/db.json</string>
+
+    <!--String-->
     <string name="terminal">Terminal</string>
     <string name="destinaton_arrived">Destination Arrived</string>
     <string name="_stations_left">Stations left</string>
@@ -18,4 +25,15 @@
     <string name="app_info">App info</string>
     <string name="developers">Developers</string>
     <string name="dev_info">Junghoon Lee(JHRunning)\nDeveloper\nhttp://jhrun.tistory.com\n\nSeunghyun Yu\nDesigner</string>
+    <string name="yes">Yes</string>
+
+    <!--Error-->
+    <string name="error">Error</string>
+    <string name="error_des">An error occurred while work was in progress. Please try again in a few minutes.</string>
+
+    <!--NetWork Error-->
+    <string name="networkerror">Network Error</string>
+    <string name="networkerrord">Unstable Internet connection.</string>
+
+
 </resources>

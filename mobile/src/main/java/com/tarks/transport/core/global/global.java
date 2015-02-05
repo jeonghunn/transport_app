@@ -1,33 +1,28 @@
-package com.tarks.transport.core;
+package com.tarks.transport.core.global;
 
+import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Rect;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 
 import com.tarks.transport.R;
-import com.tarks.transport.db.InfoClass;
+import com.tarks.transport.core.db.InfoClass;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -41,7 +36,7 @@ import java.util.Map;
  */
 public final class global {
 
-    public static boolean debug_mode = false;
+    public static boolean debug_mode = true;
 
 
     public static SharedPreferences sp_dev;
@@ -174,6 +169,81 @@ public final class global {
         }
         return null;
 
+    }
+
+    // Default Connection Error
+    public static void ConnectionError(Context cx) {
+        if (InternetConnection(cx, 1) == true || InternetConnection(cx, 0) == true) {
+            Infoalert(cx, cx.getString(R.string.error),
+                    cx.getString(R.string.error_des) ,
+                    cx.getString(R.string.yes));
+
+        } else {
+            Infoalert(cx, cx.getString(R.string.networkerror),
+                    cx.getString(R.string.networkerrord),
+                    cx.getString(R.string.yes));
+
+        }
+        //
+        // if (InternetConnection(1) == true || InternetConnection(0) == true) {
+        // toast(mod.getString(R.string.error_des), false);
+        // }else{
+        // toast(mod.getString(R.string.networkerrord), false);
+        // }
+    }
+
+
+    // Show Information alert
+    public static void Infoalert(Context context, String title, String message,
+                                 String button) {
+
+        try {
+
+            if (globalv.alert_status == true) {
+                globalv.alert_status = false;
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
+                builder.setMessage(message).setPositiveButton(button, null)
+                        .setTitle(title);
+
+                // Check OS
+                if (Build.VERSION.SDK_INT >= 17) {
+                    // Dialog Dismiss시 Event 받기
+                    builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            globalv.alert_status = true;
+                        }
+                    });
+
+                } else {
+                    globalv.alert_status = true;
+                }
+
+                builder.show();
+
+            }
+
+        } catch (Exception e) {
+            globalv.alert_status = true;
+        }
+    }
+
+    public static boolean InternetConnection(Context cx, int network) {
+        ConnectivityManager cm = (ConnectivityManager) cx.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo ni;
+        boolean connect;
+        if (network == 1) {
+            ni = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+            // boolean isWifiAvail = ni.isAvailable();
+            connect = ni.isConnected();
+        } else {
+            ni = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+            // boolean isMobileAvail = ni.isAvailable();
+            connect = ni.isConnected();
+        }
+        return connect;
     }
 
     public static Map jsonToMap(JSONObject json, Map retMap) throws JSONException {

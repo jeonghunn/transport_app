@@ -1,4 +1,4 @@
-package com.tarks.transport.db;
+package com.tarks.transport.core.db;
 
 import android.content.ContentValues;
 import android.content.Context;

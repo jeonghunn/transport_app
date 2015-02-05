@@ -1,4 +1,4 @@
-package com.tarks.transport.db;
+package com.tarks.transport.core.db;
 
 /**
  * Created by JHRunning on 11/15/14.

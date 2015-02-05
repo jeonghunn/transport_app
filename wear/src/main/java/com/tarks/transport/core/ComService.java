@@ -1,13 +1,9 @@
 package com.tarks.transport.core;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.support.v4.content.LocalBroadcastManager;
@@ -22,8 +18,9 @@ import com.google.android.gms.wearable.WearableListenerService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
-import com.tarks.transport.db.*;
 import com.tarks.transport.R;
+import com.tarks.transport.core.db.DbOpenHelper;
+import com.tarks.transport.core.db.InfoClass;
 import com.tarks.transport.ui.StationList;
 
 import java.util.ArrayList;

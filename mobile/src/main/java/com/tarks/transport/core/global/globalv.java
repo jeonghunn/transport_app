@@ -1,4 +1,4 @@
-package com.tarks.transport.core;
+package com.tarks.transport.core.global;
 
 import android.app.PendingIntent;
 import android.content.Context;
@@ -43,6 +43,10 @@ public final class globalv {
     public static final int WAITING_BUS_NOTI = 4;
 
 
+
+    //OKButton enable
+    public static boolean okbutton = true;
+
     //gyro
     public static int moving_now = 0;
     //gyro int
@@ -52,6 +56,10 @@ public final class globalv {
     //dev
     public static final String DEV_FOREGROUND = "foreground_s";
     public static final String DEV_START_F = "start_fr";
+
+    //Alert true
+    public static boolean alert_status = true;
+
 
     }
 

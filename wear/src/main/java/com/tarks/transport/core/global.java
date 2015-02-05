@@ -21,7 +21,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.tarks.transport.MainActivity;
 import com.tarks.transport.R;
-import com.tarks.transport.db.InfoClass;
+import com.tarks.transport.core.db.InfoClass;
 import com.tarks.transport.ui.RouteList;
 import com.tarks.transport.ui.StationList;
 import com.tarks.transport.ui.WayList;

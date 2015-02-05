@@ -1,8 +1,6 @@
 package com.tarks.transport.core;
 
-import android.app.Notification;
 import android.app.NotificationManager;
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -10,12 +8,10 @@ import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -33,11 +29,11 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.tarks.transport.R;
-import com.tarks.transport.db.DbOpenHelper;
-import com.tarks.transport.db.InfoClass;
-import com.tarks.transport.db.fddb;
-import com.tarks.transport.db.flowclass;
-import com.tarks.transport.main;
+import com.tarks.transport.core.global.global;
+import com.tarks.transport.core.global.globalv;
+import com.tarks.transport.core.db.DbOpenHelper;
+import com.tarks.transport.core.db.InfoClass;
+import com.tarks.transport.core.db.flowclass;
 
 import java.util.ArrayList;
 import java.util.List;

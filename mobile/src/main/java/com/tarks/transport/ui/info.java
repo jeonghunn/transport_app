@@ -15,9 +15,8 @@ import android.widget.LinearLayout;
 
 import com.tarks.transport.R;
 import com.tarks.transport.core.CoreSystem;
-import com.tarks.transport.core.global;
+import com.tarks.transport.core.global.global;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
 
 /**
