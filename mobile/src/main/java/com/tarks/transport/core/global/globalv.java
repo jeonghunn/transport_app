@@ -60,6 +60,7 @@ public final class globalv {
     //Alert true
     public static boolean alert_status = true;
 
-
+    //Location
+    public static boolean location_checked = false;
     }
 
