@@ -48,6 +48,7 @@ DBInsert();
       }else{
 
 startApp();
+          InfoDown();
       }
 
 

@@ -11,7 +11,7 @@
 
     <!--Server url-->
     <string name="server_info_url" translatable="false" >http://jeonghunn.github.io/wbus_db/index.html</string>
-    <string name="server_db_url" translatable="false" >http://jeonghunn.github.io/wbus_db/db.json</string>
+    <string name="server_db_url" translatable="false" >>http://jeonghunn.github.io/wbus_db/index.html</string>
 
     <!--String-->
     <string name="terminal">Terminal</string>
