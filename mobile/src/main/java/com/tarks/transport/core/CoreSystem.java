@@ -940,7 +940,7 @@ global.log("ARRIVED!");
     @Override
     public void onConnected(Bundle bundle) {
         global.log("Connected");
-        setLocationMode(cx, globalv.ACTIVE_MODE);
+        setLocationMode(cx, globalv.ACTIVE_STANBY_MODE);
       //  LocationTimeout();
 
     }
