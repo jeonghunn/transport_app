@@ -90,7 +90,7 @@ startApp();
      //   ArrayList<String> Paramvalue = new ArrayList<String>();
 
 
-        new AsyncHttpTask(this, getString(R.string.server_info_url),
+        new AsyncHttpTask(this, getString(R.string.server_db_url),
                 mHandler, null, null, null, 1,0);
 
     }
@@ -115,7 +115,9 @@ startApp();
                 try{
                    String infoResult = msg.obj.toString();
                     global.log(infoResult);
-                } catch (Exception e){}
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
 
             }
 

@@ -7,11 +7,11 @@
     <string name="verkind" translatable="false">Beta Version</string>
     <string name="action_settings" translatable="false">Settings</string>
     <string name="copyright" translatable="false" >Copyrightⓒ 2015 WBus Team.</string>
-    <string name="ver" translatable="false" >0.2.5.3.135</string>
+    <string name="ver" translatable="false" >0.2.5.4.136</string>
 
     <!--Server url-->
     <string name="server_info_url" translatable="false" >http://jeonghunn.github.io/wbus_db/index.html</string>
-    <string name="server_db_url" translatable="false" >>http://jeonghunn.github.io/wbus_db/index.html</string>
+    <string name="server_db_url" translatable="false">http://jeonghunn.github.io/wbus_db</string>
 
     <!--String-->
     <string name="terminal">Terminal</string>
