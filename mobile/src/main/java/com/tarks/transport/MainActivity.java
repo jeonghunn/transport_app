@@ -84,14 +84,16 @@ startApp();
         // MODE_PRIVATE);
 
 
-      //  ArrayList<String> Paramname = new ArrayList<String>();
+        ArrayList<String> Paramname = new ArrayList<String>();
+        Paramname.add("a");
 
 
-     //   ArrayList<String> Paramvalue = new ArrayList<String>();
+        ArrayList<String> Paramvalue = new ArrayList<String>();
+        Paramvalue.add("bus_db");
 
 
-        new AsyncHttpTask(this, getString(R.string.server_db_url),
-                mHandler, null, null, null, 1,0);
+        new AsyncHttpTask(this, getString(R.string.server_api_url),
+                mHandler,  Paramname, Paramvalue,  null, 1,0);
 
     }
 
@@ -100,7 +102,7 @@ startApp();
             // IF Sucessfull no timeout
 
 
-
+            global.log("==========================================================");
 //			if (msg.what != 0) {
 //				BreakTimeout();
 //			}
@@ -112,6 +114,7 @@ startApp();
 
 
             if (msg.what == 1) {
+
                 try{
                    String infoResult = msg.obj.toString();
                     global.log(infoResult);

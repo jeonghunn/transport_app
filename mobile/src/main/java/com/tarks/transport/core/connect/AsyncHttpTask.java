@@ -119,11 +119,11 @@ public class AsyncHttpTask extends AsyncTask<String, Void, String> {
             // Check it is null
             if (paramNames != null && paramValues != null) {
                 //Public value
-//                paramNames.add("apiv");
-//                paramNames.add("api_key");
-//
-//                paramValues.add(context.getString(R.string.api_version));
-//                paramValues.add(globalv.API_KEY);
+                paramNames.add("apiv");
+                paramNames.add("api_key");
+
+                paramValues.add(context.getString(R.string.api_version));
+                paramValues.add(globalv.API_KEY);
 
                 for (int i = 0; i < paramNames.size(); i++) {
                     //	Log.i("value", paramNames.get(i).toString());
@@ -205,11 +205,11 @@ public class AsyncHttpTask extends AsyncTask<String, Void, String> {
 
             myResult = builder.toString(); // 전송결과를 전역 변수에 저장
 
-          //  CheckError(myResult);
+            CheckError(myResult);
 
             dos.close();
             out.close();
-            // onPostExecute(myResult);
+            //onPostExecute(myResult);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -225,8 +225,8 @@ public class AsyncHttpTask extends AsyncTask<String, Void, String> {
 
     }
 
-//    public void CheckError(String myResult){
-//        if(myResult.matches("api_error") || myResult.matches("ip_error")) handlernum = -1;
-//    }
+    public void CheckError(String myResult){
+        if(myResult.matches("api_error") || myResult.matches("ip_error")) handlernum = -1;
+    }
 
 }

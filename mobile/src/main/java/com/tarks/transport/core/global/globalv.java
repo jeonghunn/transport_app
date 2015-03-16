@@ -25,6 +25,8 @@ import java.util.Map;
  */
 public final class globalv {
 
+    //API_KEY
+    public static final String API_KEY = "jfklf23w90232";
 
     //Location
 
