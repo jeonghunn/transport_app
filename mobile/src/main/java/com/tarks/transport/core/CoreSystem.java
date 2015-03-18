@@ -148,6 +148,7 @@ public class CoreSystem extends WearableListenerService implements GoogleApiClie
             if (near_level >= 6) setActionLocationMode(cx, globalv.HIBERNATION_MODE);
 
 
+
         }
         initcheck = true;
     }
@@ -155,6 +156,8 @@ public class CoreSystem extends WearableListenerService implements GoogleApiClie
     public void conFlow(Context cx, Location lc) {
         global.log("conFlow");
         action_count++;
+
+
 
 
         int near_level = 0;
@@ -669,6 +672,7 @@ public class CoreSystem extends WearableListenerService implements GoogleApiClie
         DbOpenHelper mDbOpenHelper = new DbOpenHelper(cx);
         mDbOpenHelper.open();
         Cursor csr = mDbOpenHelper.getStations(country_srl, route_srl, way_srl);
+
 
 
         while (csr.moveToNext()) {

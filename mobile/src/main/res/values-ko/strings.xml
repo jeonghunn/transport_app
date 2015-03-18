@@ -15,6 +15,11 @@
     <string name="dev_info">Junghoon Lee(JHRunning)\nDeveloper\nhttp://jhrun.tistory.com\n\nSeunghyun Yu\nDesigner</string>
     <string name="yes">확인</string>
 
+    <!--Splash-->
+    <string name="new_bus_db_available">새로운 버스 데이터배이스가 있습니다!</string>
+    <string name="db_downloading">DB 다운로드 중...</string>
+    <string name="db_installing">설치하는 중...</string>
+
     <!--Error-->
     <string name="error">오류</string>
     <string name="error_des">작업을 진행하는 도중 오류가 발생했습니다. 잠시후에 다시 시도해주세요.</string>

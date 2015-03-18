@@ -15,6 +15,8 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.tarks.transport.R;
 import com.tarks.transport.core.db.InfoClass;
 
@@ -169,6 +171,18 @@ public final class global {
         }
         return null;
 
+    }
+
+    public static ArrayList<InfoClass> getJSONArrayListByInfoClass(String content) {
+        ArrayList<InfoClass> yourArray = null;
+        try {
+            JSONArray array = new JSONArray(content);
+            yourArray   = new Gson().fromJson(array.toString(), new TypeToken<List<InfoClass>>(){}.getType());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return yourArray;
     }
 
     // Default Connection Error

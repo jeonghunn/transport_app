@@ -241,6 +241,11 @@ public class DbOpenHelper {
         mDB.execSQL("DELETE FROM flow WHERE id_srl >=" + id + " AND id_srl <  3 + " + id);
     }
 
+    public void ResetStationsDB(){
+        mDB.execSQL("DROP TABLE IF EXISTS " +DataBases.CreateDB._TABLENAME);
+        mDB.execSQL(DataBases.CreateDB._CREATE);
+    }
+
 //    public Cursor getNowStation(Double latitude, Double longitude){
 //        Double max_latitude = latitude + 0.001;
 //        Double min_latitude = latitude - 0.001;

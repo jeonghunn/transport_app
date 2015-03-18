@@ -7,7 +7,7 @@
     <string name="verkind" translatable="false">Beta Version</string>
     <string name="action_settings" translatable="false">Settings</string>
     <string name="copyright" translatable="false" >Copyrightⓒ 2015 WBus Team.</string>
-    <string name="ver" translatable="false" >0.2.6.0.138</string>
+    <string name="ver" translatable="false" >0.2.7.0.139</string>
     <string name="api_version">1</string>
 
     <!--Server url-->
@@ -28,6 +28,11 @@
     <string name="developers">Developers</string>
     <string name="dev_info">Junghoon Lee(JHRunning)\nDeveloper\nhttp://jhrun.tistory.com\n\nSeunghyun Yu\nDesigner</string>
     <string name="yes">Yes</string>
+
+    <!--Splash-->
+    <string name="new_bus_db_available">There is new bus database available!</string>
+    <string name="db_downloading">Database Downloading...</string>
+    <string name="db_installing">Installing...</string>
 
     <!--Error-->
     <string name="error">Error</string>
