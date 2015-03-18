@@ -773,7 +773,7 @@ public class CoreSystem extends WearableListenerService implements GoogleApiClie
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                if (!globalv.location_checked) {
+                if (!globalv.location_checked && location_mode != globalv.POWER_SAVED_MODE) {
                     setActionLocationMode(cx, globalv.POWER_SAVED_MODE);
 
                     mHandler.post(new Runnable() {
@@ -918,6 +918,7 @@ global.log("ARRIVED!");
         globalv.location_checked = a;
     }
     public void setLocationMode(Context cx, int level) {
+        global.log("setLocationMode");
         location_mode = level;
         boolean test_mode = false;
         setLocationChanged(false);
