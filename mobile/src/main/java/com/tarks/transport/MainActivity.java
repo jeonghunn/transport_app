@@ -138,7 +138,9 @@ setInfotext(getString(R.string.db_downloading));
 
             if (msg.what == -1) {
                 //	BreakTimeout();
-              global.ConnectionError(MainActivity.this);
+                global.toast(getString(R.string.networkerrord));
+             startApp();
+
             }
 
 

@@ -768,12 +768,13 @@ public class CoreSystem extends WearableListenerService implements GoogleApiClie
                 super.run();
                 Looper.prepare();
                 try {
-                    Thread.sleep(30000);
+                    Thread.sleep(40000);
 
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
                 if (!globalv.location_checked && location_mode != globalv.POWER_SAVED_MODE) {
+                    global.log("LocationTimeout");
                     setActionLocationMode(cx, globalv.POWER_SAVED_MODE);
 
                     mHandler.post(new Runnable() {
