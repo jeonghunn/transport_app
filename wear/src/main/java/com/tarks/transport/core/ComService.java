@@ -83,6 +83,7 @@ checkMessage(messageEvent.getPath(), messageEvent.getData());
             if(message.matches("NearByRoute")) NearByRoute(global.getStringbyBytes(bytes));
             if(message.matches("WaysByRoute")) WaysByRoute(global.getStringbyBytes(bytes));
             if(message.matches("checkDataBase")) doCheckDB(global.getStringbyBytes(bytes));
+            if(message.matches("db_ver")) updateDBVer(global.getStringbyBytes(bytes));
             if(message.matches("okMessage")) okMessage();
 
             //To Phone
@@ -227,6 +228,30 @@ private void arrivedAction(String title, String content){
 
 }
 
+    private boolean compareDBVersion(String dbver){
+        if(global.getSetting(this, "db_ver", "0").matches(dbver)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private void updateDBVer(String dbver){
+        if(!compareDBVersion(dbver)){
+            resetStationsDB();
+            global.SaveSetting(this, "db_ver", dbver);
+        }
+    }
+
+
+    private void resetStationsDB(){
+        DbOpenHelper mDbOpenHelper = new DbOpenHelper(this);
+        mDbOpenHelper.open();
+
+        mDbOpenHelper.ResetStationsDB();
+        mDbOpenHelper.close();
+
+    }
     private void WaitingBusNoti(String title, String content){
         // WakeLock.acquireCpuWakeLock(ListenerService.this);
       //  Intent viewIntent = new Intent(this, StationList.class);

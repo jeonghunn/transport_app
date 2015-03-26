@@ -4,6 +4,7 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -256,7 +257,25 @@ public final class global {
         return null;
     }
 
+    public static void SaveSetting(Context cx, String setting, String value){
+        SharedPreferences edit = cx.getSharedPreferences("setting",
+                cx.MODE_PRIVATE);
+        SharedPreferences.Editor editor = edit.edit();
+        editor.putString(setting , value);
+        editor.commit();
+    }
 
+
+    public static String getSetting(Context cx, String setting, String default_value) {
+        SharedPreferences prefs = cx.getSharedPreferences("setting",
+                cx.MODE_PRIVATE);
+        return prefs.getString(setting, default_value);
+    }
+    public static SharedPreferences getSP(Context cx, String name) {
+        SharedPreferences prefs = cx.getSharedPreferences("setting",
+                cx.MODE_PRIVATE);
+        return prefs;
+    }
 
 
 

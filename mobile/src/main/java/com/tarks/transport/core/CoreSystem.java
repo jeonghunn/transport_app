@@ -3,6 +3,7 @@ package com.tarks.transport.core;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
 import android.location.Location;
@@ -120,6 +121,8 @@ public class CoreSystem extends WearableListenerService implements GoogleApiClie
         global.DBCountSrlUpdate(cx);
 
 //global.setGoalID(cx, 18);
+
+
 
 
         if (global.getLocationMode(cx) > globalv.HIBERNATION_MODE) {
@@ -946,6 +949,9 @@ global.log("ARRIVED!");
     @Override
     public void onConnected(Bundle bundle) {
         global.log("Connected");
+        //Send DB Version to Wear
+sendMessageDefault("db_ver",  global.getSetting(this, "db_ver", "0"));
+        //SetLocationMode
         setLocationMode(cx, globalv.ACTIVE_STANBY_MODE);
       //  LocationTimeout();
 

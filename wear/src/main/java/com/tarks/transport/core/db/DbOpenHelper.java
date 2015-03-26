@@ -75,6 +75,10 @@ public class DbOpenHelper {
     }
 
 
+    public void ResetStationsDB(){
+        mDB.execSQL("DROP TABLE IF EXISTS " +DataBases.CreateDB._TABLENAME);
+        mDB.execSQL(DataBases.CreateDB._CREATE);
+    }
 
     // Update DB
 //    public boolean updateColumn(String user_srl, String profile_update, String profile_update_thumbnail, String profile_pic){
