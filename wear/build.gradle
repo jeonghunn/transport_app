@@ -2,14 +2,14 @@ apply plugin: 'com.android.application'
 
 
 android {
-    compileSdkVersion 21
+    compileSdkVersion 22
     buildToolsVersion '21.1.1'
 
     defaultConfig {
         applicationId "com.tarks.transport"
         minSdkVersion 20
-        targetSdkVersion 21
-        versionCode 15
+        targetSdkVersion 22
+        versionCode 16
         versionName "@string/ver"
     }
     buildTypes {
