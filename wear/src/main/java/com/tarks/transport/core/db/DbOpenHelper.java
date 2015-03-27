@@ -8,6 +8,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.tarks.transport.core.global;
+
 /**
  * Created by JHRunning on 11/16/14.
  */
@@ -76,6 +78,7 @@ public class DbOpenHelper {
 
 
     public void ResetStationsDB(){
+        global.log("resetdb");
         mDB.execSQL("DROP TABLE IF EXISTS " +DataBases.CreateDB._TABLENAME);
         mDB.execSQL(DataBases.CreateDB._CREATE);
     }

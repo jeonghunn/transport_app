@@ -7,7 +7,7 @@
     <string name="verkind" translatable="false">Beta Version</string>
     <string name="action_settings" translatable="false">Settings</string>
     <string name="copyright" translatable="false" >Copyrightⓒ 2015 WBus Team.</string>
-    <string name="ver" translatable="false" >0.2.8.1.144</string>
+    <string name="ver" translatable="false" >0.2.8.2.145</string>
     <string name="api_version" translatable="false">1</string>
 
     <!--Server url-->
@@ -18,6 +18,7 @@
     <!--String-->
     <string name="terminal">Terminal</string>
     <string name="destinaton_arrived">Destination Arrived</string>
+    <string name="item"></string>
     <string name="_stations_left">Stations left</string>
     <string name="currunt">Current</string>
     <string name="almost_arrived">Almost arrived</string>

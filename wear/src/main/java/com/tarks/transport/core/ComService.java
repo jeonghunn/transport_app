@@ -77,7 +77,6 @@ checkMessage(messageEvent.getPath(), messageEvent.getData());
           //  String[] array = message.split("//");
          //   String action_kind = array[0];
          //   String data = array[1];
-
             if(message.matches("notification")) actionNoti(global.getStringbyBytes(bytes));
             if(message.matches("stations_data")) StationsDataDBInput(global.getStringbyBytes(bytes));
             if(message.matches("NearByRoute")) NearByRoute(global.getStringbyBytes(bytes));

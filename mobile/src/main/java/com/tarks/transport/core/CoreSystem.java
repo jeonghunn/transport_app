@@ -120,8 +120,8 @@ public class CoreSystem extends WearableListenerService implements GoogleApiClie
         global.log("firstFlow");
         global.DBCountSrlUpdate(cx);
 
-//global.setGoalID(cx, 18);
-
+//dbver check
+        sendMessageDefault("db_ver",  global.getSetting(this, "db_ver", "0"));
 
 
 
@@ -283,7 +283,7 @@ public class CoreSystem extends WearableListenerService implements GoogleApiClie
                     if (mflow.size() > 0 && next_name != null && station_left > 2) {
 
 
-                        sendBusNoti(globalv.DEFUALT_NOTI, 1, station_left + getString(R.string._stations_left), stations.get(flowget.station_srl - 1).station_name + "\n" + next_name, direction_name, stationListString, flowget.country_srl, flowget.route_srl, flowget.way_srl, flowget.station_srl - 1);
+                        sendBusNoti(globalv.DEFUALT_NOTI, 1, station_left +  getString(R.string.item) + " " + getString(R.string._stations_left), stations.get(flowget.station_srl - 1).station_name + "\n" + next_name, direction_name, stationListString, flowget.country_srl, flowget.route_srl, flowget.way_srl, flowget.station_srl - 1);
 
 
                     } else {
@@ -296,7 +296,7 @@ public class CoreSystem extends WearableListenerService implements GoogleApiClie
 
                         } else {
                             if (station_left != 0)
-                                sendBusNoti(2, 1, getString(R.string.almost_arrived), station_left + getString(R.string._stations_left) + "\n\n" + stations.get(flowget.station_srl - 1).station_name + "\n" + next_name, direction_name, stationListString, flowget.country_srl, flowget.route_srl, flowget.way_srl, flowget.station_srl - 1);
+                                sendBusNoti(2, 1, getString(R.string.almost_arrived), station_left + getString(R.string.item) + " " + getString(R.string._stations_left) + "\n\n" + stations.get(flowget.station_srl - 1).station_name + "\n" + next_name, direction_name, stationListString, flowget.country_srl, flowget.route_srl, flowget.way_srl, flowget.station_srl - 1);
                             if (station_left == 0 && global.getGoalID(cx) == flowget.id_srl) {
                                 arrivedAction(cx, getString(R.string.destinaton_arrived), stations.get(flowget.station_srl - 1).station_name);
                             } else if (station_left == 0) {
@@ -950,7 +950,7 @@ global.log("ARRIVED!");
     public void onConnected(Bundle bundle) {
         global.log("Connected");
         //Send DB Version to Wear
-sendMessageDefault("db_ver",  global.getSetting(this, "db_ver", "0"));
+
         //SetLocationMode
         setLocationMode(cx, globalv.ACTIVE_STANBY_MODE);
       //  LocationTimeout();

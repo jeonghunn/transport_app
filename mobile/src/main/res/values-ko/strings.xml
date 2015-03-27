@@ -4,7 +4,8 @@
 
     <string name="terminal">종착 정류장</string>
     <string name="destinaton_arrived">목적지 도착</string>
-    <string name="_stations_left">개 정거장 남음</string>
+    <string name="_stations_left">정거장 남음</string>
+    <string name="item">개</string>
     <string name="currunt">현재</string>
     <string name="almost_arrived">목적지 거의 도착</string>
     <string name="calculating_station_left">남은 정류장 찾는 중..</string>
