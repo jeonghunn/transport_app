@@ -140,8 +140,7 @@ public final class global {
 
         // Create a big text style for the second page
         NotificationCompat.BigTextStyle secondPageStyle = new NotificationCompat.BigTextStyle();
-        secondPageStyle.setBigContentTitle(direction_name + " " + cx.getString(R.string.direction) + "(" + route_srl  + ")")
-                .bigText(station_summary);
+        secondPageStyle.bigText(direction_name + " " + cx.getString(R.string.direction) + "(" + route_srl  + ")\n\n" + station_summary);
 
 
 // Create second page notification
