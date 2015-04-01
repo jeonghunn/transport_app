@@ -273,7 +273,7 @@ public class CoreSystem extends WearableListenerService implements GoogleApiClie
                     if (waitingbus || action_count < 2 || location_mode < globalv.ACTIVE_MODE) {
                           //Check it is acitve mode
                         if(location_mode >= globalv.ACTIVE_MODE){
-                            sendBusNoti(globalv.ACTIVE_BUS_NOTI, 1, getString(R.string.app_name), getString(R.string.bus_mode_started), getString(R.string.nearby_bus_routes),  global.arraylistStringtoString(routes), flowget.country_srl, flowget.route_srl, flowget.way_srl, flowget.station_srl - 1);
+                            sendBusNoti(globalv.DEFUALT_NOTI, 1, getString(R.string.app_name), getString(R.string.bus_mode_started), getString(R.string.nearby_bus_routes),  global.arraylistStringtoString(routes), flowget.country_srl, flowget.route_srl, flowget.way_srl, flowget.station_srl - 1);
                         }else{
                             sendNoti(globalv.WAITING_BUS_NOTI, 1, getString(R.string.nearby_bus_routes),  global.arraylistStringtoString(routes) );
                         }
