@@ -273,7 +273,7 @@ public class CoreSystem extends WearableListenerService implements GoogleApiClie
                     if (waitingbus || action_count < 2 || location_mode < globalv.ACTIVE_MODE) {
                           //Check it is acitve mode
                         if(location_mode >= globalv.ACTIVE_MODE){
-                            sendBusNoti(globalv.DEFUALT_NOTI, 1, getString(R.string.app_name), getString(R.string.bus_mode_started), getString(R.string.nearby_bus_routes),  global.arraylistStringtoString(routes), flowget.country_srl, flowget.route_srl, flowget.way_srl, flowget.station_srl - 1);
+                            sendBusNoti(globalv.DEFUALT_NOTI, 1, getString(R.string.app_name), getString(R.string.bus_mode_started), getString(R.string.nearby_bus_routes) + "\n\n" +  global.arraylistStringtoString(routes) ,  global.arraylistStringtoString(routes), flowget.country_srl, flowget.route_srl, flowget.way_srl, flowget.station_srl - 1);
                         }else{
                             sendNoti(globalv.WAITING_BUS_NOTI, 1, getString(R.string.nearby_bus_routes),  global.arraylistStringtoString(routes) );
                         }
@@ -281,6 +281,8 @@ public class CoreSystem extends WearableListenerService implements GoogleApiClie
                     } else {
                         if (mflow.size() > 0 && next_name != null)
                             sendBusNoti(globalv.DEFUALT_NOTI, 1, stations.get(flowget.station_srl - 1).station_name, next_name, direction_name, stationListString, flowget.country_srl, flowget.route_srl, flowget.way_srl, flowget.station_srl - 1);
+                    //direction_name + " " + cx.getString(R.string.direction) + "(" + route_srl  + ")\n\n" + station_summary
+
                     }
 
 
