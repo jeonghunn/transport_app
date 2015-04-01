@@ -16,6 +16,9 @@
     <string name="dev_info">Junghoon Lee(JHRunning)\nDeveloper\nhttp://jhrun.tistory.com\n\nSeunghyun Yu\nDesigner</string>
     <string name="yes">확인</string>
 
+    <!--Noti-->
+    <string name="bus_mode_started">버스 모드 활성화됨</string>
+
     <!--Splash-->
     <string name="new_bus_db_available">새로운 버스 데이터배이스가 있습니다!</string>
     <string name="db_downloading">DB 다운로드 중...</string>

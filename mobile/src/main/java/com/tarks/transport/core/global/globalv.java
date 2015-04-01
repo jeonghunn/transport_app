@@ -43,6 +43,7 @@ public final class globalv {
     public static final int ALMOST_NOTI = 2;
     public static final int ARRIVED_NOTI = 3;
     public static final int WAITING_BUS_NOTI = 4;
+    public static final int ACTIVE_BUS_NOTI = 5;
 
 
 

@@ -30,6 +30,9 @@
     <string name="dev_info">Junghoon Lee(JHRunning)\nDeveloper\nhttp://jhrun.tistory.com\n\nSeunghyun Yu\nDesigner</string>
     <string name="yes">Yes</string>
 
+    <!--Noti-->
+    <string name="bus_mode_started">Bus Mode Activated</string>
+
     <!--Splash-->
     <string name="new_bus_db_available">There is new bus database available!</string>
     <string name="db_downloading">Database Downloading...</string>

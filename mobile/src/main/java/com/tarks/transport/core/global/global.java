@@ -38,7 +38,7 @@ import java.util.Map;
  */
 public final class global {
 
-    public static boolean debug_mode = false;
+    public static boolean debug_mode = true;
 
 
     public static SharedPreferences sp_dev;
