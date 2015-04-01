@@ -48,6 +48,8 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
         startActivity(intent);
 
 
+
+
         //global.log(global.getSetting(this, "db_ver", "0") + "asdf");
 
 
