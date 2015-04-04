@@ -245,7 +245,57 @@ public final class global {
         notificationManager.notify(notificationId, notificationBuilder.build());
     }
 
+    public static void ActivieModeNoti(Context cx, int notificationId, String title, String content, int icon, int largeicon){
 
+
+
+
+
+
+        //Delete
+        Intent deleteIntent = new Intent(cx, ActionActivity.class);
+        deleteIntent.putExtra("action_kind", "delete_noti");
+        PendingIntent pendingDeleteIntent = PendingIntent.getActivity(cx, 0, deleteIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+
+
+
+
+
+        NotificationCompat.WearableExtender wearableExtender =
+                new NotificationCompat.WearableExtender()
+                        .setHintHideIcon(true)
+                                //.setDisplayIntent(pendingdetailintent)
+                        .setBackground(BitmapFactory.decodeResource(
+                                cx.getResources(), largeicon));
+
+
+        NotificationCompat.Builder notificationBuilder =
+                new NotificationCompat.Builder(cx)
+                        .setSmallIcon(icon)
+                        .setContentTitle(title)
+                        .setContentText(content)
+                        .setDeleteIntent(pendingDeleteIntent)
+                        .setLargeIcon(BitmapFactory.decodeResource(
+                                cx.getResources(), largeicon))
+                        .extend(wearableExtender);
+                     //   .addAction(R.drawable.ic_close_white,
+                     //           cx.getString(R.string.busmode_disable), pendingDeleteIntent);
+
+
+
+
+
+
+// Get an instance of the NotificationManager service
+        NotificationManagerCompat notificationManager =
+                NotificationManagerCompat.from(cx);
+
+
+
+// Build the notification and issues it with notification manager.
+        notificationManager.notify(notificationId, notificationBuilder.build());
+    }
 
     public static String getStringbyBytes(byte[] bytes){
         try {

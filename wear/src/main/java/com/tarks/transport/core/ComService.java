@@ -172,6 +172,10 @@ checkMessage(messageEvent.getPath(), messageEvent.getData());
             WaitingBusNoti(title, content);
         }
 
+        if(kind == 5){
+            ActiveBusNoti(title, content);
+        }
+
     }
 
     private void okMessage(){
@@ -258,6 +262,18 @@ private void arrivedAction(String title, String content){
 
 
      //   global.Vibrate(this, 4000);
+        // WakeLock.releaseCpuLock();
+
+
+    }
+
+    private void ActiveBusNoti(String title, String content){
+        // WakeLock.acquireCpuWakeLock(ListenerService.this);
+        //  Intent viewIntent = new Intent(this, StationList.class);
+        global.ActivieModeNoti(this, 1, title, content, R.drawable.ic_launcher, global.getNight()? R.drawable.bus_background_night : R.drawable.bus_background);
+
+
+        //   global.Vibrate(this, 4000);
         // WakeLock.releaseCpuLock();
 
 

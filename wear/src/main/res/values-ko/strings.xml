@@ -14,4 +14,7 @@
     <string name="destination_setting">목적지 설정</string>
     <string name="developers">개발자</string>
     <string name="bus">버스</string>
+
+    <!--Noti-->
+    <string name="busmode_disable">버스모드 해제</string>
 </resources>

@@ -911,6 +911,10 @@ global.log("ARRIVED!");
         global.setGoalID(cx, 0);
     }
 
+    private void ActiveBusnoti(){
+        sendNoti(globalv.ACTIVE_BUS_NOTI,1, getString(R.string.app_name), getString(R.string.bus_mode_started) );
+    }
+
 
     public void initSamePlaceCount(){
         same_place_count = 0;
@@ -932,6 +936,10 @@ global.log("ARRIVED!");
     public void setLocationChanged(boolean a){
         globalv.location_checked = a;
     }
+
+    private boolean getLocationChanged(){
+        return globalv.location_checked;
+    }
     public void setLocationMode(Context cx, int level) {
         global.log("setLocationMode");
         location_mode = level;
@@ -952,6 +960,8 @@ global.log("ARRIVED!");
                 LocationRequest(cx, 25000, 7000, LocationRequest.PRIORITY_HIGH_ACCURACY);
             if (level == globalv.LIVE_ACTIVE_MODE)
                 LocationRequest(cx, 15000, 3000, LocationRequest.PRIORITY_HIGH_ACCURACY);
+            //Check if it has to send bus noti
+            if(level  >= globalv.ACTIVE_MODE && !getLocationChanged()) ActiveBusnoti();
         } else {
             LocationRequest(cx, 5000, 1000, LocationRequest.PRIORITY_HIGH_ACCURACY);
         }
