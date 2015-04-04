@@ -15,6 +15,7 @@
     <string name="developers">개발자</string>
     <string name="dev_info">Junghoon Lee(JHRunning)\nDeveloper\nhttp://jhrun.tistory.com\n\nSeunghyun Yu\nDesigner</string>
     <string name="yes">확인</string>
+    <string name="direction">방면</string>
 
     <!--Noti-->
     <string name="bus_mode_started">버스 모드 활성화됨</string>

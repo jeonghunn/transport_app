@@ -108,7 +108,7 @@ public final class global {
 
 
       //Temp function
-    public static void BusNoti(Context cx, int notificationId, Intent viewIntent, String title, String content, String sec_contents,  int country_srl, int route_srl, int way_srl, int station_srl ,  String station_summary, int icon, int largeicon){
+    public static void BusNoti(Context cx, int notificationId, Intent viewIntent, String title, String content, String direction_name,  int country_srl, int route_srl, int way_srl, int station_srl ,  String station_summary, int icon, int largeicon){
 
 
 
@@ -140,7 +140,7 @@ public final class global {
 
         // Create a big text style for the second page
         NotificationCompat.BigTextStyle secondPageStyle = new NotificationCompat.BigTextStyle();
-        secondPageStyle.bigText(sec_contents);
+        secondPageStyle.bigText(station_summary);
 
 
 // Create second page notification
