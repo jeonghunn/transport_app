@@ -4,54 +4,28 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.tarks.transport.ui.MainAdapter;
 import com.tarks.transport.ui.info;
 
 /**
  * Created by panda on 2014-10-25.
  */
-public class main extends ActionBarActivity{
+public class maintest extends ActionBarActivity{
 
 
-    private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
 
 
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.setContentView(R.layout.main);
+        this.setContentView(R.layout.layouttest);
        // cs = new CoreSystem();
 
-        String names[] = {  "맹구",
-                "배용준",
-                "땡칠이",
-                "장동건",
-                "강수정",
-                "송창식",
-                "황당해",
-                "고은아"};
 
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
 
-        // use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
-        mRecyclerView.setHasFixedSize(true);
-
-        // use a linear layout manager
-        mLayoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-
-        // specify an adapter (see also next example)
-        mAdapter = new MainAdapter(names);
-        mRecyclerView.setAdapter(mAdapter);
 
 
 //
@@ -95,7 +69,7 @@ public class main extends ActionBarActivity{
 
 
         if (item.getItemId() == 1) {
-            Intent intent1 = new Intent(main.this, info.class);
+            Intent intent1 = new Intent(maintest.this, info.class);
         startActivity(intent1);
             return true;
 
