@@ -9,7 +9,7 @@ android {
         applicationId "com.tarks.transport"
         minSdkVersion 20
         targetSdkVersion 22
-        versionCode 17
+        versionCode 18
         versionName "@string/ver"
     }
     buildTypes {
