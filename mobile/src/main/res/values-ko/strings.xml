@@ -16,6 +16,7 @@
     <string name="dev_info">Junghoon Lee(JHRunning)\nDeveloper\nhttp://jhrun.tistory.com\n\nSeunghyun Yu\nDesigner</string>
     <string name="yes">확인</string>
     <string name="direction">방면</string>
+    <string name="wbus_on_android_wear">안드로이드 웨어와 연결하시면 사용이 가능합니다. 아직 휴대폰은 지원 하지 않습니다. </string>
 
     <!--Noti-->
     <string name="bus_mode_started">버스 모드 활성화됨</string>

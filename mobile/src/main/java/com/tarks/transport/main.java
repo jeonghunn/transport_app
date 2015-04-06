@@ -29,14 +29,7 @@ public class main extends ActionBarActivity{
         this.setContentView(R.layout.main);
        // cs = new CoreSystem();
 
-        String names[] = {  "맹구",
-                "배용준",
-                "땡칠이",
-                "장동건",
-                "강수정",
-                "송창식",
-                "황당해",
-                "고은아"};
+        String names[] = { getString(R.string.wbus_on_android_wear)};
 
 
         mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
