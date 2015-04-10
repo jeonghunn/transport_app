@@ -14,7 +14,7 @@ public class fddb {
         public static final String ACTION_SRL = "action_srl";
         public static final String ID_SRL = "id_srl";
         public static final String COUNTRY_SRL = "country_srl";
-        public static final String ROUTE_SRL = "route_srl";
+        public static final String ROUTE = "route";
         public static final String STATION_SRL = "station_srl";
         public static final String WAY_SRL = "way_srl";
         public static final String LATITUDE = "latitude";
@@ -31,7 +31,7 @@ public class fddb {
                         +ACTION_SRL+" int not null , "
                         +ID_SRL+" int not null , "
                         +COUNTRY_SRL+" int not null , "
-                        +ROUTE_SRL+" int not null , "
+                        +ROUTE+" text not null , "
                         +STATION_SRL+" int not null , "
                         +WAY_SRL+" int not null , "
                         +LATITUDE+" double not null , "

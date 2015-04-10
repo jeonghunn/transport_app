@@ -354,7 +354,7 @@ setInfotext(getString(R.string.db_downloading));
         for (int i = 0; i < infoArraylist.size(); i++) {
             // global.log(infoArraylist.get(i).station_name);
             InfoClass get = infoArraylist.get(i);
-            mDbOpenHelper.insertColumn(get.country_srl,get.route_srl, get.station_srl,get.way_srl, get.station_name, get.station_latitude,  get.station_longitude);
+            mDbOpenHelper.insertColumn(get.country_srl,get.route, get.station_srl,get.way_srl, get.station_name, get.station_latitude,  get.station_longitude);
         }
 
         mDbOpenHelper.close();

@@ -12,7 +12,7 @@ public class BusNotiClass {
     public String direction_name;
     public String station_summary;
     public int country_srl;
-    public int route_srl;
+    public String route;
     public int way_srl;
     public int station_srl;
 
@@ -21,7 +21,7 @@ public class BusNotiClass {
 
     public BusNotiClass(){}
 
-    public BusNotiClass(int _kind, int _noti_id, String _title, String _content,  String _direction_name, String _StationSummary, int _country_srl, int _route_srl, int _way_srl, int _station_srl){
+    public BusNotiClass(int _kind, int _noti_id, String _title, String _content,  String _direction_name, String _StationSummary, int _country_srl, String _route, int _way_srl, int _station_srl){
         this.kind = _kind;
         this.noti_id = _noti_id;
         this.title = _title;
@@ -29,7 +29,7 @@ public class BusNotiClass {
         this.direction_name = _direction_name;
         this.station_summary = _StationSummary;
         this.country_srl = _country_srl;
-        this.route_srl = _route_srl;
+        this.route = _route;
         this.way_srl = _way_srl;
         this.station_srl = _station_srl;
 

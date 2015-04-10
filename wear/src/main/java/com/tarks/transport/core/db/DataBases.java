@@ -12,7 +12,7 @@ public class DataBases {
         public static final String _TABLENAME = "stations";
         public static final String ID_SRL = "id_srl";
         public static final String COUNTRY_SRL = "country_srl";
-        public static final String ROUTE_SRL = "route_srl";
+        public static final String ROUTE = "route";
         public static final String STATION_SRL = "station_srl";
         public static final String WAY_SRL = "way_srl";
         public static final String STATION_NAME = "station_name";
@@ -23,7 +23,7 @@ public class DataBases {
                         +_ID+" integer primary key autoincrement, "
                         +ID_SRL+" int not null , "
                         +COUNTRY_SRL+" int not null , "
-                        +ROUTE_SRL+" int not null , "
+                        +ROUTE +" text not null , "
                         +STATION_SRL+" int not null , "
                         +WAY_SRL+" int not null , "
                         +STATION_NAME+" text not null , "

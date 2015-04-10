@@ -7,7 +7,7 @@ package com.tarks.transport.core.db;
 public class InfoClass {
     public int id;
     public int country_srl;
-    public int route_srl;
+    public int route;
     public int way_srl;
     public int station_srl;
     public String station_name;
@@ -17,10 +17,10 @@ public class InfoClass {
 
     public InfoClass(){}
 
-    public InfoClass(int _id, int _country_srl , int _route_srl , int _way_srl, int _station_srl, String _station_name, Double _station_latitude, Double _station_longitude){
+    public InfoClass(int _id, int _country_srl , int _route , int _way_srl, int _station_srl, String _station_name, Double _station_latitude, Double _station_longitude){
         this.id = _id;
         this.country_srl = _country_srl;
-        this.route_srl = _route_srl;
+        this.route = _route;
         this.way_srl = _way_srl;
         this.station_srl = _station_srl;
         this.station_name = _station_name;

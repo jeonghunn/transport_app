@@ -16,7 +16,7 @@ import com.tarks.transport.core.global.global;
 public class DbOpenHelper {
 
     private static final String DATABASE_NAME = "transport.db";
-    public static final int DATABASE_VERSION = 3;
+    public static final int DATABASE_VERSION = 4;
     public static SQLiteDatabase mDB;
     private DatabaseHelper mDBHelper;
     private Context mCtx;
@@ -61,10 +61,10 @@ public class DbOpenHelper {
     }
 
     // Insert DB
-    public long insertColumn(int country_srl ,int route_srl, int station_srl, int way_srl,  String station_name, Double station_latitude, Double station_longitude){
+    public long insertColumn(int country_srl ,int route, int station_srl, int way_srl,  String station_name, Double station_latitude, Double station_longitude){
         ContentValues values = new ContentValues();
         values.put(DataBases.CreateDB.COUNTRY_SRL, country_srl);
-        values.put(DataBases.CreateDB.ROUTE_SRL, route_srl);
+        values.put(DataBases.CreateDB.ROUTE, route);
         values.put(DataBases.CreateDB.STATION_SRL, station_srl);
         values.put(DataBases.CreateDB.WAY_SRL, way_srl);
         values.put(DataBases.CreateDB.STATION_NAME, station_name);
@@ -80,13 +80,13 @@ public class DbOpenHelper {
 
 
     // Insert DB
-    public long insertFdColumn(int count_srl, int action_srl,  int id_srl, int country_srl ,int route_srl, int station_srl, int way_srl, Double latitude, Double longitude, Double station_latitude, Double station_longitude, long time, int location_mode ,int location_level){
+    public long insertFdColumn(int count_srl, int action_srl,  int id_srl, int country_srl ,int route, int station_srl, int way_srl, Double latitude, Double longitude, Double station_latitude, Double station_longitude, long time, int location_mode ,int location_level){
         ContentValues values = new ContentValues();
         values.put(fddb.CreateDB.COUNT_SRL, count_srl);
         values.put(fddb.CreateDB.ACTION_SRL, action_srl);
         values.put(fddb.CreateDB.ID_SRL, id_srl);
         values.put(fddb.CreateDB.COUNTRY_SRL, country_srl);
-        values.put(fddb.CreateDB.ROUTE_SRL, route_srl);
+        values.put(fddb.CreateDB.ROUTE, route);
         values.put(fddb.CreateDB.STATION_SRL, station_srl);
         values.put(fddb.CreateDB.WAY_SRL, way_srl);
         values.put(fddb.CreateDB.LATITUDE, latitude);

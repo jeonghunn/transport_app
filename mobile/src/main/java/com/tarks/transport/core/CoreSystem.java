@@ -180,8 +180,8 @@ public class CoreSystem extends WearableListenerService implements GoogleApiClie
 
         //Make Array of  near routes
         for (int i = 1; i <= ic.size(); i++) {
-            if (!routes.contains(String.valueOf(ic.get(i - 1).route_srl)))
-                routes.add(String.valueOf(ic.get(i - 1).route_srl));
+            if (!routes.contains(String.valueOf(ic.get(i - 1).route)))
+                routes.add(String.valueOf(ic.get(i - 1).route));
         }
         try {
             DbOpenHelper mDbOpenHelper = new DbOpenHelper(this);
@@ -194,7 +194,7 @@ public class CoreSystem extends WearableListenerService implements GoogleApiClie
                     //No Destination
                     global.log("ok" + ic.size());
                     InfoClass get = ic.get(i);
-                    mDbOpenHelper.insertFdColumn(count_srl, action_count, get.id, get.country_srl, get.route_srl, get.station_srl, get.way_srl, lc.getLatitude(), lc.getLongitude(), get.station_latitude, get.station_longitude, global.getCurrentTimeStamp(), location_mode, near_level);
+                    mDbOpenHelper.insertFdColumn(count_srl, action_count, get.id, get.country_srl, get.route, get.station_srl, get.way_srl, lc.getLatitude(), lc.getLongitude(), get.station_latitude, get.station_longitude, global.getCurrentTimeStamp(), location_mode, near_level);
                     //     if (goal_id == get.id)
 
                 }
@@ -213,7 +213,7 @@ public class CoreSystem extends WearableListenerService implements GoogleApiClie
             String stationListString = null;
 
             if (mflow.size() > 0)
-                stations = getStations(flowget.country_srl, flowget.route_srl, flowget.way_srl);
+                stations = getStations(flowget.country_srl, flowget.route, flowget.way_srl);
             if (mflow.size() > 0 && stations.size() > 0) {
                 for (int i = 0; i < stations.size(); i++) {
                     //Calculate stations left
@@ -273,14 +273,14 @@ public class CoreSystem extends WearableListenerService implements GoogleApiClie
                     if (waitingbus || action_count < 2 || location_mode < globalv.ACTIVE_MODE) {
                           //Check it is acitve mode
                         if(location_mode >= globalv.ACTIVE_MODE){
-                            sendBusNoti(globalv.DEFUALT_NOTI, 1, getString(R.string.app_name), getString(R.string.bus_mode_started), direction_name,getString(R.string.nearby_bus_routes) + "\n\n" +  global.arraylistStringtoString(routes) ,  flowget.country_srl, flowget.route_srl, flowget.way_srl, flowget.station_srl - 1);
+                            sendBusNoti(globalv.DEFUALT_NOTI, 1, getString(R.string.app_name), getString(R.string.bus_mode_started), direction_name,getString(R.string.nearby_bus_routes) + "\n\n" +  global.arraylistStringtoString(routes) ,  flowget.country_srl, flowget.route , flowget.way_srl, flowget.station_srl - 1);
                         }else{
                             sendNoti(globalv.WAITING_BUS_NOTI, 1, getString(R.string.nearby_bus_routes),  global.arraylistStringtoString(routes) );
                         }
 
                     } else {
                         if (mflow.size() > 0 && next_name != null)
-                            sendBusNoti(globalv.DEFUALT_NOTI, 1, next_name, stations.get(flowget.station_srl - 1).station_name, direction_name, direction_name + " " + getString(R.string.direction) + "(" + flowget.route_srl  + ")\n\n"  + stationListString, flowget.country_srl, flowget.route_srl, flowget.way_srl, flowget.station_srl - 1);
+                            sendBusNoti(globalv.DEFUALT_NOTI, 1, next_name, stations.get(flowget.station_srl - 1).station_name, direction_name, direction_name + " " + getString(R.string.direction) + "(" + flowget.route  + ")\n\n"  + stationListString, flowget.country_srl, flowget.route, flowget.way_srl, flowget.station_srl - 1);
                     //
 
                     }
@@ -291,7 +291,7 @@ public class CoreSystem extends WearableListenerService implements GoogleApiClie
                     if (mflow.size() > 0 && next_name != null && station_left > 2) {
 
 
-                        sendBusNoti(globalv.DEFUALT_NOTI, 1, station_left +  getString(R.string.item) + " " + getString(R.string._stations_left), next_name +"\n" + stations.get(flowget.station_srl - 1).station_name , direction_name, direction_name + " " + getString(R.string.direction) + "(" + flowget.route_srl  + ")\n\n"  + stationListString, flowget.country_srl, flowget.route_srl, flowget.way_srl, flowget.station_srl - 1);
+                        sendBusNoti(globalv.DEFUALT_NOTI, 1, station_left +  getString(R.string.item) + " " + getString(R.string._stations_left), next_name +"\n" + stations.get(flowget.station_srl - 1).station_name , direction_name, direction_name + " " + getString(R.string.direction) + "(" + flowget.route  + ")\n\n"  + stationListString, flowget.country_srl, flowget.route, flowget.way_srl, flowget.station_srl - 1);
 
 
                     } else {
@@ -300,15 +300,15 @@ public class CoreSystem extends WearableListenerService implements GoogleApiClie
                         //Check destination
                         if (station_left < 0) {
 
-                            sendBusNoti(1, 1, getString(R.string.missed_the_stop),next_name + "\n" +  stations.get(flowget.station_srl - 1).station_name  , direction_name,  direction_name + " " + getString(R.string.direction) + "(" + flowget.route_srl  + ")\n\n"  + stationListString, flowget.country_srl, flowget.route_srl, flowget.way_srl, flowget.station_srl - 1);
+                            sendBusNoti(1, 1, getString(R.string.missed_the_stop),next_name + "\n" +  stations.get(flowget.station_srl - 1).station_name  , direction_name,  direction_name + " " + getString(R.string.direction) + "(" + flowget.route  + ")\n\n"  + stationListString, flowget.country_srl, flowget.route, flowget.way_srl, flowget.station_srl - 1);
 
                         } else {
                             if (station_left != 0)
-                                sendBusNoti(2, 1, getString(R.string.almost_arrived) + " (" + station_left + ")", station_left + getString(R.string.item) + " " + getString(R.string._stations_left) + "\n\n" + next_name + "\n" + stations.get(flowget.station_srl - 1).station_name , direction_name,direction_name + " " + getString(R.string.direction) + "(" + flowget.route_srl  + ")\n\n"  +  stationListString, flowget.country_srl, flowget.route_srl, flowget.way_srl, flowget.station_srl - 1);
+                                sendBusNoti(2, 1, getString(R.string.almost_arrived) + " (" + station_left + ")", station_left + getString(R.string.item) + " " + getString(R.string._stations_left) + "\n\n" + next_name + "\n" + stations.get(flowget.station_srl - 1).station_name , direction_name,direction_name + " " + getString(R.string.direction) + "(" + flowget.route  + ")\n\n"  +  stationListString, flowget.country_srl, flowget.route, flowget.way_srl, flowget.station_srl - 1);
                             if (station_left == 0 && global.getGoalID(cx) == flowget.id_srl) {
                                 arrivedAction(cx, getString(R.string.destinaton_arrived), stations.get(flowget.station_srl - 1).station_name);
                             } else if (station_left == 0) {
-                                sendBusNoti(1, 1, next_name, stations.get(flowget.station_srl - 1).station_name + "\n\n" + getString(R.string.calculating_station_left), direction_name, direction_name + " " + getString(R.string.direction) + "(" + flowget.route_srl  + ")\n\n"  + stationListString, flowget.country_srl, flowget.route_srl, flowget.way_srl, flowget.station_srl - 1);
+                                sendBusNoti(1, 1, next_name, stations.get(flowget.station_srl - 1).station_name + "\n\n" + getString(R.string.calculating_station_left), direction_name, direction_name + " " + getString(R.string.direction) + "(" + flowget.route  + ")\n\n"  + stationListString, flowget.country_srl, flowget.route, flowget.way_srl, flowget.station_srl - 1);
                             }
                         }
 
@@ -421,7 +421,7 @@ public class CoreSystem extends WearableListenerService implements GoogleApiClie
                     csr.getInt(csr.getColumnIndex("action_srl")),
                     csr.getInt(csr.getColumnIndex("id_srl")),
                     csr.getInt(csr.getColumnIndex("country_srl")),
-                    csr.getInt(csr.getColumnIndex("route_srl")),
+                    csr.getString(csr.getColumnIndex("route")),
                     csr.getInt(csr.getColumnIndex("station_srl")),
                     csr.getInt(csr.getColumnIndex("way_srl")),
                     csr.getDouble(csr.getColumnIndex("latitude")),
@@ -505,7 +505,7 @@ public class CoreSystem extends WearableListenerService implements GoogleApiClie
             //     station_srl_temp = 0;
             global.log(timestamp_best + " : timestmap best, " + csr.getInt(csr.getColumnIndex("time")) + ": time");
 
-            Cursor csrc = mDbOpenHelper.getDirectionRows(count_srl, csr.getInt(csr.getColumnIndex("country_srl")), csr.getInt(csr.getColumnIndex("route_srl")), csr.getInt(csr.getColumnIndex("way_srl")), csr.getInt(csr.getColumnIndex("station_srl")));
+            Cursor csrc = mDbOpenHelper.getDirectionRows(count_srl, csr.getInt(csr.getColumnIndex("country_srl")), csr.getString(csr.getColumnIndex("route")), csr.getInt(csr.getColumnIndex("way_srl")), csr.getInt(csr.getColumnIndex("station_srl")));
             //if(csr.getInt(csr.getColumnIndex("time")) < timestamp_temp) break;
             //  if(csrc.getCount() > count){
             while (csrc.moveToNext()) {
@@ -580,7 +580,7 @@ public class CoreSystem extends WearableListenerService implements GoogleApiClie
                     csr.getInt(csr.getColumnIndex("action_srl")),
                     csr.getInt(csr.getColumnIndex("id_srl")),
                     csr.getInt(csr.getColumnIndex("country_srl")),
-                    csr.getInt(csr.getColumnIndex("route_srl")),
+                    csr.getString(csr.getColumnIndex("route")),
                     csr.getInt(csr.getColumnIndex("station_srl")),
                     csr.getInt(csr.getColumnIndex("way_srl")),
                     csr.getDouble(csr.getColumnIndex("latitude")),
@@ -628,7 +628,7 @@ public class CoreSystem extends WearableListenerService implements GoogleApiClie
             InfoClass mInfoClass = new InfoClass(
                     csr.getInt(csr.getColumnIndex("_id")),
                     csr.getInt(csr.getColumnIndex("country_srl")),
-                    csr.getInt(csr.getColumnIndex("route_srl")),
+                    csr.getString(csr.getColumnIndex("route")),
                     csr.getInt(csr.getColumnIndex("way_srl")),
                     csr.getInt(csr.getColumnIndex("station_srl")),
                     csr.getString(csr.getColumnIndex("station_name")),
@@ -647,14 +647,14 @@ public class CoreSystem extends WearableListenerService implements GoogleApiClie
     }
 
 
-    public ArrayList<WayClass> getWaysByRoute(Context cx, int country_srl, int route_srl) {
+    public ArrayList<WayClass> getWaysByRoute(Context cx, int country_srl, String route) {
         // InfoClass mInfoClass;
         ArrayList<WayClass> mInfoArray = new ArrayList<WayClass>();
 
 
         DbOpenHelper mDbOpenHelper = new DbOpenHelper(cx);
         mDbOpenHelper.open();
-        Cursor csr = mDbOpenHelper.getWays(country_srl, route_srl);
+        Cursor csr = mDbOpenHelper.getWays(country_srl, route);
 
 
         while (csr.moveToNext()) {
@@ -676,14 +676,14 @@ public class CoreSystem extends WearableListenerService implements GoogleApiClie
     }
 
 
-    public ArrayList<InfoClass> getStations(int country_srl, int route_srl, int way_srl) {
+    public ArrayList<InfoClass> getStations(int country_srl, String route, int way_srl) {
         // InfoClass mInfoClass;
         ArrayList<InfoClass> mInfoArray = new ArrayList<InfoClass>();
 
 
         DbOpenHelper mDbOpenHelper = new DbOpenHelper(cx);
         mDbOpenHelper.open();
-        Cursor csr = mDbOpenHelper.getStations(country_srl, route_srl, way_srl);
+        Cursor csr = mDbOpenHelper.getStations(country_srl, route, way_srl);
 
 
 
@@ -694,7 +694,7 @@ public class CoreSystem extends WearableListenerService implements GoogleApiClie
             InfoClass mInfoClass = new InfoClass(
                     csr.getInt(csr.getColumnIndex("_id")),
                     csr.getInt(csr.getColumnIndex("country_srl")),
-                    csr.getInt(csr.getColumnIndex("route_srl")),
+                    csr.getString(csr.getColumnIndex("route")),
                     csr.getInt(csr.getColumnIndex("way_srl")),
                     csr.getInt(csr.getColumnIndex("station_srl")),
                     csr.getString(csr.getColumnIndex("station_name")),
@@ -858,9 +858,9 @@ sendMessage(msg, data.getBytes());
     }
 
 
-    public void sendBusNoti(int kind, int noti_id, String title, String content, String direction_name, String station_summary,  int country_srl, int route_srl, int way_srl, int station_srl) {
+    public void sendBusNoti(int kind, int noti_id, String title, String content, String direction_name, String station_summary,  int country_srl, String route, int way_srl, int station_srl) {
         ArrayList<BusNotiClass> notiarray = new ArrayList<BusNotiClass>();
-        BusNotiClass mnoticalss = new BusNotiClass(kind, noti_id, title, content, direction_name, station_summary,   country_srl, route_srl, way_srl, station_srl);
+        BusNotiClass mnoticalss = new BusNotiClass(kind, noti_id, title, content, direction_name, station_summary,   country_srl, route, way_srl, station_srl);
 
         notiarray.add(mnoticalss);
         Gson gson = new GsonBuilder().create();
@@ -885,8 +885,8 @@ global.log("ARRIVED!");
         // global.setActiveNoti(cx, 1, viewIntent, title, content, R.drawable.ic_launcher, R.drawable.ic_launcher);
     }
 
-    public void sendStationsData(int country_srl, int route_srl, int way_srl){
-        ArrayList<InfoClass> stations = getStations(country_srl, route_srl, way_srl);
+    public void sendStationsData(int country_srl, String route, int way_srl){
+        ArrayList<InfoClass> stations = getStations(country_srl, route, way_srl);
         Gson gson = new GsonBuilder().create();
         JsonArray json_result = gson.toJsonTree(stations).getAsJsonArray();
         global.log(json_result.toString());
@@ -898,10 +898,10 @@ global.log("ARRIVED!");
         resultmap = global.getJSONArray(data);
 
         int country_srl = Integer.parseInt(String.valueOf(resultmap.get("country_srl")));
-        int route_srl = Integer.parseInt(String.valueOf(resultmap.get("route_srl")));
+        String route = Integer.parseInt(String.valueOf(resultmap.get("route")));
         int way_srl = Integer.parseInt(String.valueOf(resultmap.get("way_srl")));
 
-        sendStationsData(country_srl, route_srl, way_srl);
+        sendStationsData(country_srl, route, way_srl);
 
 
     }
@@ -1034,9 +1034,9 @@ global.log("ARRIVED!");
         Map<String, String> resultmap = null;
         resultmap = global.getJSONArray(data);
         int country_srl = Integer.parseInt(String.valueOf(resultmap.get("country_srl")));
-        int route_srl = Integer.parseInt(String.valueOf(resultmap.get("route_srl")));
+        String route = Integer.parseInt(String.valueOf(resultmap.get("route")));
 
-         ArrayList<WayClass> ways = getWaysByRoute(cx, country_srl, route_srl);
+         ArrayList<WayClass> ways = getWaysByRoute(cx, country_srl, route);
         Gson gson = new GsonBuilder().create();
         JsonArray json_result = gson.toJsonTree(ways).getAsJsonArray();
         global.log("WAYS" + json_result.toString());
