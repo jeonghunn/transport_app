@@ -898,7 +898,7 @@ global.log("ARRIVED!");
         resultmap = global.getJSONArray(data);
 
         int country_srl = Integer.parseInt(String.valueOf(resultmap.get("country_srl")));
-        String route = Integer.parseInt(String.valueOf(resultmap.get("route")));
+        String route = String.valueOf(resultmap.get("route"));
         int way_srl = Integer.parseInt(String.valueOf(resultmap.get("way_srl")));
 
         sendStationsData(country_srl, route, way_srl);
@@ -1034,7 +1034,7 @@ global.log("ARRIVED!");
         Map<String, String> resultmap = null;
         resultmap = global.getJSONArray(data);
         int country_srl = Integer.parseInt(String.valueOf(resultmap.get("country_srl")));
-        String route = Integer.parseInt(String.valueOf(resultmap.get("route")));
+        String route = (String.valueOf(resultmap.get("route")));
 
          ArrayList<WayClass> ways = getWaysByRoute(cx, country_srl, route);
         Gson gson = new GsonBuilder().create();

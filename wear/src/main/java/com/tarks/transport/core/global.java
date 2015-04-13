@@ -108,7 +108,7 @@ public final class global {
 
 
       //Temp function
-    public static void BusNoti(Context cx, int notificationId, Intent viewIntent, String title, String content, String direction_name,  int country_srl, int route_srl, int way_srl, int station_srl ,  String station_summary, int icon, int largeicon){
+    public static void BusNoti(Context cx, int notificationId, Intent viewIntent, String title, String content, String direction_name,  int country_srl, String route, int way_srl, int station_srl ,  String station_summary, int icon, int largeicon){
 
 
 
@@ -117,7 +117,7 @@ public final class global {
 
         Intent stationIntent = new Intent(cx, StationList.class);
         stationIntent.putExtra("country_srl" , country_srl);
-        stationIntent.putExtra("route_srl" , route_srl);
+        stationIntent.putExtra("route" , route);
         stationIntent.putExtra("way_srl" , way_srl);
         stationIntent.putExtra("station_srl" , station_srl);
 

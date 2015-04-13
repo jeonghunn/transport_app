@@ -55,7 +55,7 @@ public class RouteList extends Activity
 
             Intent i = new Intent(RouteList.this, WayList.class);
         i.putExtra("country_srl" , country_srl);
-        i.putExtra("route_srl" , Integer.parseInt(routes.get(viewHolder.getPosition())));
+        i.putExtra("route" , routes.get(viewHolder.getPosition()));
             startActivity(i);
         finish();
 

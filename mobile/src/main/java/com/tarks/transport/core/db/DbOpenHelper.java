@@ -61,7 +61,7 @@ public class DbOpenHelper {
     }
 
     // Insert DB
-    public long insertColumn(int country_srl ,int route, int station_srl, int way_srl,  String station_name, Double station_latitude, Double station_longitude){
+    public long insertColumn(int country_srl ,String route, int station_srl, int way_srl,  String station_name, Double station_latitude, Double station_longitude){
         ContentValues values = new ContentValues();
         values.put(DataBases.CreateDB.COUNTRY_SRL, country_srl);
         values.put(DataBases.CreateDB.ROUTE, route);
@@ -80,7 +80,7 @@ public class DbOpenHelper {
 
 
     // Insert DB
-    public long insertFdColumn(int count_srl, int action_srl,  int id_srl, int country_srl ,int route, int station_srl, int way_srl, Double latitude, Double longitude, Double station_latitude, Double station_longitude, long time, int location_mode ,int location_level){
+    public long insertFdColumn(int count_srl, int action_srl,  int id_srl, int country_srl ,String route, int station_srl, int way_srl, Double latitude, Double longitude, Double station_latitude, Double station_longitude, long time, int location_mode ,int location_level){
         ContentValues values = new ContentValues();
         values.put(fddb.CreateDB.COUNT_SRL, count_srl);
         values.put(fddb.CreateDB.ACTION_SRL, action_srl);
@@ -220,21 +220,21 @@ public class DbOpenHelper {
 //    }
 
 
-    public Cursor getDirectionRows(int count_srl, int country_srl, int route_srl, int way_srl, int station_srl){
+    public Cursor getDirectionRows(int count_srl, int country_srl, String route, int way_srl, int station_srl){
 
-        Cursor c = mDB.rawQuery( "select distinct station_srl, way_srl, id_srl from flow where count_srl='" +  count_srl + "'AND country_srl='" + country_srl + "' AND route_srl= '" + route_srl + "' AND way_srl= '"+ way_srl +"' AND station_srl <= '" + station_srl + 1 + "' ORDER BY `_id` ASC" , null);
+        Cursor c = mDB.rawQuery( "select distinct station_srl, way_srl, id_srl from flow where count_srl='" +  count_srl + "'AND country_srl='" + country_srl + "' AND route= '" + route + "' AND way_srl= '"+ way_srl +"' AND station_srl <= '" + station_srl + 1 + "' ORDER BY `_id` ASC" , null);
         return c;
     }
 
-    public Cursor getStations(int country_srl, int route_srl, int way_srl){
+    public Cursor getStations(int country_srl, String route, int way_srl){
 
-        Cursor c = mDB.rawQuery( "select * from stations where country_srl='" + country_srl + "' AND route_srl= '" + route_srl + "' AND way_srl= '"+ way_srl +"' ORDER BY `station_srl` ASC" , null);
+        Cursor c = mDB.rawQuery( "select * from stations where country_srl='" + country_srl + "' AND route= '" + route + "' AND way_srl= '"+ way_srl +"' ORDER BY `station_srl` ASC" , null);
         return c;
     }
 
-    public Cursor getWays(int country_srl, int route_srl){
+    public Cursor getWays(int country_srl, String route){
 
-        Cursor c = mDB.rawQuery( "select * from stations where country_srl='" + country_srl + "' AND route_srl= '" + route_srl + "' GROUP BY way_srl ORDER BY `way_srl` ASC" , null);
+        Cursor c = mDB.rawQuery( "select * from stations where country_srl='" + country_srl + "' AND route= '" + route + "' GROUP BY way_srl ORDER BY `way_srl` ASC" , null);
         return c;
     }
 

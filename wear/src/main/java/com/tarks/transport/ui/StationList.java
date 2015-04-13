@@ -44,7 +44,7 @@ public class StationList extends Activity
     Context ct;
   //  WearableListView listView;
     private int country_srl = 0;
-    private int route_srl = 0;
+    private String route = "0";
     private int way_srl = 0;
     private int station_srl = 0;
     GoogleApiClient mGoogleApiClient;
@@ -124,14 +124,14 @@ public class StationList extends Activity
     }
 
 
-    public ArrayList<InfoClass> getStations(int country_srl, int route_srl, int way_srl) {
+    public ArrayList<InfoClass> getStations(int country_srl, String route, int way_srl) {
         // InfoClass mInfoClass;
         ArrayList<InfoClass> mInfoArray = new ArrayList<InfoClass>();
 
 
         DbOpenHelper mDbOpenHelper = new DbOpenHelper(this);
         mDbOpenHelper.open();
-        Cursor csr = mDbOpenHelper.getStations(country_srl, route_srl, way_srl);
+        Cursor csr = mDbOpenHelper.getStations(country_srl, route, way_srl);
 
 
         while (csr.moveToNext()) {
@@ -142,7 +142,7 @@ public class StationList extends Activity
                     csr.getInt(csr.getColumnIndex("_id")),
                     csr.getInt(csr.getColumnIndex("id_srl")),
                     csr.getInt(csr.getColumnIndex("country_srl")),
-                    csr.getInt(csr.getColumnIndex("route_srl")),
+                    csr.getString(csr.getColumnIndex("route")),
                     csr.getInt(csr.getColumnIndex("way_srl")),
                     csr.getInt(csr.getColumnIndex("station_srl")),
                     csr.getString(csr.getColumnIndex("station_name")),
@@ -174,7 +174,7 @@ public class StationList extends Activity
 
 
 
-            stations = getStations(country_srl,route_srl,way_srl);
+            stations = getStations(country_srl,route,way_srl);
             // Assign an adapter to the list
             listView.setAdapter(new ListAdapter(StationList.this,stations));
 
@@ -238,7 +238,7 @@ public class StationList extends Activity
         Intent intent = getIntent(); // 인텐트 받아오고
 
          country_srl = intent.getIntExtra("country_srl", 0);
-         route_srl = intent.getIntExtra("route_srl", 0); // 인텐트로 부터 데이터 가져오고
+         route = intent.getIntExtra("route", "0"); // 인텐트로 부터 데이터 가져오고
          way_srl = intent.getIntExtra("way_srl", 0); // 인텐트로 부터 데이터 가져오고
          station_srl = intent.getIntExtra("station_srl", 0); // 인텐트로 부터 데이터 가져오고
 
@@ -248,7 +248,7 @@ public class StationList extends Activity
         try {
 
             obj.put("country_srl", country_srl);
-            obj.put("route_srl", route_srl);
+            obj.put("route", route);
             obj.put("way_srl", way_srl);
             obj.put("station_srl", station_srl);
         }catch (Exception e){

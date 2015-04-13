@@ -123,16 +123,16 @@ checkMessage(messageEvent.getPath(), messageEvent.getData());
 
             String direction_name = String.valueOf(resultmap.get("direction_name"));
             String station_summary = String.valueOf(resultmap.get("station_summary"));
-            int route_srl = Integer.parseInt(String.valueOf(resultmap.get("route_srl")));
+            String route = String.valueOf(resultmap.get("route"));
             int country_srl = Integer.parseInt(String.valueOf(resultmap.get("country_srl")));
             int way_srl = Integer.parseInt(String.valueOf(resultmap.get("way_srl")));
             int station_srl = Integer.parseInt(String.valueOf(resultmap.get("station_srl")));
 
 
             Intent viewIntent = new Intent(ComService.this, StationList.class);
-            global.BusNoti(ComService.this, noti_id, viewIntent, title, content, direction_name ,country_srl,route_srl, way_srl, station_srl, station_summary, R.drawable.ic_launcher, global.getNight()? R.drawable.ride_bus_background_night : R.drawable.ride_bus_background);
+            global.BusNoti(ComService.this, noti_id, viewIntent, title, content, direction_name ,country_srl,route, way_srl, station_srl, station_summary, R.drawable.ic_launcher, global.getNight()? R.drawable.ride_bus_background_night : R.drawable.ride_bus_background);
 
-            checkDataDB(country_srl, route_srl, way_srl, station_srl);
+            checkDataDB(country_srl, route, way_srl, station_srl);
         }
 
         //Bus almost arrived
@@ -140,14 +140,14 @@ checkMessage(messageEvent.getPath(), messageEvent.getData());
 
             String direction_name = String.valueOf(resultmap.get("direction_name"));
             String station_summary = String.valueOf(resultmap.get("station_summary"));
-            int route_srl = Integer.parseInt(String.valueOf(resultmap.get("route_srl")));
+            String route = String.valueOf(resultmap.get("route"));
             int country_srl = Integer.parseInt(String.valueOf(resultmap.get("country_srl")));
             int way_srl = Integer.parseInt(String.valueOf(resultmap.get("way_srl")));
             int station_srl = Integer.parseInt(String.valueOf(resultmap.get("station_srl")));
 
             global.Vibrate(this, 2000);
             Intent viewIntent = new Intent(ComService.this, StationList.class);
-            global.BusNoti(ComService.this, noti_id, viewIntent, title, content, direction_name, country_srl,route_srl, way_srl, station_srl, station_summary, R.drawable.ic_launcher, R.drawable.flag);
+            global.BusNoti(ComService.this, noti_id, viewIntent, title, content, direction_name, country_srl,route, way_srl, station_srl, station_summary, R.drawable.ic_launcher, R.drawable.flag);
 //
 //            Intent i = new Intent(ListenerService.this, BusArrive.class);
 //            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -359,11 +359,11 @@ waitingreceive = true;
         resultmap = global.getJSONArray(data);
 
         int country_srl = Integer.parseInt(String.valueOf(resultmap.get("country_srl")));
-        int route_srl = Integer.parseInt(String.valueOf(resultmap.get("route_srl")));
+        String route = String.valueOf(resultmap.get("route"));
         int way_srl = Integer.parseInt(String.valueOf(resultmap.get("way_srl")));
         int station_srl = 1;
 
-        checkDataDB(country_srl, route_srl, way_srl, station_srl);
+        checkDataDB(country_srl, route, way_srl, station_srl);
     }
 
 
@@ -384,7 +384,7 @@ waitingreceive = true;
         for (int i = 0; i < infoArraylist.size(); i++) {
            // global.log(infoArraylist.get(i).station_name);
             InfoClass get = infoArraylist.get(i);
-            mDbOpenHelper.insertColumn(get.id, get.country_srl,get.route_srl,get.station_srl,get.way_srl, get.station_name, get.station_latitude,  get.station_longitude);
+            mDbOpenHelper.insertColumn(get.id, get.country_srl,get.route,get.station_srl,get.way_srl, get.station_name, get.station_latitude,  get.station_longitude);
         }
 
         mDbOpenHelper.close();
@@ -400,20 +400,20 @@ waitingreceive = true;
         LocalBroadcastManager.getInstance(this).sendBroadcast(messageIntent);
     }
 
-    private void checkDataDB(int country_srl, int route_srl, int way_srl, int station_srl){
+    private void checkDataDB(int country_srl, String route, int way_srl, int station_srl){
         DbOpenHelper mDbOpenHelper = new DbOpenHelper(this);
         mDbOpenHelper.open();
 
 
 
 
-       if(mDbOpenHelper.checkStations(country_srl, route_srl, way_srl)){
+       if(mDbOpenHelper.checkStations(country_srl, route, way_srl)){
            broadcastCheckDataDB(true);
 
        }else{
 
            ArrayList<StationClass> notiarray = new ArrayList<StationClass>();
-           StationClass mnoticalss = new StationClass(country_srl, route_srl, way_srl, station_srl);
+           StationClass mnoticalss = new StationClass(country_srl, route, way_srl, station_srl);
 
            notiarray.add(mnoticalss);
            Gson gson = new GsonBuilder().create();
