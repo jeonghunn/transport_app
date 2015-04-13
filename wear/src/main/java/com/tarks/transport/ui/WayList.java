@@ -47,7 +47,7 @@ public class WayList extends Activity
     ArrayList<WayClass> wayarray = new ArrayList<WayClass>();
 
     private int country_srl;
-    private int route;
+    private String route;
 
     WearableListView listView;
 
@@ -163,7 +163,7 @@ protected void onCreate(Bundle savedInstanceState) {
     Intent intent = getIntent(); // 인텐트 받아오고
 
    // int country_srl = intent.getIntExtra("country_srl", 0);
-    route = intent.getIntExtra("route", "0"); // 인텐트로 부터 데이터 가져오고
+    route = intent.getStringExtra("route"); // 인텐트로 부터 데이터 가져오고
      country_srl = intent.getIntExtra("country_srl", 0); // 인텐트로 부터 데이터 가져오고
 
     JSONArray jsonArrayList = new JSONArray();   // JSONArray 생성

@@ -238,7 +238,7 @@ public class StationList extends Activity
         Intent intent = getIntent(); // 인텐트 받아오고
 
          country_srl = intent.getIntExtra("country_srl", 0);
-         route = intent.getIntExtra("route", "0"); // 인텐트로 부터 데이터 가져오고
+         route = intent.getStringExtra("route"); // 인텐트로 부터 데이터 가져오고
          way_srl = intent.getIntExtra("way_srl", 0); // 인텐트로 부터 데이터 가져오고
          station_srl = intent.getIntExtra("station_srl", 0); // 인텐트로 부터 데이터 가져오고
 

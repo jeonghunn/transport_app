@@ -14,7 +14,7 @@ public class StationClass {
 
     public StationClass(){}
 
-    public StationClass(int _country_srl, int _route, int _way_srl, int _station_srl){
+    public StationClass(int _country_srl, String _route, int _way_srl, int _station_srl){
         this.country_srl = _country_srl;
         this.route = _route;
         this.way_srl = _way_srl;
