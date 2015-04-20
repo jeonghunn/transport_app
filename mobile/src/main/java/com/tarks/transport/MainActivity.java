@@ -364,6 +364,10 @@ setInfotext(getString(R.string.db_downloading));
     }
 
     public void startApp(){
+        startActivity(new Intent(MainActivity.this,main.class));
+        startService(new Intent(MainActivity.this, CoreSystem.class));
+        finish();
+        /*
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
@@ -373,6 +377,7 @@ setInfotext(getString(R.string.db_downloading));
                 finish();
             }
         }, (long) (900));
+        */
     }
 
     private void SaveNewVersion(DbOpenHelper dp, String ver){

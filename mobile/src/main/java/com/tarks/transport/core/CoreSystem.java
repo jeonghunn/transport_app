@@ -1,8 +1,12 @@
 package com.tarks.transport.core;
 
 import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
@@ -38,6 +42,7 @@ import com.tarks.transport.core.db.DbOpenHelper;
 import com.tarks.transport.core.db.InfoClass;
 import com.tarks.transport.core.db.flowclass;
 import com.tarks.transport.main;
+import com.tarks.transport.ui.DevReciever;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,7 +72,9 @@ public class CoreSystem extends WearableListenerService implements GoogleApiClie
 
     //dev
     private boolean useFg = false;
+    private boolean useBt = false;
     private boolean runningFg;
+    private BusActiveReceiver devReceiver;
 
 
     private ArrayList<String> routes = new ArrayList<String>();
@@ -1190,6 +1197,13 @@ if(msg.obj != null)     setActionLocationMode(CoreSystem.this,Integer.parseInt( 
 
     private void hiddenDev(){
         useFg = global.getBooleanDev(this,globalv.DEV_FOREGROUND);
+        useBt = global.getBooleanDev(this,globalv.DEV_CLICK_ON);
+        if(useBt){
+            IntentFilter filter = new IntentFilter();
+            filter.addAction(globalv.broadcast_CLICK);
+            devReceiver = new BusActiveReceiver();
+            registerReceiver(devReceiver, filter);
+        }
         if(global.getBooleanDev(this,globalv.DEV_START_F)){
             doDev_Noti(32767,"sc");
         }
@@ -1202,6 +1216,20 @@ if(msg.obj != null)     setActionLocationMode(CoreSystem.this,Integer.parseInt( 
                 .setContentText("Running")
                 .setPriority(NotificationCompat.PRIORITY_MIN)
                 .setOngoing(true);
+        if(useBt){
+            // Creates an Intent for the Activity
+            Intent notifyIntent = new Intent(cx,DevReciever.class);
+            notifyIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            // Creates the PendingIntent
+            PendingIntent notifyPendingIntent =
+                    PendingIntent.getActivity(
+                            this,
+                            0,
+                            notifyIntent,
+                            PendingIntent.FLAG_UPDATE_CURRENT
+                    );
+            notificationBuilder.setContentIntent(notifyPendingIntent);
+        }
         if(s != null){
             if(s.equalsIgnoreCase("sc")){
                 runningFg = true;
@@ -1228,6 +1256,19 @@ if(msg.obj != null)     setActionLocationMode(CoreSystem.this,Integer.parseInt( 
             notificationBuilder.setContentText(sp[1]);
             NotificationManager mNotifyMgr =  (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
             mNotifyMgr.notify(9997, notificationBuilder.build());
+        }
+    }
+    public class BusActiveReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if(intent.getAction().equalsIgnoreCase(globalv.broadcast_CLICK)){
+                //globalv.
+                if(location_mode == 6 || location_mode == 5){
+                    setActionLocationMode(context,globalv.STANBY_MODE);
+                }else if(location_mode <= 4){
+                    setActionLocationMode(context,globalv.LIVE_ACTIVE_MODE);
+                }
+            }
         }
     }
 

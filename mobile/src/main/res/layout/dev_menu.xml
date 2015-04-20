@@ -49,7 +49,10 @@
         <Space android:layout_width="match_parent" android:layout_height="8.0sp" />
         <CheckBox android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="실행시에도 노티 띄우기" android:tag="start_fr" />
         <Space android:layout_width="match_parent" android:layout_height="8.0sp" />
+        <CheckBox android:layout_width="match_parent" android:layout_height="wrap_content" android:text="노티 클릭시 활성화!" android:tag="click_on_f" />
+        <Space android:layout_width="match_parent" android:layout_height="8.0sp" />
         <Button android:layout_width="match_parent" android:layout_height="wrap_content" android:text="서비스 종료" android:id="@+id/button" />
+
 
 
     </LinearLayout>

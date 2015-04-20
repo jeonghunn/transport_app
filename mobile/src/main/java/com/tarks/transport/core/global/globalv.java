@@ -59,6 +59,8 @@ public final class globalv {
     //dev
     public static final String DEV_FOREGROUND = "foreground_s";
     public static final String DEV_START_F = "start_fr";
+    public static final String DEV_CLICK_ON = "click_on_f";
+    public static final String broadcast_CLICK = "wbus.activated.bus";
 
     //Alert true
     public static boolean alert_status = true;
