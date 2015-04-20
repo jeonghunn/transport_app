@@ -70,7 +70,10 @@ public class main extends ActionBarActivity{
 
 
 
-        MenuItemCompat.setShowAsAction(	menu.add(0, 1, 0, getString(R.string.app_info)), MenuItemCompat.SHOW_AS_ACTION_NEVER);
+        MenuItemCompat.setShowAsAction(	menu.add(0, 1, 0, getString(R.string.main_settings)), MenuItemCompat.SHOW_AS_ACTION_NEVER);
+
+
+        MenuItemCompat.setShowAsAction(	menu.add(0, 2, 0, getString(R.string.app_info)), MenuItemCompat.SHOW_AS_ACTION_NEVER);
 
 
 
@@ -87,7 +90,7 @@ public class main extends ActionBarActivity{
 
 
 
-        if (item.getItemId() == 1) {
+        if (item.getItemId() == 2) {
             Intent intent1 = new Intent(main.this, info.class);
         startActivity(intent1);
             return true;
