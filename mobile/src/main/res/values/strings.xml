@@ -32,6 +32,9 @@
     <string name="direction">Direction</string>
     <string name="wbus_on_android_wear">WBUS just supports Android Wear. We will support for phone soon. </string>
 
+    <!--Main-->
+    <string name="main_settings" >Settings</string>
+
     <!--Noti-->
     <string name="bus_mode_started">Bus Mode Activated</string>
 

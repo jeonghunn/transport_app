@@ -18,6 +18,7 @@
     <string name="developers">Developers</string>
     <string name="bus">Bus</string>
 
+
     <!--Noti-->
     <string name="busmode_disable">Disable</string>
 </resources>
