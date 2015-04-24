@@ -1,5 +1,6 @@
 package com.tarks.transport.core;
 
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -84,6 +85,7 @@ checkMessage(messageEvent.getPath(), messageEvent.getData());
             if(message.matches("checkDataBase")) doCheckDB(global.getStringbyBytes(bytes));
             if(message.matches("db_ver")) updateDBVer(global.getStringbyBytes(bytes));
             if(message.matches("okMessage")) okMessage();
+            if(message.matches("deleteNoti")) deleteNoti(Integer.parseInt(global.getStringbyBytes(bytes)));
 
             //To Phone
             if(message.matches("requestLocationMode")) requestLocationMode(global.getStringbyBytes(bytes));
@@ -176,6 +178,11 @@ checkMessage(messageEvent.getPath(), messageEvent.getData());
             ActiveBusNoti(title, content);
         }
 
+    }
+
+    private void deleteNoti(int notiid){
+        NotificationManager nMgr = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        nMgr.cancel(notiid);
     }
 
     private void okMessage(){

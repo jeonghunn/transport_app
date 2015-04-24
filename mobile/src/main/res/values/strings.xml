@@ -7,7 +7,7 @@
     <string name="verkind" translatable="false">Beta Version</string>
     <string name="action_settings" translatable="false">Settings</string>
     <string name="copyright" translatable="false" >Copyrightⓒ 2015 WBus Team.</string>
-    <string name="ver" translatable="false" >0.2.13.0.158</string>
+    <string name="ver" translatable="false" >0.2.14.0.160</string>
     <string name="api_version" translatable="false">1</string>
 
     <!--Server url-->

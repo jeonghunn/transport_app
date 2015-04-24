@@ -864,6 +864,10 @@ sendMessage(msg, data.getBytes());
 
     }
 
+    private void sendDeleteNoti(int noti_id){
+        sendMessageDefault("deleteNoti" , String.valueOf(noti_id));
+    }
+
 
     public void sendBusNoti(int kind, int noti_id, String title, String content, String direction_name, String station_summary,  int country_srl, String route, int way_srl, int station_srl) {
         ArrayList<BusNotiClass> notiarray = new ArrayList<BusNotiClass>();
@@ -922,6 +926,10 @@ global.log("ARRIVED!");
         sendNoti(globalv.ACTIVE_BUS_NOTI,1, getString(R.string.app_name), getString(R.string.bus_mode_started) );
     }
 
+    private void DisableBusModeNoti(){
+sendDeleteNoti(1);
+    }
+
 
     public void initSamePlaceCount(){
         same_place_count = 0;
@@ -968,7 +976,8 @@ global.log("ARRIVED!");
             if (level == globalv.LIVE_ACTIVE_MODE)
                 LocationRequest(cx, 15000, 3000, LocationRequest.PRIORITY_HIGH_ACCURACY);
             //Check if it has to send bus noti
-            if(level  >= globalv.ACTIVE_MODE &&  action_count == 0) ActiveBusnoti();
+            if(level  >= globalv.ACTIVE_MODE &&  action_count == 0 && !getLocationChanged()) ActiveBusnoti();
+            if(level <= globalv.ACTIVE_STANBY_MODE && action_count == 0 && !getLocationChanged()) DisableBusModeNoti();
         } else {
             LocationRequest(cx, 5000, 1000, LocationRequest.PRIORITY_HIGH_ACCURACY);
         }
