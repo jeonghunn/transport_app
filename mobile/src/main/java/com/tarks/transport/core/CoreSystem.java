@@ -968,7 +968,7 @@ global.log("ARRIVED!");
             if (level == globalv.LIVE_ACTIVE_MODE)
                 LocationRequest(cx, 15000, 3000, LocationRequest.PRIORITY_HIGH_ACCURACY);
             //Check if it has to send bus noti
-            if(level  >= globalv.ACTIVE_MODE && !getLocationChanged()) ActiveBusnoti();
+            if(level  >= globalv.ACTIVE_MODE &&  action_count == 0) ActiveBusnoti();
         } else {
             LocationRequest(cx, 5000, 1000, LocationRequest.PRIORITY_HIGH_ACCURACY);
         }
