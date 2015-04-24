@@ -58,8 +58,25 @@ public class DbOpenHelper {
         mDB.close();
     }
 
+    public void beginTransaction(){
+        mDB.beginTransaction();
+    }
+
+    public void TransactionFinish(){
+        mDB.setTransactionSuccessful();
+        mDB.endTransaction();
+    }
+
+
+
+
     // Insert DB
     public long insertColumn(int id_srl, int country_srl ,String route, int station_srl, int way_srl,  String station_name, Double station_latitude, Double station_longitude){
+
+
+
+
+
         ContentValues values = new ContentValues();
         values.put(DataBases.CreateDB.ID_SRL, id_srl);
         values.put(DataBases.CreateDB.COUNTRY_SRL, country_srl);
@@ -71,7 +88,12 @@ public class DbOpenHelper {
         values.put(DataBases.CreateDB.STATION_LONGITUDE, station_longitude);
 
 
-        return mDB.insert(DataBases.CreateDB._TABLENAME, null, values);
+     long result =  mDB.insert(DataBases.CreateDB._TABLENAME, null, values);
+
+        mDB.setTransactionSuccessful();
+        mDB.endTransaction();
+
+        return result;
 
 
     }

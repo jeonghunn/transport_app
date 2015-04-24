@@ -43,7 +43,6 @@ public class ComService extends WearableListenerService implements GoogleApiClie
         super.onCreate();
 
         setGoogleApiClient(this);
-
     }
 
 

@@ -77,6 +77,15 @@ public class DbOpenHelper {
 
     }
 
+    public void beginTransaction(){
+        mDB.beginTransaction();
+    }
+
+    public void TransactionFinish(){
+        mDB.setTransactionSuccessful();
+        mDB.endTransaction();
+    }
+
 
 
     // Insert DB
