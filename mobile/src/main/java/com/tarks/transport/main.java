@@ -11,6 +11,7 @@ import android.view.MenuItem;
 
 import com.tarks.transport.ui.MainAdapter;
 import com.tarks.transport.ui.info;
+import com.tarks.transport.ui.setting.setting;
 
 /**
  * Created by panda on 2014-10-25.
@@ -88,6 +89,13 @@ public class main extends ActionBarActivity{
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
+
+
+        if(item.getItemId() == 1){
+            Intent intent1 = new Intent(main.this, setting.class);
+            startActivity(intent1);
+            return true;
+        }
 
 
         if (item.getItemId() == 2) {
