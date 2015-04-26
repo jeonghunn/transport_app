@@ -167,6 +167,8 @@ public class CoreSystem extends WearableListenerService implements GoogleApiClie
         global.log("conFlow");
         action_count++;
 
+        //init near routes
+        routes.clear();
 
 
 
