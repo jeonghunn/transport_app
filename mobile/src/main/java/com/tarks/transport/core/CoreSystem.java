@@ -70,6 +70,13 @@ public class CoreSystem extends WearableListenerService implements GoogleApiClie
     private int last_nearby_sration_id = 0;
     private boolean same_place = false;
 
+    //Destination
+    //route, way srl
+    private String destination_route;
+    private int destination_way_srl;
+    private int goal_id;
+
+
     //dev
     private boolean useFg = false;
     private boolean useBt = false;
@@ -168,13 +175,14 @@ public class CoreSystem extends WearableListenerService implements GoogleApiClie
         action_count++;
 
         //init near routes
-        routes.clear();
+        //routes.clear();
 
 
 
         int near_level = 0;
         final int count_srl = global.getCountSrl(cx);
-        final int goal_id = global.getGoalID(cx);
+        goal_id = global.getGoalID(cx);
+
 
         ArrayList<InfoClass> ic = null;
         for (int i = 1; i <= 6; i++) {
@@ -221,13 +229,20 @@ public class CoreSystem extends WearableListenerService implements GoogleApiClie
             int station_left = 0;
             String stationListString = null;
 
+            //Get Stations list when flow available
             if (mflow.size() > 0)
                 stations = getStations(flowget.country_srl, flowget.route, flowget.way_srl);
             if (mflow.size() > 0 && stations.size() > 0) {
                 for (int i = 0; i < stations.size(); i++) {
                     //Calculate stations left
-                    if (stations.get(i).id == goal_id && goal_id != 0)
+                    if (stations.get(i).id == goal_id && goal_id != 0){
                         station_left = stations.get(i).station_srl - flowget.station_srl;
+                        destination_route = stations.get(i).route;
+                        destination_way_srl = stations.get(i).way_srl;
+
+
+                    }
+
 
                     // Make Stations List to show wear
                     if (flowget.station_srl <= stations.get(i).station_srl)
@@ -546,25 +561,19 @@ public class CoreSystem extends WearableListenerService implements GoogleApiClie
                 if (csrc.getPosition() + 1 == csrc.getCount() && csr.getInt(csr.getColumnIndex("station_srl")) >= station_srl_sub_temp + 3)
                     station_srl_count = 0;
 
-//               if(
-//   csrc.getInt(csrc.getColumnIndex("station_srl")) < station_srl_sub_temp + 3  ||  station_srl_sub_temp == 0){
-//                   global.log("true");
-//               }else{
-//                   global.log("false");
-//               }
 
-
-//global.log(csr.getInt(csr.getColumnIndex("station_srl")) + "AND" + csrc.getCount() );
-                // global.log( csr.getInt(csr.getColumnIndex("station_srl")) + "VS" +csrc.getInt(csrc.getColumnIndex("station_srl")));
-                //
             }
             global.log(csr.getInt(csr.getColumnIndex("way_srl")) + "========");
 
 
-            //   global.log("best_count : " + best_count + "station_srl_count : " + station_srl_count);
+            //Accept when more big count than best count with no destination
+//            if ((best_count <= station_srl_count && goal_id == 0 ) ||
+//                    (csrc.getString(csrc.getColumnIndex("route")) == destination_route &&
+//                            csrc.getInt(csrc.getColumnIndex("way_srl")) == destination_way_srl  && goal_id != 0)) {
+
             if (best_count <= station_srl_count) {
 
-                pos = csr.getPosition();
+            pos = csr.getPosition();
                 best_count = station_srl_count;
                 waitingbus = best_count == 1 ? true : false;
                 global.log(" : " + pos + "best count  : " + best_count);

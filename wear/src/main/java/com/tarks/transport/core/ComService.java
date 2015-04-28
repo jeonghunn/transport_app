@@ -20,6 +20,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.tarks.transport.R;
+import com.tarks.transport.core.db.DataBases;
 import com.tarks.transport.core.db.DbOpenHelper;
 import com.tarks.transport.core.db.InfoClass;
 import com.tarks.transport.ui.StationList;
@@ -41,7 +42,7 @@ public class ComService extends WearableListenerService implements GoogleApiClie
     @Override
     public void onCreate() {
         super.onCreate();
-
+     // resetStationsDB();
         setGoogleApiClient(this);
     }
 
@@ -387,11 +388,16 @@ waitingreceive = true;
         DbOpenHelper mDbOpenHelper = new DbOpenHelper(this);
         mDbOpenHelper.open();
 
+        mDbOpenHelper.beginTransaction();
         for (int i = 0; i < infoArraylist.size(); i++) {
            // global.log(infoArraylist.get(i).station_name);
             InfoClass get = infoArraylist.get(i);
             mDbOpenHelper.insertColumn(get.id, get.country_srl,get.route,get.station_srl,get.way_srl, get.station_name, get.station_latitude,  get.station_longitude);
         }
+
+
+        mDbOpenHelper.TransactionFinish();
+
 
         mDbOpenHelper.close();
         broadcastCheckDataDB(true);

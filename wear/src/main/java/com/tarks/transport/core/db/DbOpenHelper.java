@@ -88,12 +88,10 @@ public class DbOpenHelper {
         values.put(DataBases.CreateDB.STATION_LONGITUDE, station_longitude);
 
 
-     long result =  mDB.insert(DataBases.CreateDB._TABLENAME, null, values);
 
-        mDB.setTransactionSuccessful();
-        mDB.endTransaction();
 
-        return result;
+
+        return mDB.insert(DataBases.CreateDB._TABLENAME, null, values);
 
 
     }
