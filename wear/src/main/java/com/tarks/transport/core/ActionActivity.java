@@ -11,6 +11,7 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
+import android.support.wearable.activity.ConfirmationActivity;
 import android.support.wearable.view.CardScrollView;
 import android.support.wearable.view.WatchViewStub;
 import android.util.Log;
@@ -53,12 +54,23 @@ public class ActionActivity extends Activity implements GoogleApiClient.Connecti
 
         Intent intent = getIntent(); // 인텐트 받아오고
         String action_kind = intent.getStringExtra("action_kind"); // 인텐트로 부터 데이터 가져오고
-
+global.log(action_kind);
 
         if(action_kind.matches("delete_noti")){
           //  requsetToMain("delete_noti//1");
           //  global.log("dfsafdsafsdfsd");
             new SendMessage("requestLocationMode", "3").start();
+        }
+
+        if(action_kind.matches("startBusMode")){
+            new SendMessage("startBusMode", "true").start();
+global.cancelNoti(this, 1);
+            Intent intent1 = new Intent(this, ConfirmationActivity.class);
+            intent1.putExtra(ConfirmationActivity.EXTRA_ANIMATION_TYPE,
+                    ConfirmationActivity.SUCCESS_ANIMATION);
+            intent1.putExtra(ConfirmationActivity.EXTRA_MESSAGE,
+                    getString(R.string.bus_mode_started));
+            startActivity(intent1);
         }
 
 

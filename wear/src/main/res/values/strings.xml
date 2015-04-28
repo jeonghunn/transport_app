@@ -1,19 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">WhereBus</string>
+    <string name="app_name">WBUS</string>
     <string name="hello_round">Hello Round World!</string>
     <string name="hello_square">Hello Square World!</string>
-    <string name="ver">0.2.0.0.111</string>
-    <string name="stations">정류장</string>
-    <string name="way">방향</string>
-    <string name="route">노선</string>
-    <string name="riding">승차</string>
-    <string name="get_off">하차</string>
-    <string name="direction">방면</string>
-    <string name="set_to_destination">목적지로 설정됨</string>
-    <string name="pass_destination">지나친 정류장</string>
-    <string name="bus_mode_started">버스 모드 활성화됨</string>
-    <string name="destination_setting">목적지 설정</string>
+    <string name="ver">0.2.16.2.165</string>
+    <string name="stations">Stations</string>
+    <string name="way">Way</string>
+    <string name="route">Route</string>
+    <string name="riding">Taking a Bus</string>
+    <string name="get_off">Getting Off</string>
+    <string name="direction">Direction</string>
+    <string name="set_to_destination">Set to Destination</string>
+    <string name="missed_the_stop">Missed the Stop</string>
+    <string name="bus_mode_started">Bus Mode Activated</string>
+    <string name="destination_setting">Destination Setting</string>
+    <string name="developers">Developers</string>
     <string name="bus">Bus</string>
+
+
+    <!--Noti-->
+    <string name="busmode_disable">Disable</string>
 </resources>

@@ -6,7 +6,7 @@ package com.tarks.transport.core;
 
 public class StationClass {
     public int country_srl;
-    public int route_srl;
+    public String route;
     public int way_srl;
     public int station_srl;
 
@@ -14,9 +14,9 @@ public class StationClass {
 
     public StationClass(){}
 
-    public StationClass(int _country_srl, int _route_srl, int _way_srl, int _station_srl){
+    public StationClass(int _country_srl, String _route, int _way_srl, int _station_srl){
         this.country_srl = _country_srl;
-        this.route_srl = _route_srl;
+        this.route = _route;
         this.way_srl = _way_srl;
         this.station_srl = _station_srl;
 

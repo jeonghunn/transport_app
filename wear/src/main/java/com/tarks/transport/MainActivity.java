@@ -4,20 +4,13 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.wearable.activity.ConfirmationActivity;
-import android.support.wearable.view.CardScrollView;
-import android.support.wearable.view.WatchViewStub;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.View;
-import android.widget.TextView;
-
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.MessageApi;
 import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.Wearable;
-import com.tarks.transport.ui.RouteList;
 
 public class MainActivity extends Activity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener{
 
@@ -53,6 +46,16 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
         intent.putExtra(ConfirmationActivity.EXTRA_MESSAGE,
                 getString(R.string.bus_mode_started));
         startActivity(intent);
+
+
+
+
+        //global.log(global.getSetting(this, "db_ver", "0") + "asdf");
+
+
+    //    global.BusNoti(this, 1, intent, "펜타포트", "서당골", "ㅁㅇㄴㄹ", 1,1,1,1,"ㅇㅁㄴㄹ",R.drawable.ic_launcher, R.drawable.bus_background_night);
+//        Intent intent2 = new Intent(this, List.class);
+//        startActivity(intent2);
 
 
 

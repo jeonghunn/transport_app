@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.wearable.view.WatchViewStub;
 import android.support.wearable.view.WearableListView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -37,7 +38,7 @@ public class WayList extends Activity
         implements WearableListView.ClickListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     // Sample dataset for the list
-    String[] elements = { "동춘동종점 방향" , "무지개아파트 방향"};
+   // String[] elements = { "동춘동종점 방향" , "무지개아파트 방향"};
 
     GoogleApiClient mGoogleApiClient;
     ProgressBar ps;
@@ -46,7 +47,9 @@ public class WayList extends Activity
     ArrayList<WayClass> wayarray = new ArrayList<WayClass>();
 
     private int country_srl;
-    private int route_srl;
+    private String route;
+
+    WearableListView listView;
 
     @Override
     public void onClick(WearableListView.ViewHolder viewHolder) {
@@ -57,7 +60,7 @@ public class WayList extends Activity
        // if(viewHolder.getItemId() == 0){
             Intent i = new Intent(WayList.this, StationList.class);
         i.putExtra("country_srl" , country_srl);
-        i.putExtra("route_srl" , route_srl);
+        i.putExtra("route" , route);
         i.putExtra("way_srl" , wayarray.get(viewHolder.getPosition()).way_srl);
             startActivity(i);
         finish();
@@ -121,10 +124,10 @@ public class WayList extends Activity
 @Override
 protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.list);
+        setContentView(R.layout.listhub);
     getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-    ps = (ProgressBar) findViewById(R.id.progressBar);
+
 
     if(null == mGoogleApiClient) {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -140,10 +143,27 @@ protected void onCreate(Bundle savedInstanceState) {
         //  Log.v(TAG, "Connecting to GoogleApiClient..");
     }
 
+    WatchViewStub stub = (WatchViewStub) findViewById(R.id.watch_view_stub);
+    stub.setOnLayoutInflatedListener(new WatchViewStub.OnLayoutInflatedListener() {
+        @Override public void onLayoutInflated(WatchViewStub stub) {
+            // Now you can access your views
+            // Get the list component from the layout of the activity
+
+            ps = (ProgressBar) findViewById(R.id.progressBar);
+
+
+            listView =
+                    (WearableListView) findViewById(R.id.wearable_list);
+
+
+
+        }
+    });
+
     Intent intent = getIntent(); // 인텐트 받아오고
 
    // int country_srl = intent.getIntExtra("country_srl", 0);
-     route_srl = intent.getIntExtra("route_srl", 0); // 인텐트로 부터 데이터 가져오고
+    route = intent.getStringExtra("route"); // 인텐트로 부터 데이터 가져오고
      country_srl = intent.getIntExtra("country_srl", 0); // 인텐트로 부터 데이터 가져오고
 
     JSONArray jsonArrayList = new JSONArray();   // JSONArray 생성
@@ -151,7 +171,7 @@ protected void onCreate(Bundle savedInstanceState) {
     try {
 
         obj.put("country_srl", country_srl);
-        obj.put("route_srl", route_srl);
+        obj.put("route", route);
     }catch (Exception e){
         e.printStackTrace();
     }
@@ -185,9 +205,7 @@ protected void onCreate(Bundle savedInstanceState) {
 
             wayarray = global.getJSONArrayListByWayClass(message);
 
-            // Get the list component from the layout of the activity
-            WearableListView listView =
-                    (WearableListView) findViewById(R.id.wearable_list);
+
 
             // Assign an adapter to the list
             listView.setAdapter(new ListAdapter(WayList.this, wayarray));

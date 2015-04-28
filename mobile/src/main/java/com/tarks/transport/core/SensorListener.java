@@ -4,8 +4,8 @@ import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
+
+import com.tarks.transport.core.global.globalv;
 
 /**
  * Created by JHRunning on 12/2/14.

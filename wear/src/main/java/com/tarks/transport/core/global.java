@@ -4,6 +4,7 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -19,8 +20,9 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.tarks.transport.MainActivity;
 import com.tarks.transport.R;
-import com.tarks.transport.db.InfoClass;
+import com.tarks.transport.core.db.InfoClass;
 import com.tarks.transport.ui.RouteList;
 import com.tarks.transport.ui.StationList;
 import com.tarks.transport.ui.WayList;
@@ -43,7 +45,7 @@ import java.util.Map;
  */
 public final class global {
 
-    static boolean debug_mode = true;
+    static boolean debug_mode = false;
 
     public static void toast(Context cx, String str, boolean length) {
         // Log.i("ACCESS", "I can access to toast");
@@ -106,7 +108,7 @@ public final class global {
 
 
       //Temp function
-    public static void BusNoti(Context cx, int notificationId, Intent viewIntent, String title, String content, String direction_name,  int country_srl, int route_srl, int way_srl, int station_srl ,  String station_summary, int icon, int largeicon){
+    public static void BusNoti(Context cx, int notificationId, Intent viewIntent, String title, String content, String direction_name,  int country_srl, String route, int way_srl, int station_srl ,  String station_summary, int icon, int largeicon){
 
 
 
@@ -115,7 +117,7 @@ public final class global {
 
         Intent stationIntent = new Intent(cx, StationList.class);
         stationIntent.putExtra("country_srl" , country_srl);
-        stationIntent.putExtra("route_srl" , route_srl);
+        stationIntent.putExtra("route" , route);
         stationIntent.putExtra("way_srl" , way_srl);
         stationIntent.putExtra("station_srl" , station_srl);
 
@@ -138,8 +140,7 @@ public final class global {
 
         // Create a big text style for the second page
         NotificationCompat.BigTextStyle secondPageStyle = new NotificationCompat.BigTextStyle();
-        secondPageStyle.setBigContentTitle(direction_name + " " + cx.getString(R.string.direction) + "(" + route_srl  + ")")
-                .bigText(station_summary);
+        secondPageStyle.bigText(station_summary);
 
 
 // Create second page notification
@@ -196,17 +197,17 @@ public final class global {
 
 
 
-        Intent rideintent = new Intent(cx, RouteList.class);
-        PendingIntent ridePendingIntent = PendingIntent.getActivity(cx, 0, rideintent, PendingIntent.FLAG_UPDATE_CURRENT);
-
 
         //Delete
         Intent deleteIntent = new Intent(cx, ActionActivity.class);
         deleteIntent.putExtra("action_kind", "delete_noti");
-        PendingIntent pendingDeleteIntent = PendingIntent.getActivity(cx, 0, deleteIntent, 0);
+        PendingIntent pendingDeleteIntent = PendingIntent.getActivity(cx, 0, deleteIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
 
 
+
+        Intent rideintent = new Intent(cx, MainActivity.class);
+        PendingIntent ridePendingIntent = PendingIntent.getActivity(cx, 0, rideintent, PendingIntent.FLAG_UPDATE_CURRENT);
 
 
         NotificationCompat.WearableExtender wearableExtender =
@@ -244,7 +245,57 @@ public final class global {
         notificationManager.notify(notificationId, notificationBuilder.build());
     }
 
+    public static void ActivieModeNoti(Context cx, int notificationId, String title, String content, int icon, int largeicon){
 
+
+
+
+
+
+        //Delete
+        Intent deleteIntent = new Intent(cx, ActionActivity.class);
+        deleteIntent.putExtra("action_kind", "delete_noti");
+        PendingIntent pendingDeleteIntent = PendingIntent.getActivity(cx, 0, deleteIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+
+
+
+
+
+        NotificationCompat.WearableExtender wearableExtender =
+                new NotificationCompat.WearableExtender()
+                        .setHintHideIcon(true)
+                                //.setDisplayIntent(pendingdetailintent)
+                        .setBackground(BitmapFactory.decodeResource(
+                                cx.getResources(), largeicon));
+
+
+        NotificationCompat.Builder notificationBuilder =
+                new NotificationCompat.Builder(cx)
+                        .setSmallIcon(icon)
+                        .setContentTitle(title)
+                        .setContentText(content)
+                        .setDeleteIntent(pendingDeleteIntent)
+                        .setLargeIcon(BitmapFactory.decodeResource(
+                                cx.getResources(), largeicon))
+                        .extend(wearableExtender);
+                     //   .addAction(R.drawable.ic_close_white,
+                     //           cx.getString(R.string.busmode_disable), pendingDeleteIntent);
+
+
+
+
+
+
+// Get an instance of the NotificationManager service
+        NotificationManagerCompat notificationManager =
+                NotificationManagerCompat.from(cx);
+
+
+
+// Build the notification and issues it with notification manager.
+        notificationManager.notify(notificationId, notificationBuilder.build());
+    }
 
     public static String getStringbyBytes(byte[] bytes){
         try {
@@ -255,7 +306,25 @@ public final class global {
         return null;
     }
 
+    public static void SaveSetting(Context cx, String setting, String value){
+        SharedPreferences edit = cx.getSharedPreferences("setting",
+                cx.MODE_PRIVATE);
+        SharedPreferences.Editor editor = edit.edit();
+        editor.putString(setting , value);
+        editor.commit();
+    }
 
+
+    public static String getSetting(Context cx, String setting, String default_value) {
+        SharedPreferences prefs = cx.getSharedPreferences("setting",
+                cx.MODE_PRIVATE);
+        return prefs.getString(setting, default_value);
+    }
+    public static SharedPreferences getSP(Context cx, String name) {
+        SharedPreferences prefs = cx.getSharedPreferences("setting",
+                cx.MODE_PRIVATE);
+        return prefs;
+    }
 
 
 

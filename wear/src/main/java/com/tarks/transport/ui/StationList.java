@@ -7,38 +7,33 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
 import android.graphics.Typeface;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.wearable.activity.ConfirmationActivity;
+import android.support.wearable.view.WatchViewStub;
 import android.support.wearable.view.WearableListView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.MessageApi;
-import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.Wearable;
 import com.tarks.transport.R;
 import com.tarks.transport.core.global;
-import com.tarks.transport.db.DbOpenHelper;
-import com.tarks.transport.db.InfoClass;
+import com.tarks.transport.core.db.DbOpenHelper;
+import com.tarks.transport.core.db.InfoClass;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
 
 public class StationList extends Activity
         implements WearableListView.ClickListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
@@ -49,7 +44,7 @@ public class StationList extends Activity
     Context ct;
   //  WearableListView listView;
     private int country_srl = 0;
-    private int route_srl = 0;
+    private String route = "0";
     private int way_srl = 0;
     private int station_srl = 0;
     GoogleApiClient mGoogleApiClient;
@@ -57,7 +52,7 @@ public class StationList extends Activity
     private ArrayList<InfoClass> stations;
     MessageReceiver messageReceiver;
     ProgressBar ps;
-
+    WearableListView listView;
 
     @Override
     public void onClick(WearableListView.ViewHolder viewHolder) {
@@ -75,7 +70,7 @@ public class StationList extends Activity
                     getString(R.string.set_to_destination));
             startActivity(intent);
         }else{
-            global.toast(this, getString(R.string.pass_destination));
+            global.toast(this, getString(R.string.missed_the_stop));
         }
 
       //  global.log(viewHolder.getPosition() + "asdfaf");
@@ -129,14 +124,14 @@ public class StationList extends Activity
     }
 
 
-    public ArrayList<InfoClass> getStations(int country_srl, int route_srl, int way_srl) {
+    public ArrayList<InfoClass> getStations(int country_srl, String route, int way_srl) {
         // InfoClass mInfoClass;
         ArrayList<InfoClass> mInfoArray = new ArrayList<InfoClass>();
 
 
         DbOpenHelper mDbOpenHelper = new DbOpenHelper(this);
         mDbOpenHelper.open();
-        Cursor csr = mDbOpenHelper.getStations(country_srl, route_srl, way_srl);
+        Cursor csr = mDbOpenHelper.getStations(country_srl, route, way_srl);
 
 
         while (csr.moveToNext()) {
@@ -147,7 +142,7 @@ public class StationList extends Activity
                     csr.getInt(csr.getColumnIndex("_id")),
                     csr.getInt(csr.getColumnIndex("id_srl")),
                     csr.getInt(csr.getColumnIndex("country_srl")),
-                    csr.getInt(csr.getColumnIndex("route_srl")),
+                    csr.getString(csr.getColumnIndex("route")),
                     csr.getInt(csr.getColumnIndex("way_srl")),
                     csr.getInt(csr.getColumnIndex("station_srl")),
                     csr.getString(csr.getColumnIndex("station_name")),
@@ -173,17 +168,13 @@ public class StationList extends Activity
             boolean message = intent.getBooleanExtra("message", false);
 
             global.log("PAYBACK");
-
             //   if(routes == null) {
             // Get the list component from the layout of the activity
-            WearableListView listView =
-                    (WearableListView) findViewById(R.id.wearable_list);
 
 
 
 
-
-            stations = getStations(country_srl,route_srl,way_srl);
+            stations = getStations(country_srl,route,way_srl);
             // Assign an adapter to the list
             listView.setAdapter(new ListAdapter(StationList.this,stations));
 
@@ -208,10 +199,10 @@ public class StationList extends Activity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.list);
+        setContentView(R.layout.listhub);
         ct = this;
 
-         ps = (ProgressBar) findViewById(R.id.progressBar);
+
 
        if(null == mGoogleApiClient) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -227,12 +218,27 @@ public class StationList extends Activity
             //  Log.v(TAG, "Connecting to GoogleApiClient..");
         }
 
+        WatchViewStub stub = (WatchViewStub) findViewById(R.id.watch_view_stub);
+        stub.setOnLayoutInflatedListener(new WatchViewStub.OnLayoutInflatedListener() {
+            @Override public void onLayoutInflated(WatchViewStub stub) {
+                // Now you can access your views
+                // Get the list component from the layout of the activity
 
+                ps = (ProgressBar) findViewById(R.id.progressBar);
+
+
+                listView =
+                        (WearableListView) findViewById(R.id.wearable_list);
+
+
+
+            }
+        });
 
         Intent intent = getIntent(); // 인텐트 받아오고
 
          country_srl = intent.getIntExtra("country_srl", 0);
-         route_srl = intent.getIntExtra("route_srl", 0); // 인텐트로 부터 데이터 가져오고
+         route = intent.getStringExtra("route"); // 인텐트로 부터 데이터 가져오고
          way_srl = intent.getIntExtra("way_srl", 0); // 인텐트로 부터 데이터 가져오고
          station_srl = intent.getIntExtra("station_srl", 0); // 인텐트로 부터 데이터 가져오고
 
@@ -242,7 +248,7 @@ public class StationList extends Activity
         try {
 
             obj.put("country_srl", country_srl);
-            obj.put("route_srl", route_srl);
+            obj.put("route", route);
             obj.put("way_srl", way_srl);
             obj.put("station_srl", station_srl);
         }catch (Exception e){
@@ -380,6 +386,7 @@ public class StationList extends Activity
         super.onDestroy();
         //unregister our receiver
         LocalBroadcastManager.getInstance(this).unregisterReceiver(messageReceiver);
+
     }
 
 }

@@ -1,4 +1,4 @@
-package com.tarks.transport.core;
+package com.tarks.transport.core.global;
 
 import android.app.PendingIntent;
 import android.content.Context;
@@ -25,6 +25,8 @@ import java.util.Map;
  */
 public final class globalv {
 
+    //API_KEY
+    public static final String API_KEY = "jfklf23w90232";
 
     //Location
 
@@ -41,7 +43,12 @@ public final class globalv {
     public static final int ALMOST_NOTI = 2;
     public static final int ARRIVED_NOTI = 3;
     public static final int WAITING_BUS_NOTI = 4;
+    public static final int ACTIVE_BUS_NOTI = 5;
 
+
+
+    //OKButton enable
+    public static boolean okbutton = true;
 
     //gyro
     public static int moving_now = 0;
@@ -49,5 +56,16 @@ public final class globalv {
     public static final int STOP_STATE = 1;
     public static final int ACTIVE_STATE = 2;
 
+    //dev
+    public static final String DEV_FOREGROUND = "foreground_s";
+    public static final String DEV_START_F = "start_fr";
+    public static final String DEV_CLICK_ON = "click_on_f";
+    public static final String broadcast_CLICK = "wbus.activated.bus";
+
+    //Alert true
+    public static boolean alert_status = true;
+
+    //Location
+    public static boolean location_checked = false;
     }
 

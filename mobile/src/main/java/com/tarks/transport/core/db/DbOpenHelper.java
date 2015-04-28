@@ -1,4 +1,4 @@
-package com.tarks.transport.db;
+package com.tarks.transport.core.db;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -7,7 +7,8 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
+
+import com.tarks.transport.core.global.global;
 
 /**
  * Created by JHRunning on 11/16/14.
@@ -15,7 +16,7 @@ import android.util.Log;
 public class DbOpenHelper {
 
     private static final String DATABASE_NAME = "transport.db";
-    public static final int DATABASE_VERSION = 2;
+    public static final int DATABASE_VERSION = 4;
     public static SQLiteDatabase mDB;
     private DatabaseHelper mDBHelper;
     private Context mCtx;
@@ -60,10 +61,10 @@ public class DbOpenHelper {
     }
 
     // Insert DB
-    public long insertColumn(int country_srl ,int route_srl, int station_srl, int way_srl,  String station_name, Double station_latitude, Double station_longitude){
+    public long insertColumn(int country_srl ,String route, int station_srl, int way_srl,  String station_name, Double station_latitude, Double station_longitude){
         ContentValues values = new ContentValues();
         values.put(DataBases.CreateDB.COUNTRY_SRL, country_srl);
-        values.put(DataBases.CreateDB.ROUTE_SRL, route_srl);
+        values.put(DataBases.CreateDB.ROUTE, route);
         values.put(DataBases.CreateDB.STATION_SRL, station_srl);
         values.put(DataBases.CreateDB.WAY_SRL, way_srl);
         values.put(DataBases.CreateDB.STATION_NAME, station_name);
@@ -76,16 +77,25 @@ public class DbOpenHelper {
 
     }
 
+    public void beginTransaction(){
+        mDB.beginTransaction();
+    }
+
+    public void TransactionFinish(){
+        mDB.setTransactionSuccessful();
+        mDB.endTransaction();
+    }
+
 
 
     // Insert DB
-    public long insertFdColumn(int count_srl, int action_srl,  int id_srl, int country_srl ,int route_srl, int station_srl, int way_srl, Double latitude, Double longitude, Double station_latitude, Double station_longitude, long time, int location_mode ,int location_level){
+    public long insertFdColumn(int count_srl, int action_srl,  int id_srl, int country_srl ,String route, int station_srl, int way_srl, Double latitude, Double longitude, Double station_latitude, Double station_longitude, long time, int location_mode ,int location_level){
         ContentValues values = new ContentValues();
         values.put(fddb.CreateDB.COUNT_SRL, count_srl);
         values.put(fddb.CreateDB.ACTION_SRL, action_srl);
         values.put(fddb.CreateDB.ID_SRL, id_srl);
         values.put(fddb.CreateDB.COUNTRY_SRL, country_srl);
-        values.put(fddb.CreateDB.ROUTE_SRL, route_srl);
+        values.put(fddb.CreateDB.ROUTE, route);
         values.put(fddb.CreateDB.STATION_SRL, station_srl);
         values.put(fddb.CreateDB.WAY_SRL, way_srl);
         values.put(fddb.CreateDB.LATITUDE, latitude);
@@ -219,27 +229,33 @@ public class DbOpenHelper {
 //    }
 
 
-    public Cursor getDirectionRows(int count_srl, int country_srl, int route_srl, int way_srl, int station_srl){
+    public Cursor getDirectionRows(int count_srl, int country_srl, String route, int way_srl, int station_srl){
 
-        Cursor c = mDB.rawQuery( "select distinct station_srl, way_srl, id_srl from flow where count_srl='" +  count_srl + "'AND country_srl='" + country_srl + "' AND route_srl= '" + route_srl + "' AND way_srl= '"+ way_srl +"' AND station_srl <= '" + station_srl + 1 + "' ORDER BY `_id` ASC" , null);
+        Cursor c = mDB.rawQuery( "select distinct station_srl, way_srl, id_srl from flow where count_srl='" +  count_srl + "'AND country_srl='" + country_srl + "' AND route= '" + route + "' AND way_srl= '"+ way_srl +"' AND station_srl <= '" + station_srl + 1 + "' ORDER BY `_id` ASC" , null);
         return c;
     }
 
-    public Cursor getStations(int country_srl, int route_srl, int way_srl){
+    public Cursor getStations(int country_srl, String route, int way_srl){
 
-        Cursor c = mDB.rawQuery( "select * from stations where country_srl='" + country_srl + "' AND route_srl= '" + route_srl + "' AND way_srl= '"+ way_srl +"' ORDER BY `station_srl` ASC" , null);
+        Cursor c = mDB.rawQuery( "select * from stations where country_srl='" + country_srl + "' AND route= '" + route + "' AND way_srl= '"+ way_srl +"' ORDER BY `station_srl` ASC" , null);
         return c;
     }
 
-    public Cursor getWays(int country_srl, int route_srl){
+    public Cursor getWays(int country_srl, String route){
 
-        Cursor c = mDB.rawQuery( "select * from stations where country_srl='" + country_srl + "' AND route_srl= '" + route_srl + "' GROUP BY way_srl ORDER BY `way_srl` ASC" , null);
+        Cursor c = mDB.rawQuery( "select * from stations where country_srl='" + country_srl + "' AND route= '" + route + "' GROUP BY way_srl ORDER BY `way_srl` ASC" , null);
         return c;
     }
 
 
     public void DeleteFlowRow( int id){
         mDB.execSQL("DELETE FROM flow WHERE id_srl >=" + id + " AND id_srl <  3 + " + id);
+    }
+
+    public void ResetStationsDB(){
+        global.log("resetdb");
+        mDB.execSQL("DROP TABLE IF EXISTS " +DataBases.CreateDB._TABLENAME);
+        mDB.execSQL(DataBases.CreateDB._CREATE);
     }
 
 //    public Cursor getNowStation(Double latitude, Double longitude){

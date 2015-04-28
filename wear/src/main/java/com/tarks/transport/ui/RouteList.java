@@ -5,10 +5,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Typeface;
-import android.media.Image;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.wearable.view.WatchViewStub;
 import android.support.wearable.view.WearableListView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,7 +26,7 @@ import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.Wearable;
 import com.tarks.transport.R;
 import com.tarks.transport.core.global;
-import com.tarks.transport.db.InfoClass;
+import com.tarks.transport.core.db.InfoClass;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -47,6 +46,7 @@ public class RouteList extends Activity
 
     private int number;
     MessageReceiver messageReceiver;
+    WearableListView listView;
 
     @Override
     public void onClick(WearableListView.ViewHolder viewHolder) {
@@ -55,7 +55,7 @@ public class RouteList extends Activity
 
             Intent i = new Intent(RouteList.this, WayList.class);
         i.putExtra("country_srl" , country_srl);
-        i.putExtra("route_srl" , Integer.parseInt(routes.get(viewHolder.getPosition())));
+        i.putExtra("route" , routes.get(viewHolder.getPosition()));
             startActivity(i);
         finish();
 
@@ -87,7 +87,7 @@ public class RouteList extends Activity
 @Override
 protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.list);
+        setContentView(R.layout.listhub);
     getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
     Intent intent = getIntent(); // 인텐트 받아오고
@@ -95,7 +95,7 @@ protected void onCreate(Bundle savedInstanceState) {
     // int country_srl = intent.getIntExtra("country_srl", 0);
     country_srl = intent.getIntExtra("country_srl", 0); // 인텐트로 부터 데이터 가져오고
 
-    ps = (ProgressBar) findViewById(R.id.progressBar);
+
 
     if(null == mGoogleApiClient) {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -111,7 +111,22 @@ protected void onCreate(Bundle savedInstanceState) {
         //  Log.v(TAG, "Connecting to GoogleApiClient..");
     }
 
+    WatchViewStub stub = (WatchViewStub) findViewById(R.id.watch_view_stub);
+    stub.setOnLayoutInflatedListener(new WatchViewStub.OnLayoutInflatedListener() {
+        @Override public void onLayoutInflated(WatchViewStub stub) {
+            // Now you can access your views
+            // Get the list component from the layout of the activity
 
+            ps = (ProgressBar) findViewById(R.id.progressBar);
+
+
+             listView =
+                    (WearableListView) findViewById(R.id.wearable_list);
+
+
+
+        }
+    });
 
     global.log("RouteSRL" + country_srl);
     //Settimer
@@ -186,9 +201,6 @@ protected void onCreate(Bundle savedInstanceState) {
 
                 routes = global.getJSONArrayListByString(message);
 
-                // Get the list component from the layout of the activity
-                WearableListView listView =
-                        (WearableListView) findViewById(R.id.wearable_list);
 
                 // Assign an adapter to the list
                 listView.setAdapter(new ListAdapter(RouteList.this, routes));
@@ -196,7 +208,7 @@ protected void onCreate(Bundle savedInstanceState) {
                 // Set a click listener
                 listView.setClickListener(RouteList.this);
 
-                ps.setVisibility(View.INVISIBLE);
+               ps.setVisibility(View.INVISIBLE);
 
 
 
@@ -212,6 +224,7 @@ protected void onCreate(Bundle savedInstanceState) {
         super.onDestroy();
         //unregister our receiver
         LocalBroadcastManager.getInstance(this).unregisterReceiver(messageReceiver);
+        ltimeout.cancel();
     }
 
 

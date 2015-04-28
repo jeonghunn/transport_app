@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+<!--String-->
+    <string name="terminal">종착 정류장</string>
+    <string name="destinaton_arrived">목적지 도착</string>
+    <string name="_stations_left">정거장 남음</string>
+    <string name="item">개</string>
+    <string name="currunt">현재</string>
+    <string name="almost_arrived">목적지 거의 도착</string>
+    <string name="calculating_station_left">남은 정류장 찾는 중..</string>
+    <string name="missed_the_stop">정류장 지나침</string>
+    <string name="nearby_bus_routes">주변 버스 노선</string>
+    <string name="app_info">앱 정보</string>
+    <string name="developers">개발자</string>
+    <string name="dev_info">Junghoon Lee(JHRunning)\nDeveloper\nhttp://jhrun.tistory.com\n\nSeunghyun Yu\nDesigner</string>
+    <string name="yes">확인</string>
+    <string name="direction">방면</string>
+    <string name="wbus_on_android_wear">안드로이드 웨어와 연결하시면 사용이 가능합니다. 아직 휴대폰은 지원 하지 않습니다. </string>
+
+
+    <!--Main-->
+    <string name="main_settings" >설정</string>
+
+    <!--Noti-->
+    <string name="bus_mode_started">버스 모드 활성화됨</string>
+
+    <!--Splash-->
+    <string name="new_bus_db_available">새로운 버스 데이터배이스가 있습니다!</string>
+    <string name="db_downloading">DB 다운로드 중...</string>
+    <string name="db_installing">설치하는 중...</string>
+
+    <!--Error-->
+    <string name="error">오류</string>
+    <string name="error_des">작업을 진행하는 도중 오류가 발생했습니다. 잠시후에 다시 시도해주세요.</string>
+
+    <!--NetWork Error-->
+    <string name="networkerror">네트워크 오류</string>
+    <string name="networkerrord">인터넷이 연결되어있지 않거나 접속이 불안정합니다.</string>
+
+
+</resources>

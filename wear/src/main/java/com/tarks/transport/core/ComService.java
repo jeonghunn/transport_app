@@ -1,13 +1,10 @@
 package com.tarks.transport.core;
 
-import android.content.BroadcastReceiver;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.support.v4.content.LocalBroadcastManager;
@@ -22,9 +19,10 @@ import com.google.android.gms.wearable.WearableListenerService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
-import com.tarks.transport.db.*;
-import com.tarks.transport.ui.BusArrive;
 import com.tarks.transport.R;
+import com.tarks.transport.core.db.DataBases;
+import com.tarks.transport.core.db.DbOpenHelper;
+import com.tarks.transport.core.db.InfoClass;
 import com.tarks.transport.ui.StationList;
 
 import java.util.ArrayList;
@@ -39,14 +37,13 @@ public class ComService extends WearableListenerService implements GoogleApiClie
     private String nodeId;
     final Messenger mMessenger = new Messenger(new IncomingHandler());
     private Intent intent;
-
+    private boolean waitingreceive = false;
 
     @Override
     public void onCreate() {
         super.onCreate();
-
+     // resetStationsDB();
         setGoogleApiClient(this);
-
     }
 
 
@@ -81,12 +78,14 @@ checkMessage(messageEvent.getPath(), messageEvent.getData());
           //  String[] array = message.split("//");
          //   String action_kind = array[0];
          //   String data = array[1];
-
             if(message.matches("notification")) actionNoti(global.getStringbyBytes(bytes));
             if(message.matches("stations_data")) StationsDataDBInput(global.getStringbyBytes(bytes));
             if(message.matches("NearByRoute")) NearByRoute(global.getStringbyBytes(bytes));
             if(message.matches("WaysByRoute")) WaysByRoute(global.getStringbyBytes(bytes));
             if(message.matches("checkDataBase")) doCheckDB(global.getStringbyBytes(bytes));
+            if(message.matches("db_ver")) updateDBVer(global.getStringbyBytes(bytes));
+            if(message.matches("okMessage")) okMessage();
+            if(message.matches("deleteNoti")) deleteNoti(Integer.parseInt(global.getStringbyBytes(bytes)));
 
             //To Phone
             if(message.matches("requestLocationMode")) requestLocationMode(global.getStringbyBytes(bytes));
@@ -126,16 +125,16 @@ checkMessage(messageEvent.getPath(), messageEvent.getData());
 
             String direction_name = String.valueOf(resultmap.get("direction_name"));
             String station_summary = String.valueOf(resultmap.get("station_summary"));
-            int route_srl = Integer.parseInt(String.valueOf(resultmap.get("route_srl")));
+            String route = String.valueOf(resultmap.get("route"));
             int country_srl = Integer.parseInt(String.valueOf(resultmap.get("country_srl")));
             int way_srl = Integer.parseInt(String.valueOf(resultmap.get("way_srl")));
             int station_srl = Integer.parseInt(String.valueOf(resultmap.get("station_srl")));
 
 
             Intent viewIntent = new Intent(ComService.this, StationList.class);
-            global.BusNoti(ComService.this, noti_id, viewIntent, title, content, direction_name ,country_srl,route_srl, way_srl, station_srl, station_summary, R.drawable.ic_launcher, global.getNight()? R.drawable.ride_bus_background_night : R.drawable.ride_bus_background);
+            global.BusNoti(ComService.this, noti_id, viewIntent, title, content, direction_name ,country_srl,route, way_srl, station_srl, station_summary, R.drawable.ic_launcher, global.getNight()? R.drawable.ride_bus_background_night : R.drawable.ride_bus_background);
 
-            checkDataDB(country_srl, route_srl, way_srl, station_srl);
+            checkDataDB(country_srl, route, way_srl, station_srl);
         }
 
         //Bus almost arrived
@@ -143,14 +142,14 @@ checkMessage(messageEvent.getPath(), messageEvent.getData());
 
             String direction_name = String.valueOf(resultmap.get("direction_name"));
             String station_summary = String.valueOf(resultmap.get("station_summary"));
-            int route_srl = Integer.parseInt(String.valueOf(resultmap.get("route_srl")));
+            String route = String.valueOf(resultmap.get("route"));
             int country_srl = Integer.parseInt(String.valueOf(resultmap.get("country_srl")));
             int way_srl = Integer.parseInt(String.valueOf(resultmap.get("way_srl")));
             int station_srl = Integer.parseInt(String.valueOf(resultmap.get("station_srl")));
 
             global.Vibrate(this, 2000);
             Intent viewIntent = new Intent(ComService.this, StationList.class);
-            global.BusNoti(ComService.this, noti_id, viewIntent, title, content, direction_name, country_srl,route_srl, way_srl, station_srl, station_summary, R.drawable.ic_launcher, R.drawable.flag);
+            global.BusNoti(ComService.this, noti_id, viewIntent, title, content, direction_name, country_srl,route, way_srl, station_srl, station_summary, R.drawable.ic_launcher, R.drawable.flag);
 //
 //            Intent i = new Intent(ListenerService.this, BusArrive.class);
 //            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -175,8 +174,21 @@ checkMessage(messageEvent.getPath(), messageEvent.getData());
             WaitingBusNoti(title, content);
         }
 
+        if(kind == 5){
+            ActiveBusNoti(title, content);
+        }
+
     }
 
+    private void deleteNoti(int notiid){
+        NotificationManager nMgr = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        nMgr.cancel(notiid);
+    }
+
+    private void okMessage(){
+        //I GOT OK SIGN!
+        waitingreceive = false;
+    }
     //To Phone
     private void getWays(String data){
         sendMessage("Main_getWays", data.getBytes());
@@ -197,7 +209,6 @@ checkMessage(messageEvent.getPath(), messageEvent.getData());
 
     private void NearByRoute(String data){
         //global.log("NearByRoute Calling");
-
 
 
         Intent messageIntent = new Intent();
@@ -227,6 +238,30 @@ private void arrivedAction(String title, String content){
 
 }
 
+    private boolean compareDBVersion(String dbver){
+        if(global.getSetting(this, "db_ver", "0").matches(dbver)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private void updateDBVer(String dbver){
+        if(!compareDBVersion(dbver)){
+            resetStationsDB();
+            global.SaveSetting(this, "db_ver", dbver);
+        }
+    }
+
+
+    private void resetStationsDB(){
+        DbOpenHelper mDbOpenHelper = new DbOpenHelper(this);
+        mDbOpenHelper.open();
+
+        mDbOpenHelper.ResetStationsDB();
+        mDbOpenHelper.close();
+
+    }
     private void WaitingBusNoti(String title, String content){
         // WakeLock.acquireCpuWakeLock(ListenerService.this);
       //  Intent viewIntent = new Intent(this, StationList.class);
@@ -234,6 +269,18 @@ private void arrivedAction(String title, String content){
 
 
      //   global.Vibrate(this, 4000);
+        // WakeLock.releaseCpuLock();
+
+
+    }
+
+    private void ActiveBusNoti(String title, String content){
+        // WakeLock.acquireCpuWakeLock(ListenerService.this);
+        //  Intent viewIntent = new Intent(this, StationList.class);
+        global.ActivieModeNoti(this, 1, title, content, R.drawable.ic_launcher, global.getNight()? R.drawable.bus_background_night : R.drawable.bus_background);
+
+
+        //   global.Vibrate(this, 4000);
         // WakeLock.releaseCpuLock();
 
 
@@ -276,21 +323,36 @@ private void arrivedAction(String title, String content){
 
 
     }
-
     public void sendMessage(final String msg, final byte[] data) {
-       // if (nodeId != null) {
+
+waitingreceive = true;
+
+        //if (nodeId != null) {
+            global.log("SEND MEssageMethod");
             new Thread(new Runnable() {
                 @Override
                 public void run() {
+                    int tried = 0;
+                    while(waitingreceive && tried < 3){
+                        tried++;
+                        global.log("SEND MEssage");
                         mGoogleApiClient.blockingConnect(10000, TimeUnit.MILLISECONDS);
-                    Wearable.MessageApi.sendMessage(mGoogleApiClient, nodeId, msg, data);
-                }
-            }).start();
-     //   }
+                        Wearable.MessageApi.sendMessage(mGoogleApiClient, nodeId, msg, data);
+                        if(!msg.matches("Main_LocationMode") && !msg.matches("Main_setDestination") && !msg.matches("Main_startBusMode")) break;
+                        try {
+                            Thread.sleep(5000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    }
 
+            }).start();
+      //  }
 
 
     }
+
 
 
     public void sendMessageDefault(final String msg, String data) {
@@ -304,11 +366,11 @@ private void arrivedAction(String title, String content){
         resultmap = global.getJSONArray(data);
 
         int country_srl = Integer.parseInt(String.valueOf(resultmap.get("country_srl")));
-        int route_srl = Integer.parseInt(String.valueOf(resultmap.get("route_srl")));
+        String route = String.valueOf(resultmap.get("route"));
         int way_srl = Integer.parseInt(String.valueOf(resultmap.get("way_srl")));
         int station_srl = 1;
 
-        checkDataDB(country_srl, route_srl, way_srl, station_srl);
+        checkDataDB(country_srl, route, way_srl, station_srl);
     }
 
 
@@ -326,11 +388,16 @@ private void arrivedAction(String title, String content){
         DbOpenHelper mDbOpenHelper = new DbOpenHelper(this);
         mDbOpenHelper.open();
 
+        mDbOpenHelper.beginTransaction();
         for (int i = 0; i < infoArraylist.size(); i++) {
            // global.log(infoArraylist.get(i).station_name);
             InfoClass get = infoArraylist.get(i);
-            mDbOpenHelper.insertColumn(get.id, get.country_srl,get.route_srl,get.station_srl,get.way_srl, get.station_name, get.station_latitude,  get.station_longitude);
+            mDbOpenHelper.insertColumn(get.id, get.country_srl,get.route,get.station_srl,get.way_srl, get.station_name, get.station_latitude,  get.station_longitude);
         }
+
+
+        mDbOpenHelper.TransactionFinish();
+
 
         mDbOpenHelper.close();
         broadcastCheckDataDB(true);
@@ -345,20 +412,20 @@ private void arrivedAction(String title, String content){
         LocalBroadcastManager.getInstance(this).sendBroadcast(messageIntent);
     }
 
-    private void checkDataDB(int country_srl, int route_srl, int way_srl, int station_srl){
+    private void checkDataDB(int country_srl, String route, int way_srl, int station_srl){
         DbOpenHelper mDbOpenHelper = new DbOpenHelper(this);
         mDbOpenHelper.open();
 
 
 
 
-       if(mDbOpenHelper.checkStations(country_srl, route_srl, way_srl)){
+       if(mDbOpenHelper.checkStations(country_srl, route, way_srl)){
            broadcastCheckDataDB(true);
 
        }else{
 
            ArrayList<StationClass> notiarray = new ArrayList<StationClass>();
-           StationClass mnoticalss = new StationClass(country_srl, route_srl, way_srl, station_srl);
+           StationClass mnoticalss = new StationClass(country_srl, route, way_srl, station_srl);
 
            notiarray.add(mnoticalss);
            Gson gson = new GsonBuilder().create();
@@ -401,7 +468,5 @@ private void arrivedAction(String title, String content){
     public void onConnectionFailed(ConnectionResult connectionResult) {
 
     }
-
-
 
 }

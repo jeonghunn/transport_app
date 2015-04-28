@@ -1,18 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">WhereBus</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
-    <string name="verkind">Alpha Version</string>
-    <string name="copyright">Copyrightⓒ 2014 WBus Team.</string>
-    <string name="ver">0.2.0.0.111</string>
-    <string name="terminal">종착 정류장</string>
-    <string name="destinaton_arrived">목적지 도착</string>
-    <string name="_stations_left">개 정거장 남음</string>
-    <string name="currunt">현재</string>
-    <string name="almost_arrived">목적지 거의 도착</string>
-    <string name="calculating_station_left">남은 정류장 찾는 중..</string>
-    <string name="passed_station">정류장 지나침</string>
-    <string name="nearby_bus_routes">주변 버스 노선</string>
+    <!--INFO-->
+    <string name="app_name" translatable="false" >WBUS</string>
+    <string name="hello_world" translatable="false" >Hello world!</string>
+    <string name="verkind" translatable="false">Beta Version</string>
+    <string name="action_settings" translatable="false">Settings</string>
+    <string name="copyright" translatable="false" >Copyrightⓒ 2015 WBus Team.</string>
+    <string name="ver" translatable="false" >0.2.16.2.165</string>
+    <string name="api_version" translatable="false">1</string>
+
+    <!--Server url-->
+    <string name="server_api_url" translatable="false" >http://tarks.net/where/api.php</string>
+    <string name="server_info_url" translatable="false" >http://jeonghunn.github.io/wbus_db/index.html</string>
+    <string name="server_db_url" translatable="false">http://jeonghunn.github.io/wbus_db</string>
+
+    <!--String-->
+    <string name="terminal">Terminal</string>
+    <string name="destinaton_arrived">Destination Arrived</string>
+    <string name="item"></string>
+    <string name="_stations_left">Stations left</string>
+    <string name="currunt">Current</string>
+    <string name="almost_arrived">Almost arrived</string>
+    <string name="calculating_station_left">Calculating Stations..</string>
+    <string name="missed_the_stop">Missed the Stop</string>
+    <string name="nearby_bus_routes">Nearby bus routes</string>
+    <string name="app_info">App info</string>
+    <string name="developers">Developers</string>
+    <string name="dev_info">Junghoon Lee(JHRunning)\nDeveloper\nhttp://jhrun.tistory.com\n\nSeunghyun Yu\nDesigner</string>
+    <string name="yes">Yes</string>
+    <string name="direction">Direction</string>
+    <string name="wbus_on_android_wear">WBUS just supports Android Wear. We will support for phone soon. </string>
+
+    <!--Main-->
+    <string name="main_settings" >Settings</string>
+
+    <!--Noti-->
+    <string name="bus_mode_started">Bus Mode Activated</string>
+
+    <!--Splash-->
+    <string name="new_bus_db_available">There is new bus database available!</string>
+    <string name="db_downloading">Database Downloading...</string>
+    <string name="db_installing">Installing...</string>
+
+    <!--Error-->
+    <string name="error">Error</string>
+    <string name="error_des">An error occurred while work was in progress. Please try again in a few minutes.</string>
+
+    <!--NetWork Error-->
+    <string name="networkerror">Network Error</string>
+    <string name="networkerrord">Unstable Internet connection.</string>
+
+
 </resources>
